@@ -11,6 +11,16 @@ pub extern "C" fn wire_rust_release_mode(port_: i64) {
     wire_rust_release_mode_impl(port_)
 }
 
+#[no_mangle]
+pub extern "C" fn wire_multiply_zk(port_: i64, a: i32, b: i32) {
+    wire_multiply_zk_impl(port_, a, b)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_pwd_and_ls(port_: i64) {
+    wire_pwd_and_ls_impl(port_)
+}
+
 // Section: allocate functions
 
 // Section: related functions

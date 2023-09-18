@@ -54,6 +54,11 @@ class _MyHomePageState extends State<MyHomePage> {
   late Future<Platform> platform;
   late Future<bool> isRelease;
 
+  final control1 = TextEditingController();
+  final control2 = TextEditingController();
+  final control3 = TextEditingController();
+  final control4 = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -94,6 +99,48 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            TextField(
+              controller: control1,
+            ),
+
+            TextField(
+              controller: control2,
+            ),
+
+            TextField(
+              controller: control3,
+            ),
+
+            TextField(
+              controller: control4,
+            ),
+
+            TextButton(
+                onPressed: () async {
+                  final in1 = int.parse(control1.text);
+                  final in2 = int.parse(control2.text);
+
+                  // final t = await api.multiply(a: in1, b: in2);
+                  final tt = await api.multiplyZk(a: in1, b: in2);
+
+                  control3.text = tt.$1.toString();
+                  control4.text = tt.$2.toString();
+
+                  // control3.text = (in1 * in2).toString();
+                },
+                child: Text("multiply")),
+
+            TextButton(
+                onPressed: () async {
+                  final tt = await api.pwdAndLs();
+
+                  control3.text = tt.$1.toString();
+                  control4.text = tt.$2.toString();
+
+                  // control3.text = (in1 * in2).toString();
+                },
+                child: Text("pwd ls")),
+
             const Text("You're running on"),
             // To render the results of a Future, a FutureBuilder is used which
             // turns a Future into an AsyncSnapshot, which can be used to

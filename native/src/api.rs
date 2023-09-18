@@ -57,3 +57,140 @@ pub fn platform() -> Platform {
 pub fn rust_release_mode() -> bool {
     cfg!(not(debug_assertions))
 }
+
+pub fn multiply_zk(a: i32, b: i32) -> (String, String) {
+    use ark_bn254::Bn254;
+    use ark_circom::{read_zkey, CircomBuilder, CircomConfig};
+    use ark_groth16::Groth16;
+    use ark_snark::SNARK;
+    // use ark_std::rand::thread_rng;
+    type GrothBn = Groth16<Bn254>;
+    use rand::thread_rng;
+
+    // let cfg = CircomConfig::<Bn254>::new(
+    //     "/Users/hanbu/MyApps/Gear/HackHouse/Codes/0918/arkcircom/test-vectors/circom2_multiplier2.wasm",
+    //     "/Users/hanbu/MyApps/Gear/HackHouse/Codes/0918/arkcircom/test-vectors/circom2_multiplier2.r1cs",
+    // ).map_err(|e|{
+    //     return ("error：  CircomConfig::<Bn254>".to_string(),  e.to_string())
+    // }).unwrap();
+
+    let wtns_bytes = include_bytes!("/Users/hanbu/MyApps/Gear/HackHouse/Codes/0918/arkcircom/test-vectors/circom2_multiplier2.wasm");
+
+    let store = wasmer::Store::default();
+    let module = wasmer::Module::from_binary(&store, wtns_bytes).unwrap();
+    let wtns = ark_circom::WitnessCalculator::from_module(module).unwrap();
+
+    // let reader = std::fs::File::open(r1cs)?;
+    let r1cs_bytes = include_bytes!("/Users/hanbu/MyApps/Gear/HackHouse/Codes/0918/arkcircom/test-vectors/circom2_multiplier2.r1cs");
+    let cursor = std::io::Cursor::new(r1cs_bytes);
+    let r1cs = ark_circom::circom::R1CSFile::new(cursor).unwrap().into();
+
+    let cfg = CircomConfig::<Bn254> {
+        r1cs,
+        wtns,
+        sanity_check: false,
+    };
+
+    let mut builder = CircomBuilder::new(cfg);
+    builder.push_input("a", 3);
+    builder.push_input("b", 11);
+
+    // create an empty instance for setting it up
+    let _ = builder.setup();
+
+    let mut rng = thread_rng();
+
+    // // params random generated
+    // // let params = GrothBn::generate_random_parameters_with_reduction(circom, &mut rng)?;
+    // // params from zkey
+    // let path = "./test-vectors/test.zkey";
+    // let mut file = std::fs::File::open(path).unwrap();
+    // let (params, _matrices) = read_zkey(&mut file).unwrap();
+
+    let zkey_bytes = include_bytes!(
+        "/Users/hanbu/MyApps/Gear/HackHouse/Codes/0918/arkcircom/test-vectors/test.zkey"
+    );
+    let mut cursor = std::io::Cursor::new(zkey_bytes);
+    let (params, _matrices) = read_zkey(&mut cursor).unwrap();
+
+    let circom = builder.build().unwrap();
+
+    // // Corresponding to circom2
+    // // proof.json: it contains the proof.
+    // // public.json: it contains the values of the public inputs and outputs.
+    // // let inputs = circom.get_public_inputs().unwrap();
+    let inputs: Vec<ark_ff::Fp<ark_ff::MontBackend<ark_bn254::FrConfig, 4>, 4>> =
+        circom.get_public_inputs().unwrap();
+
+    // let t = inputs[0].0;
+    // let t1 = inputs[0].1;
+
+    // println!("t: {}", t);
+    // println!("t1: {:?}", t1);
+
+    let proof = GrothBn::prove(&params, circom, &mut rng).unwrap();
+
+    // let mut builder = CircomBuilder::new(cfg);
+    // builder.push_input("a", a);
+    // builder.push_input("b", b);
+
+    // // create an empty instance for setting it up
+    // let _ = builder.setup();
+
+    // // let mut rng = thread_rng();
+
+    // // params random generated
+    // // let params = GrothBn::generate_random_parameters_with_reduction(circom, &mut rng)?;
+    // // params from zkey
+    // // let path =
+    // //     "/Users/hanbu/MyApps/Gear/HackHouse/Codes/0918/arkcircom/test-vectors/test.zkey";
+    // // let mut file = std::fs::File::open(path).unwrap();
+    // // let (params, _matrices) = read_zkey(&mut file).unwrap();
+
+    // let circom = builder
+    //     .build()
+    //     .map_err(|e| return ("error：  builder.build()".to_string(), e.to_string()))
+    //     .unwrap();
+
+    // // // Corresponding to circom2
+    // // // proof.json: it contains the proof.
+    // // // public.json: it contains the values of the public inputs and outputs.
+    // // let proof = GrothBn::prove(&params, circom, &mut rng).unwrap();
+
+    // let inputs: Vec<ark_ff::Fp<ark_ff::MontBackend<ark_bn254::FrConfig, 4>, 4>> =
+    //     circom.get_public_inputs().unwrap_or({
+    //         return (
+    //             "error：  circom.get_public_inputs()".to_string(),
+    //             "".to_string(),
+    //         );
+    //     });
+
+    // let inputs = inputs
+    //     .iter()
+    //     .map(|x| )
+    //     .collect::<Vec<String>>()
+    //     .join('/');
+
+    // let ou1 = format!("{:?}", inputs);
+    // let ou2 = format!("{:?}", proof);
+    // // let out = request_message.in1 * request_message.in2;
+
+    // let ou1 = a.in1.to_string();
+    // let ou2 = request_message.in2.to_string();
+
+    // (a.to_string(), b.to_string())
+    (format!("{:?}", inputs), format!("{:?}", proof))
+}
+
+pub fn pwd_and_ls() -> (String, String) {
+    use std::process::Command;
+    let pwd = Command::new("pwd")
+        .output()
+        .expect("failed to execute process");
+    let ls = Command::new("ls")
+        .output()
+        .expect("failed to execute process");
+    let pwd = String::from_utf8(pwd.stdout).unwrap();
+    let ls = String::from_utf8(ls.stdout).unwrap();
+    (pwd, ls)
+}
