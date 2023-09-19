@@ -13,7 +13,7 @@ class AppNavigator {
     Get.offAllNamed(AppRoutes.newWallet);
   }
 
-  // static void homepage() {
-  //   Get.offAllNamed(AppRoutes.home);
-  // }
+  static void homepage() {
+    Get.offAllNamed(AppRoutes.home);
+  }
 }

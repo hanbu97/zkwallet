@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 
 import '../../screens/splash/binding.dart';
 import '../../screens/splash/screen.dart';
+import '../../screens/wallet/create_import/binding.dart';
+import '../../screens/wallet/create_import/screen.dart';
 part 'app_routes.dart';
 
 class AppPages {
@@ -32,6 +34,11 @@ class AppPages {
       name: AppRoutes.onBoarding,
       page: () => OnboardingScreen(),
       binding: OnboardingBinding(),
+    ),
+    _pageBuilder(
+      name: AppRoutes.newWallet,
+      page: () => NewWalletPage(),
+      binding: NewWalletBinding(),
     ),
   ];
 }
