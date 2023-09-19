@@ -22,7 +22,6 @@ class WalletPage extends StatelessWidget {
         title: Row(
           children: [
             Container(
-              // height: 32.h,
               padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
               decoration: BoxDecoration(
                   color: const Color(0xff263530),
@@ -206,10 +205,14 @@ class WalletPage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(16.w),
                                   color: Styles.mainColorDark,
                                 ),
-                                child: Icon(
-                                  Icons.download,
-                                  color: Colors.white,
-                                  size: 22.w,
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.download,
+                                      color: Colors.white,
+                                      size: 22.w,
+                                    ),
+                                  ],
                                 ),
                               ),
                               Container(
@@ -259,86 +262,61 @@ class WalletPage extends StatelessWidget {
                         )))
               ],
             ),
-            Column(children: [
-              MenuItem(
-                name: 'Reset Password',
-                logo: 'assets/images/menu/pwd.png',
-                routeName: '',
-              ),
-              MenuItem(
-                name: 'Preferences',
-                logo: 'assets/images/menu/setting.png',
-                routeName: '',
-              ),
-              MenuItem(
-                name: 'Collection',
-                logo: 'assets/images/menu/collection.png',
-                routeName: '',
-              ),
-              MenuItem(
-                name: 'Help',
-                logo: 'assets/images/menu/help.png',
-                routeName: '',
-              ),
-              MenuItem(
-                name: 'About',
-                logo: 'assets/images/menu/about.png',
-                routeName: '',
-              )
-            ]),
-
-            // Stack(
-            //   children: [
-            //     // 按钮列表
-            //     Container(
-            //       decoration: BoxDecoration(
-            //           borderRadius: BorderRadius.only(
-            //             topLeft: Radius.circular(39.r),
-            //             topRight: Radius.circular(39.r),
-            //           ),
-            //           color: Styles.white),
-            //       margin: EdgeInsets.only(top: 177.w),
-            //       padding: EdgeInsets.only(top: 83.w),
-            //       child: ListView(
-            //         physics: ClampingScrollPhysics(),
-            //         padding: EdgeInsets.fromLTRB(31.w, 0, 25.w, 0),
-
-            //         ],
-            //       ),
-            //     ),
-
-            //   ],
-            // )
             SizedBox(
-              height: 40.w,
+              height: 30.w,
             ),
-            // Center(
-            //   child: Container(
-            //     alignment: Alignment.center,
-            //     width: double.infinity,
-            //     height: 42.h,
-            //     child: ConfirmButton(
-            //       cancel: true,
-            //       click: () => {
-            //         // Get.back(),
-            //         // Get.toNamed("/exportTip"),
-            //         // print(1111)
-            //         // Get.to(() => SyncTgScreen())
-
-            //         // _client?.send(tdApi.LogOut());
-            //         DataSp.tgStateManager.logout(),
-            //       },
-            //       text: Text(
-            //         'Log out',
-            //         style: TextStyle(
-            //           color: Styles.mainColor,
-            //           fontSize: 16.sp,
-            //           fontWeight: FontWeight.w700,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Text("Tokens",
+                        style: TextStyle(
+                          color: Styles.mainWhite,
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                        )),
+                    const Expanded(child: SizedBox()),
+                    Icon(Icons.search, color: Styles.infoGrayColor, size: 24.w)
+                  ],
+                ),
+                SizedBox(
+                  height: 10.w,
+                ),
+                MenuItem(
+                  name: 'DOT',
+                  logo: 'assets/images/zklogo.png',
+                  routeName: '/createWallet',
+                  desp: '\$7.22',
+                ),
+                SizedBox(
+                  height: 10.w,
+                ),
+                MenuItem(
+                  name: 'DOT',
+                  logo: 'assets/images/zklogo.png',
+                  routeName: '/createWallet',
+                  desp: '\$7.22',
+                ),
+                SizedBox(
+                  height: 10.w,
+                ),
+                MenuItem(
+                  name: 'DOT',
+                  logo: 'assets/images/zklogo.png',
+                  routeName: '/createWallet',
+                  desp: '\$7.22',
+                ),
+                SizedBox(
+                  height: 10.w,
+                ),
+                MenuItem(
+                  name: 'DOT',
+                  logo: 'assets/images/zklogo.png',
+                  routeName: '/createWallet',
+                  desp: '\$7.22',
+                ),
+              ],
+            ),
             SizedBox(
               height: 30.w,
             ),
@@ -351,44 +329,112 @@ class WalletPage extends StatelessWidget {
 
 // 操作按钮组件
 class MenuItem extends StatelessWidget {
-  const MenuItem({Key? key, this.name, this.logo, this.routeName})
+  const MenuItem({Key? key, this.name, this.logo, this.routeName, this.desp})
       : super(key: key);
   final name; // 名称
   final logo; // logo
   final routeName; // 路由跳转地址
+  final desp;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () => Get.toNamed(routeName),
         child: Container(
-          margin: EdgeInsets.only(top: 36.w),
+          height: 58.w,
+          // margin: EdgeInsets.symmetric(vertical: 36.w),
+          decoration: const BoxDecoration(color: Color(0xff1A1A1A)),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: 12.w,
               ),
-              Image.asset(
-                logo,
-                width: 24.w,
-                height: 24.w,
+              // Image.asset(
+              //   logo,
+              //   width: 32.w,
+              //   height: 32.w,
+              // ),
+              Container(
+                width: 39.w,
+                height: 39.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2.0, // you can adjust the width as you need
+                  ),
+                ),
+                child: ClipOval(
+                    child: ImageRes.zkLogo.toImage
+                      ..width = 32.w
+                      ..height = 32.w),
               ),
               SizedBox(width: 11.w),
               Expanded(
-                child: Text(name,
-                    style: GoogleFonts.rubik(
-                      color: Styles.titleColor,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                    )
+                  child: Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(name,
+                          style: GoogleFonts.rubik(
+                            color: Styles.mainWhite,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          )),
+                      SizedBox(
+                        height: 2.w,
+                      ),
+                      Text(desp,
+                          style: GoogleFonts.rubik(
+                            color: Styles.mainColorDark,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                          )),
+                    ],
+                  ),
+                  const Expanded(child: SizedBox()),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('3.920',
+                          style: GoogleFonts.rubik(
+                            color: Styles.mainWhite,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          )),
+                      SizedBox(
+                        height: 2.w,
+                      ),
+                      Text('\$25.112',
+                          style: GoogleFonts.rubik(
+                            color: Styles.mainColorDark,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                          )),
+                    ],
+                  ),
+                  SizedBox(
+                    width: 10.w,
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 14.w,
+                  )
+                ],
+              )),
 
-                    // TextStyle(
-                    //   color: Styles.titleColor,
-                    //   fontSize: 14.sp,
-                    //   fontWeight: FontWeight.w600,
-                    // ),
-                    ),
-              ),
+              // Expanded(
+              //   child: Text(name,
+              //       style: GoogleFonts.rubik(
+              //         color: Styles.titleColor,
+              //         fontSize: 14.sp,
+              //         fontWeight: FontWeight.w600,
+              //       )),
+              // ),
               Image.asset(
                 "assets/images/icons/arrow_right.png",
                 width: 24.w,

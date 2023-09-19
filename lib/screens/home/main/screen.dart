@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
       body: Obx(
         () => IndexedStack(
           index: tabIndex.value,
-          // children: [ChatsPage(), EventsPage(), DiscoverPage(), MenuPage()],
           children: [
             WalletPage(),
             Container(),
