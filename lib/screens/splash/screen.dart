@@ -46,42 +46,42 @@ class _SplashPageState extends State<SplashPage>
         startY: 320.w,
         endX: 88.w,
         endY: 282.w,
-        color: const Color(0xFF0556FF).withAlpha(77)),
+        color: const Color(0xFF00FFC4).withAlpha(77)),
     Circle(
-        size: 15.w,
+        size: 8.w,
         startX: 187.5.w,
         startY: 320.w,
         endX: 100.w,
-        endY: 338.w,
-        color: const Color(0xFF0556FF)),
+        endY: 320.w,
+        color: const Color(0xFF00FFC4)),
     Circle(
         size: 13.w,
         startX: 187.5.w,
         startY: 320.w,
         endX: 265.w,
-        endY: 360.w,
-        color: const Color(0xFF0556FF).withAlpha(153)),
+        endY: 320.w,
+        color: const Color(0xFF00FFC4).withAlpha(153)),
     Circle(
         size: 5.w,
         startX: 187.5.w,
         startY: 310.w,
         endX: 265.w,
         endY: 250.w,
-        color: const Color(0xFF0556FF).withAlpha(179)),
+        color: const Color(0xFF00FFC4).withAlpha(179)),
     Circle(
         size: 10.w,
         startX: 187.5.w,
         startY: 310.w,
         endX: 230.w,
-        endY: 205.w,
-        color: const Color(0xFF0556FF).withAlpha(64)),
+        endY: 190.w,
+        color: const Color(0xFF00FFC4).withAlpha(99)),
     Circle(
         size: 10.w,
         startX: 167.5.w,
         startY: 265.w,
         endX: 125.w,
         endY: 225.w,
-        color: const Color(0xFF0556FF).withAlpha(128)),
+        color: const Color(0xFF00FFC4).withAlpha(128)),
   ];
   List<Animation<double>> animationsX = [];
   List<Animation<double>> animationsY = [];
@@ -120,7 +120,7 @@ class _SplashPageState extends State<SplashPage>
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFF7FAFF),
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
           ...circles.asMap().entries.map((entry) {
@@ -151,7 +151,7 @@ class _SplashPageState extends State<SplashPage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ImageRes.splashLogo.toImage..width = 188.05.w
+                  ImageRes.zkLogo.toImage..width = 135.w
                   // ..height = 78.91.h,
                 ],
               ),
@@ -159,7 +159,7 @@ class _SplashPageState extends State<SplashPage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ImageRes.splashToplink.toImage..width = 161.w
+                  ImageRes.zkTransfer.toImage..width = 161.w
                   // ..height = 78.91.h,
                 ],
               ),
@@ -170,7 +170,7 @@ class _SplashPageState extends State<SplashPage>
                   ? GFLoader(
                       type: GFLoaderType.android,
                       androidLoaderColor: const AlwaysStoppedAnimation<Color>(
-                          Color(0xFF0556FF)),
+                          Color(0xFF07FFC4)),
                       size: 35.w,
                     )
                   : const SizedBox(),

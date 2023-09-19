@@ -25,8 +25,8 @@ class ImageRes {
   // static const templeteUser = "$_dir/templete_user.png";
 
   // // splash screen
-  static const splashLogo = "$_dir/toplink_logo.png";
-  static const splashToplink = "$_dir/splash_toplink.png";
+  static const zkLogo = "$_dir/zklogo.png";
+  static const zkTransfer = "$_dir/zktransfer.png";
 
   // // onboarding screen
   // static const human = "$_dir/human.png";
