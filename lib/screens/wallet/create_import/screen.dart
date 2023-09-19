@@ -53,6 +53,10 @@ class _NewWalletPageState extends State<NewWalletPage>
 
   final _words = <String>[].obs;
 
+  // verify backup
+  final verifyInputs = <String>[].obs;
+  final RxList<String> verifyTabs = <String>[].obs;
+
   @override
   void initState() {
     super.initState();
@@ -87,6 +91,42 @@ class _NewWalletPageState extends State<NewWalletPage>
                 color: Styles.titleColor,
                 fontSize: 15.sp,
               )),
+        ),
+      );
+    }
+    return array;
+  }
+
+  _renderWordVerify() {
+    var array = <Widget>[];
+
+    for (var i = 0; i < verifyInputs.length; i++) {
+      array.add(
+        GestureDetector(
+          onTap: () {
+            if (verifyTabs.length < length) {
+              verifyTabs.add(verifyInputs[i]);
+              verifyInputs.removeAt(i);
+            }
+          },
+          child: Container(
+            width: 85.w,
+            height: 45.w,
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(
+              right: (i + 1) % 3 == 0 ? 0 : 18.9.w,
+              bottom: 12.w,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.r),
+              color: const Color(0xFF222225),
+            ),
+            child: Text(verifyInputs[i],
+                style: GoogleFonts.rubik(
+                  color: Styles.titleColor,
+                  fontSize: 15.sp,
+                )),
+          ),
         ),
       );
     }
@@ -237,9 +277,8 @@ class _NewWalletPageState extends State<NewWalletPage>
                   ),
                 ),
               ),
-              SizedBox(height: 6.w),
+              // SizedBox(height: 6.w),
               Container(
-                // height: 54.w,
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
@@ -460,6 +499,12 @@ class _NewWalletPageState extends State<NewWalletPage>
                         duration: const Duration(milliseconds: 800),
                         curve: Curves.easeOutCubic,
                       );
+
+                      // init verify datas
+                      verifyInputs.value = [];
+                      var _t = _words.toList();
+                      _t.shuffle();
+                      verifyTabs.value = _t;
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: agreementChecked.value
@@ -512,18 +557,19 @@ class _NewWalletPageState extends State<NewWalletPage>
                       fontSize: 14.sp, color: Styles.infoGrayColor)),
               SizedBox(height: 20.w),
               Container(
+                width: double.infinity,
                 height: length == 12 ? 258.w : 285.w,
                 padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 12.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
                   color: const Color(0xFF303033),
                 ),
-                child: SingleChildScrollView(
-                  child: Wrap(
-                    direction: Axis.horizontal,
-                    children: _renderWord(),
-                  ),
-                ),
+                child: Obx(() => SingleChildScrollView(
+                      child: Wrap(
+                        direction: Axis.horizontal,
+                        children: _renderWordVerify(),
+                      ),
+                    )),
               ),
             ],
           ),
@@ -533,12 +579,12 @@ class _NewWalletPageState extends State<NewWalletPage>
           child: SizedBox(
             height: length == 12 ? 108.w : 133.w,
             // padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 12.w),
-            child: SingleChildScrollView(
-              child: Wrap(
-                direction: Axis.horizontal,
-                children: _renderWord4(),
-              ),
-            ),
+            child: Obx(() => SingleChildScrollView(
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    children: _renderWord4(),
+                  ),
+                )),
           ),
         ),
         const Expanded(child: SizedBox()),
@@ -552,6 +598,19 @@ class _NewWalletPageState extends State<NewWalletPage>
               height: 48.w,
               child: Obx(() => ElevatedButton(
                     onPressed: () {
+                      if (verifyInputs.length != length) {
+                        EasyLoading.showError(
+                            'Please fill in all the mnemonic words'.tr);
+                        return;
+                      }
+                      if (verifyInputs.join(' ') !=
+                          polkaWallet?.mnemonicPhrase) {
+                        EasyLoading.showError(
+                            'The mnemonic words you filled in are incorrect'
+                                .tr);
+                        return;
+                      }
+
                       AppNavigator.homepage();
                     },
                     style: ElevatedButton.styleFrom(
@@ -581,26 +640,34 @@ class _NewWalletPageState extends State<NewWalletPage>
 
   _renderWord4() {
     var array = <Widget>[];
-    for (var i = 0; i < length; i++) {
+    for (var i = 0; i < verifyTabs.length; i++) {
       array.add(
-        Container(
-          width: 60.w,
-          height: 32.w,
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(
-            right: (i + 1) % 4 == 0 ? 0 : 18.9.w,
-            bottom: 4.w,
+        GestureDetector(
+          onTap: () {
+            if (verifyInputs.length < length) {
+              verifyInputs.add(verifyTabs[i]);
+              verifyTabs.removeAt(i);
+            }
+          },
+          child: Container(
+            width: 60.w,
+            height: 32.w,
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(
+              right: (i + 1) % 4 == 0 ? 0 : 18.9.w,
+              bottom: 4.w,
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFF303033), width: 1.0),
+              borderRadius: BorderRadius.circular(4.r),
+              color: const Color(0xFF303033),
+            ),
+            child: Text(verifyTabs[i],
+                style: GoogleFonts.rubik(
+                  color: Styles.titleColor,
+                  fontSize: 12.sp,
+                )),
           ),
-          decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFF303033), width: 1.0),
-            borderRadius: BorderRadius.circular(4.r),
-            color: const Color(0xFF303033),
-          ),
-          child: Text(_words[i],
-              style: GoogleFonts.rubik(
-                color: Styles.titleColor,
-                fontSize: 12.sp,
-              )),
         ),
       );
     }
@@ -665,11 +732,6 @@ class _NewWalletPageState extends State<NewWalletPage>
                   }
                 },
               ),
-              // PageView(
-              //   scrollDirection: Axis.vertical,
-              //   controller: _createPageController,
-              //   children: <Widget>[createStep1(), createStep2(), createStep3()],
-              // ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
