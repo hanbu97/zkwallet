@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_rust_bridge_template/ffi.dart';
 import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
+import 'package:flutter_rust_bridge_template/widgets/agreements/encrypt_mnemonics.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -35,30 +37,37 @@ class _NewWalletPageState extends State<NewWalletPage>
   bool showConfirmPasswd = true;
 
   RxBool agreementChecked = false.obs;
+  RxBool encryptMnemonicChecked = false.obs;
+
+  late int length;
+  late String lang;
+  final passwd = TextEditingController();
+  final passwdConfirm = TextEditingController();
+
+  // create step
+  List<bool> completedCreateSteps = [false, false, false];
+  final createStep = 0.obs;
+  int _currentPage = 0;
+
+  PolkadotAddress? polkaWallet = null;
+
+  final _words = <String>[].obs;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-  }
 
-  var words = [
-    'acct',
-    'fdghj',
-    'yrea',
-    'nicke',
-    'ticket',
-    'happy',
-    'rooms',
-    'content',
-    'swaps',
-    'month',
-    'active',
-    'fleet',
-  ];
+    setState(() {
+      length = 12;
+      lang = 'English';
+    });
+  }
 
   _renderWord() {
     var array = <Widget>[];
+    final words = polkaWallet?.mnemonicPhrase.split(' ') ?? [];
+
     for (var i = 0; i < words.length; i++) {
       array.add(
         Container(
@@ -71,7 +80,7 @@ class _NewWalletPageState extends State<NewWalletPage>
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.r),
-            color: Colors.white,
+            color: const Color(0xFF222225),
           ),
           child: Text(words[i],
               style: GoogleFonts.rubik(
@@ -84,9 +93,495 @@ class _NewWalletPageState extends State<NewWalletPage>
     return array;
   }
 
+  Widget createStep1() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 32.w,
+        ),
+        Text('Create Wallet',
+            style: GoogleFonts.titilliumWeb(
+                fontSize: 32.sp,
+                fontWeight: FontWeight.w600,
+                color: Styles.mainColor)),
+        SizedBox(
+          height: 12.w,
+        ),
+        Text('Establish your new wallet.',
+            style: GoogleFonts.rubik(
+                fontSize: 14.sp, color: Styles.infoGrayColor)),
+        SizedBox(height: 20.w),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Mnemonics Length',
+                style: GoogleFonts.rubik(
+                  color: Styles.titleColor,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 12.w),
+              Container(
+                height: 54.w,
+                // padding: EdgeInsets.symmetric(horizontal: 16.w),
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  color: Styles.backgroundColor,
+                ),
+                child: SelectDown(
+                  dataSource: const ['12', '15', '18', '21', '24'],
+                  onChange: (val) => {
+                    setState(() {
+                      length = int.parse(val);
+                    })
+                  },
+                  defaultValue: '12',
+                ),
+              ),
+              SizedBox(height: 20.w),
+              Text(
+                'Mnemonics Language',
+                style: GoogleFonts.rubik(
+                    color: Styles.titleColor,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 12.w),
+              Container(
+                height: 54.w,
+                // padding: EdgeInsets.symmetric(horizontal: 16.w),
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  // color: Styles.mainWhiteBg,
+                ),
+                child: SelectDown(
+                  dataSource: const [
+                    'English',
+                    'ChineseSimplified',
+                    'ChineseTraditional',
+                    'French',
+                    'Italian',
+                    'Japanese',
+                    'Korean',
+                    'Spanish'
+                  ],
+                  onChange: (val) => {
+                    setState(() {
+                      lang = val;
+                    })
+                  },
+                  defaultValue: 'English',
+                ),
+              ),
+              SizedBox(height: 20.w),
+              Text(
+                'Wallet Password',
+                style: GoogleFonts.rubik(
+                    color: Styles.titleColor,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 12.w),
+              Container(
+                height: 54.w,
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  color: Styles.backgroundColor,
+                ),
+                child: TextField(
+                  controller: passwd,
+                  style: TextStyle(
+                    color: Styles.titleColor,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  obscureText: showPasswd,
+                  decoration: InputDecoration(
+                    fillColor: Colors.transparent,
+                    filled: true,
+                    hintText: 'Letters, numbers, min 8 chars',
+                    hintStyle: TextStyle(
+                      color: Styles.infoGrayColor,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    contentPadding: EdgeInsets.only(),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    suffixIcon: IconButton(
+                      splashColor: Colors.transparent,
+                      icon: Icon(
+                        // Choose appropriately between 'visibility_off' and 'visibility'
+                        showPasswd ? Icons.visibility_off : Icons.visibility,
+                        color: Styles.infoGrayColor,
+                      ),
+                      onPressed: () {
+                        // Toggle password visibility
+                        setState(() {
+                          showPasswd = !showPasswd;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 6.w),
+              Container(
+                // height: 54.w,
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  color: Styles.backgroundColor,
+                ),
+                child: TextField(
+                  controller: passwdConfirm,
+                  style: TextStyle(
+                    color: Styles.titleColor,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  obscureText: showConfirmPasswd,
+                  decoration: InputDecoration(
+                    fillColor: Colors.transparent,
+                    filled: true,
+                    hintText: 'Password confirm',
+                    hintStyle: TextStyle(
+                      color: Styles.infoGrayColor,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    contentPadding: EdgeInsets.only(),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    suffixIcon: IconButton(
+                      splashColor: Colors.transparent,
+                      icon: Icon(
+                        // Choose appropriately between 'visibility_off' and 'visibility'
+                        showPasswd ? Icons.visibility_off : Icons.visibility,
+                        color: Styles.infoGrayColor,
+                      ),
+                      onPressed: () {
+                        // Toggle password visibility
+                        setState(() {
+                          showConfirmPasswd = !showConfirmPasswd;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              // SizedBox(height: 20.w),
+              EncryptMnemonicsWidget(
+                initAgree: encryptMnemonicChecked,
+              ),
+            ],
+          ),
+        ),
+        const Expanded(child: SizedBox()),
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 28.w),
+            child: SizedBox(
+              // height: 200.h,
+              width: 1000.w,
+              // height: 48.w,
+              child: Obx(() => Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CreateWalletAgreementWidget(
+                        initAgree: agreementChecked,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48.w,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (agreementChecked.value) {
+                              if (passwd.text != passwdConfirm.text) {
+                                EasyLoading.showError("Password not match".tr);
+                                return;
+                              }
+                              if (passwd.text.length < 8) {
+                                EasyLoading.showError(
+                                    "Password length must be greater than 8"
+                                        .tr);
+                                return;
+                              }
+
+                              final data = await api.generateWallet(
+                                  ss58: 137,
+                                  password: encryptMnemonicChecked.value
+                                      ? passwd.text
+                                      : null,
+                                  length: length,
+                                  lang: lang);
+
+                              _words.value = data.mnemonicPhrase.split(' ');
+
+                              setState(() {
+                                polkaWallet = data;
+                              });
+
+                              // LogUtil.debug(polkaWallet?.address);
+                              // LogUtil.debug(polkaWallet?.miniSecretKey);
+                              // LogUtil.debug(polkaWallet?.publicKey);
+                              // LogUtil.debug(polkaWallet?.mnemonicPhrase);
+
+                              completedCreateSteps[0] = true;
+                              _createPageController.nextPage(
+                                duration: const Duration(milliseconds: 800),
+                                curve: Curves.easeOutCubic,
+                              );
+                            } else {
+                              EasyLoading.showError(
+                                  "Please tick the agreement before continue to complete the next"
+                                      .tr);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: agreementChecked.value
+                                ? Styles.mainColor
+                                : Styles.mainColor.withOpacity(0.5),
+                            textStyle: GoogleFonts.rubik(fontSize: 18.sp),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.w),
+                            ),
+                          ),
+                          child: const Text(
+                            'NEXT',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      )
+                    ],
+                  )),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 32.w,
+        ),
+      ],
+    );
+  }
+
+  Widget createStep2() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 32.w,
+              ),
+              Text('Note it Down',
+                  style: GoogleFonts.titilliumWeb(
+                      fontSize: 25.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Styles.mainColor)),
+              SizedBox(
+                height: 12.w,
+              ),
+              Text(
+                  "Dont't take screenshots to save the seed phrase. You can write down the words in order and keep them stored safely.",
+                  style: GoogleFonts.rubik(
+                      fontSize: 14.sp, color: Styles.infoGrayColor)),
+              SizedBox(height: 20.w),
+              Container(
+                height: length == 12 ? 258.w : 285.w,
+                padding: EdgeInsets.only(
+                    left: 20.w, right: 20.w, top: 20.w, bottom: 12.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  color: const Color(0xFF303033),
+                ),
+                child: SingleChildScrollView(
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    children: _renderWord(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Expanded(child: SizedBox()),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+                onPressed: () {
+                  Clipboard.setData(
+                      ClipboardData(text: polkaWallet?.mnemonicPhrase ?? ''));
+                  Get.snackbar('Create Wallet', 'Copied to clipboard',
+                      colorText: Colors.white);
+                },
+                child: Text(
+                  'Copy Mnemonics to clipboard',
+                  style: GoogleFonts.rubik(
+                      fontSize: 12.sp, color: Styles.mainColor),
+                )),
+          ],
+        ),
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 28.w),
+            child: SizedBox(
+              // height: 200.h,
+              width: 1000.w,
+              height: 48.w,
+              child: Obx(() => ElevatedButton(
+                    onPressed: () {
+                      completedCreateSteps[1] = true;
+                      _createPageController.nextPage(
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.easeOutCubic,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: agreementChecked.value
+                          ? Styles.mainColor
+                          : Styles.mainColor.withOpacity(0.5),
+                      textStyle: GoogleFonts.rubik(fontSize: 18.sp),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.w),
+                      ),
+                    ),
+                    child: const Text(
+                      'Verify Backup',
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w500),
+                    ),
+                  )),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 32.w,
+        ),
+      ],
+    );
+  }
+
+  Widget createStep3() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 32.w,
+              ),
+              Text('Verify Backup',
+                  style: GoogleFonts.titilliumWeb(
+                      fontSize: 25.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Styles.mainColor)),
+              SizedBox(
+                height: 12.w,
+              ),
+              Text(
+                  "Please select and fill in the mnemonic words in the order you've written down.",
+                  style: GoogleFonts.rubik(
+                      fontSize: 14.sp, color: Styles.infoGrayColor)),
+              SizedBox(height: 20.w),
+              Container(
+                height: length == 12 ? 258.w : 285.w,
+                padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 12.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  color: const Color(0xFF303033),
+                ),
+                child: SingleChildScrollView(
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    children: _renderWord(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 20.w),
+        Center(
+          child: SizedBox(
+            height: length == 12 ? 108.w : 133.w,
+            // padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 12.w),
+            child: SingleChildScrollView(
+              child: Wrap(
+                direction: Axis.horizontal,
+                children: _renderWord4(),
+              ),
+            ),
+          ),
+        ),
+        const Expanded(child: SizedBox()),
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 28.w),
+            child: SizedBox(
+              // height: 200.h,
+              width: 1000.w,
+              height: 48.w,
+              child: Obx(() => ElevatedButton(
+                    onPressed: () {
+                      AppNavigator.homepage();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: agreementChecked.value
+                          ? Styles.mainColor
+                          : Styles.mainColor.withOpacity(0.5),
+                      textStyle: GoogleFonts.rubik(fontSize: 18.sp),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.w),
+                      ),
+                    ),
+                    child: const Text(
+                      'Confirm',
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w500),
+                    ),
+                  )),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 32.w,
+        ),
+      ],
+    );
+  }
+
   _renderWord4() {
     var array = <Widget>[];
-    for (var i = 0; i < words.length; i++) {
+    for (var i = 0; i < length; i++) {
       array.add(
         Container(
           width: 60.w,
@@ -97,14 +592,14 @@ class _NewWalletPageState extends State<NewWalletPage>
             bottom: 4.w,
           ),
           decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFDFDFDF), width: 1.0),
+            border: Border.all(color: const Color(0xFF303033), width: 1.0),
             borderRadius: BorderRadius.circular(4.r),
-            color: Colors.white,
+            color: const Color(0xFF303033),
           ),
-          child: Text(words[i],
+          child: Text(_words[i],
               style: GoogleFonts.rubik(
                 color: Styles.titleColor,
-                fontSize: 15.sp,
+                fontSize: 12.sp,
               )),
         ),
       );
@@ -152,433 +647,29 @@ class _NewWalletPageState extends State<NewWalletPage>
               child: TabBarView(
             controller: _tabController,
             children: <Widget>[
-              PageView(
+              PageView.builder(
                 scrollDirection: Axis.vertical,
                 controller: _createPageController,
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 32.w,
-                      ),
-                      Text('Create Wallet',
-                          style: GoogleFonts.titilliumWeb(
-                              fontSize: 32.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Styles.mainColor)),
-                      SizedBox(
-                        height: 12.w,
-                      ),
-                      Text('Establish your new wallet.',
-                          style: GoogleFonts.rubik(
-                              fontSize: 14.sp, color: Styles.infoGrayColor)),
-                      SizedBox(height: 20.w),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Mnemonics Length',
-                              style: GoogleFonts.rubik(
-                                color: Styles.titleColor,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: 12.w),
-                            Container(
-                              height: 54.w,
-                              // padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.r),
-                                color: Styles.backgroundColor,
-                              ),
-                              child: SelectDown(
-                                dataSource: ['12', '16', '28'],
-                                onChange: (val) => {print(val)},
-                                defaultValue: '12',
-                              ),
-                            ),
-                            SizedBox(height: 20.w),
-                            Text(
-                              'Mnemonics Language',
-                              style: GoogleFonts.rubik(
-                                  color: Styles.titleColor,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(height: 12.w),
-                            Container(
-                              height: 54.w,
-                              // padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.r),
-                                // color: Styles.mainWhiteBg,
-                              ),
-                              child: SelectDown(
-                                dataSource: ['English', '中文'],
-                                onChange: (val) => {print(val)},
-                                defaultValue: 'English',
-                              ),
-                            ),
-                            SizedBox(height: 20.w),
-                            Text(
-                              'Wallet Password',
-                              style: GoogleFonts.rubik(
-                                  color: Styles.titleColor,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(height: 12.w),
-                            Container(
-                              height: 54.w,
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.r),
-                                color: Styles.backgroundColor,
-                              ),
-                              child: TextField(
-                                style: TextStyle(
-                                  color: Styles.titleColor,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                obscureText: showPasswd,
-                                decoration: InputDecoration(
-                                  fillColor: Colors.transparent,
-                                  filled: true,
-                                  hintText: 'Letters, numbers, min 8 chars',
-                                  hintStyle: TextStyle(
-                                    color: Styles.infoGrayColor,
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  contentPadding: EdgeInsets.only(),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    splashColor: Colors.transparent,
-                                    icon: Icon(
-                                      // Choose appropriately between 'visibility_off' and 'visibility'
-                                      showPasswd
-                                          ? Icons.visibility_off
-                                          : Icons.visibility,
-                                      color: Styles.infoGrayColor,
-                                    ),
-                                    onPressed: () {
-                                      // Toggle password visibility
-                                      setState(() {
-                                        showPasswd = !showPasswd;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 12.w),
-                            Container(
-                              // height: 54.w,
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.r),
-                                color: Styles.backgroundColor,
-                              ),
-                              child: TextField(
-                                style: TextStyle(
-                                  color: Styles.titleColor,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                obscureText: showConfirmPasswd,
-                                decoration: InputDecoration(
-                                  fillColor: Colors.transparent,
-                                  filled: true,
-                                  hintText: 'Password confirm',
-                                  hintStyle: TextStyle(
-                                    color: Styles.infoGrayColor,
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  // contentPadding: EdgeInsets.only(),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    splashColor: Colors.transparent,
-                                    icon: Icon(
-                                      // Choose appropriately between 'visibility_off' and 'visibility'
-                                      showPasswd
-                                          ? Icons.visibility_off
-                                          : Icons.visibility,
-                                      color: Styles.infoGrayColor,
-                                    ),
-                                    onPressed: () {
-                                      // Toggle password visibility
-                                      setState(() {
-                                        showConfirmPasswd = !showConfirmPasswd;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 20.w),
-                            CreateWalletAgreementWidget(
-                              initAgree: agreementChecked,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Expanded(child: SizedBox()),
-                      SafeArea(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 28.w),
-                          child: SizedBox(
-                            // height: 200.h,
-                            width: 1000.w,
-                            height: 48.w,
-                            child: Obx(() => ElevatedButton(
-                                  onPressed: () async {
-                                    final data = await api.generateWallet(
-                                        ss58: 137,
-                                        password: null,
-                                        length: 12,
-                                        lang: 'English');
-
-                                    LogUtil.debug(data.address);
-                                    LogUtil.debug(data.miniSecretKey);
-                                    LogUtil.debug(data.publicKey);
-                                    LogUtil.debug(data.mnemonicPhrase);
-
-                                    // if (agreementChecked.value) {
-                                    //   // showNoticePopup(context);
-                                    //   _createPageController.nextPage(
-                                    //     duration:
-                                    //         const Duration(milliseconds: 800),
-                                    //     curve: Curves.easeOutCubic,
-                                    //   );
-                                    // } else {
-                                    //   EasyLoading.showError(
-                                    //       "Please tick the agreement before continue to complete the next"
-                                    //           .tr);
-                                    // }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: agreementChecked.value
-                                        ? Styles.mainColor
-                                        : Styles.mainColor.withOpacity(0.5),
-                                    textStyle:
-                                        GoogleFonts.rubik(fontSize: 18.sp),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.w),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    'NEXT',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                )),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 32.w,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 32.w,
-                            ),
-                            Text('Note it Down',
-                                style: GoogleFonts.titilliumWeb(
-                                    fontSize: 25.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Styles.mainColor)),
-                            SizedBox(
-                              height: 12.w,
-                            ),
-                            Text(
-                                "Dont't take screenshots to save the seed phrase. You can write down the words in order and keep them stored safely.",
-                                style: GoogleFonts.rubik(
-                                    fontSize: 14.sp,
-                                    color: Styles.infoGrayColor)),
-                            SizedBox(height: 20.w),
-                            Container(
-                              padding: EdgeInsets.only(
-                                  left: 20.w, right: 20.w, top: 12.w),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.r),
-                                color: const Color(0xFFEFF3F6),
-                              ),
-                              child: Wrap(
-                                direction: Axis.horizontal,
-                                children: _renderWord(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Expanded(child: SizedBox()),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                'Copy Mnemonics to clipboard',
-                                style: GoogleFonts.rubik(
-                                    fontSize: 12.sp, color: Styles.mainColor),
-                              )),
-                        ],
-                      ),
-                      SafeArea(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 28.w),
-                          child: SizedBox(
-                            // height: 200.h,
-                            width: 1000.w,
-                            height: 48.w,
-                            child: Obx(() => ElevatedButton(
-                                  onPressed: () {
-                                    if (agreementChecked.value) {
-                                      // showNoticePopup(context);
-                                      _createPageController.nextPage(
-                                        duration:
-                                            const Duration(milliseconds: 800),
-                                        curve: Curves.easeOutCubic,
-                                      );
-                                    } else {
-                                      EasyLoading.showError(
-                                          "Please tick the agreement before continue to complete the next"
-                                              .tr);
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: agreementChecked.value
-                                        ? Styles.mainColor
-                                        : Styles.mainColor.withOpacity(0.5),
-                                    textStyle:
-                                        GoogleFonts.rubik(fontSize: 18.sp),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.w),
-                                    ),
-                                  ),
-                                  child: const Text('Verify Backup'),
-                                )),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 32.w,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 32.w,
-                            ),
-                            Text('Verify Backup',
-                                style: GoogleFonts.titilliumWeb(
-                                    fontSize: 25.sp,
-                                    fontWeight: FontWeight.w600)),
-                            SizedBox(
-                              height: 12.w,
-                            ),
-                            Text(
-                                "Please select and fill in the mnemonic words in the order you've written down.",
-                                style: GoogleFonts.rubik(
-                                    fontSize: 14.sp,
-                                    color: const Color.fromARGB(
-                                        255, 133, 140, 173))),
-                            SizedBox(height: 20.w),
-                            Container(
-                              padding: EdgeInsets.only(
-                                  left: 20.w, right: 20.w, top: 12.w),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.r),
-                                color: const Color(0xFFEFF3F6),
-                              ),
-                              child: Wrap(
-                                direction: Axis.horizontal,
-                                children: _renderWord(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 12.w),
-                      Center(
-                        child: Wrap(
-                          direction: Axis.horizontal,
-                          children: _renderWord4(),
-                        ),
-                      ),
-                      const Expanded(child: SizedBox()),
-                      SafeArea(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 28.w),
-                          child: SizedBox(
-                            // height: 200.h,
-                            width: 1000.w,
-                            height: 48.w,
-                            child: Obx(() => ElevatedButton(
-                                  onPressed: () {
-                                    AppNavigator.homepage();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: agreementChecked.value
-                                        ? Styles.mainColor
-                                        : Styles.mainColor.withOpacity(0.5),
-                                    textStyle:
-                                        GoogleFonts.rubik(fontSize: 18.sp),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.w),
-                                    ),
-                                  ),
-                                  child: const Text('Confirm'),
-                                )),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 32.w,
-                      ),
-                    ],
-                  ),
-                ],
+                itemBuilder: (context, index) {
+                  switch (index) {
+                    case 0:
+                      return createStep1();
+                    case 1:
+                      if (completedCreateSteps[0]) {
+                        return createStep2();
+                      }
+                    case 2:
+                      if (completedCreateSteps[1]) {
+                        return createStep3();
+                      }
+                  }
+                },
               ),
+              // PageView(
+              //   scrollDirection: Axis.vertical,
+              //   controller: _createPageController,
+              //   children: <Widget>[createStep1(), createStep2(), createStep3()],
+              // ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

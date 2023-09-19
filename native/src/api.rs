@@ -227,3 +227,12 @@ pub fn generate_wallet(
     let data = crate::wallet::mnemonics::generate_wallet(ss58, password, length, lang);
     data
 }
+
+#[test]
+fn test_generate_wallet() {
+    let data = generate_wallet(42, None, 12, "English".to_string());
+    println!("data: {:?}", data);
+
+    let data = generate_wallet(137, None, 24, "ChineseSimplified".to_string());
+    println!("data: {:?}", data);
+}
