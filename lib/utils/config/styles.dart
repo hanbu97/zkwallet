@@ -8,6 +8,8 @@ class Styles {
   static Color backgroundColor = Colors.black;
 
   static Color mainColor = const Color(0xFF00FFC4);
+  static Color mainColorDark = const Color(0xff00AA83);
+
   static Color mainInactive = const Color(0xff1F1F1F);
 
   static Color titleColor = const Color(0xFF00FFC4);

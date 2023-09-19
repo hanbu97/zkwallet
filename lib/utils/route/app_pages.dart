@@ -1,3 +1,5 @@
+import 'package:flutter_rust_bridge_template/screens/home/main/binding.dart';
+import 'package:flutter_rust_bridge_template/screens/home/main/screen.dart';
 import 'package:flutter_rust_bridge_template/screens/onboarding/binding.dart';
 import 'package:flutter_rust_bridge_template/screens/onboarding/screen.dart';
 import 'package:get/get.dart';
@@ -39,6 +41,11 @@ class AppPages {
       name: AppRoutes.newWallet,
       page: () => NewWalletPage(),
       binding: NewWalletBinding(),
+    ),
+    _pageBuilder(
+      name: AppRoutes.home,
+      page: () => HomePage(),
+      binding: HomeBinding(),
     ),
   ];
 }

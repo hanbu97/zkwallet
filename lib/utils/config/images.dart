@@ -15,11 +15,11 @@ class ImageRes {
   // static const tgLoginAirPlane = "$_dir/login_airplane.tgs";
   // static const tgCodeNote = "$_dir/code_note.tgs";
 
-  // // icons
-  // static const iconCategory = "$_dir/icon/Category.png";
-  // static const iconDownload = "$_dir/icon/Download.png";
-  // static const iconSwap = "$_dir/icon/Swap.png";
-  // static const iconUpload = "$_dir/icon/Upload.png";
+  // icons
+  static const iconCategory = "$_dir/icon/Category.png";
+  static const iconDownload = "$_dir/icon/Download.png";
+  static const iconSwap = "$_dir/icon/Swap.png";
+  static const iconUpload = "$_dir/icon/Upload.png";
 
   // // template image
   // static const templeteUser = "$_dir/templete_user.png";

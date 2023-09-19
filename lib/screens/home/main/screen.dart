@@ -1,98 +1,133 @@
-// import 'package:bottom_bar_with_sheet/bottom_bar_with_sheet.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:bottom_bar_with_sheet/bottom_bar_with_sheet.dart';
+import 'package:expand_tap_area/expand_tap_area.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_rust_bridge_template/screens/home/wallet/screen.dart';
+import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// import '../../../utils/config/styles.dart';
+import '../../../utils/config/styles.dart';
 
-// // import '../../res/styles_new.dart';
-// // import '../../widget/bottom_bar.dart';
-// // import '../chats/chats_view.dart';
-// // import '../events/events_view.dart';
-// // import '../menu/menu_view.dart';
-// // import '../discover/discover_view.dart';
-// // import 'home_logic.dart';
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-// class HomePage extends StatefulWidget {
-//   const HomePage({super.key});
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
-//   @override
-//   State<HomePage> createState() => _HomePageState();
-// }
+class _HomePageState extends State<HomePage> {
+  var tabIndex = 0.obs;
+  final _bottomBarController = BottomBarWithSheetController(initialIndex: 0);
 
-// class _HomePageState extends State<HomePage> {
-//   var tabIndex = 0.obs;
-//   final _bottomBarController = BottomBarWithSheetController(initialIndex: 0);
+  @override
+  Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Obx(() => Scaffold(
-//           backgroundColor: Styles.backgroundColor,
-//           body: IndexedStack(
-//             index: tabIndex.value,
-//             // children: [ChatsPage(), EventsPage(), DiscoverPage(), MenuPage()],
-//             children: [
-//               Container(),
-//               Container(),
-//               Container(),
-//               Container(),
-//             ],
-//           ),
-//           bottomNavigationBar: BottomBarWithSheet(
-//             controller: _bottomBarController,
-//             bottomBarTheme: BottomBarTheme(
-//               mainButtonPosition: MainButtonPosition.middle,
-//               selectedItemIconSize: 24.w,
-//               itemIconSize: 24.w,
-//               selectedItemIconColor: tpStyles.mainColor,
-//               decoration: BoxDecoration(
-//                 color: Colors.white,
-//                 borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-//                 boxShadow: [
-//                   BoxShadow(
-//                     color: Colors.grey.withOpacity(0.2),
-//                     spreadRadius: 5,
-//                     blurRadius: 7,
-//                     offset: Offset(0, 0), // changes position of shadow0
-//                   ),
-//                 ],
-//               ),
-//               itemIconColor: Colors.grey,
-//               itemTextStyle: TextStyle(
-//                 color: tpStyles.mainInactive,
-//                 fontSize: 10.0,
-//               ),
-//               selectedItemTextStyle: TextStyle(
-//                 color: tpStyles.mainColor,
-//                 fontSize: 10.w,
-//               ),
-//             ),
-//             onSelectItem: (index) => {tabIndex.value = index},
-//             sheetChild: Center(
-//               child: Text(
-//                 "Another content",
-//                 style: TextStyle(
-//                   color: Colors.grey[600],
-//                   fontSize: 20.sp,
-//                   fontWeight: FontWeight.w900,
-//                 ),
-//               ),
-//             ),
-//             mainActionButtonTheme: MainActionButtonTheme(
-//                 icon: Icon(Icons.grid_view_rounded,
-//                     size: 30.w, color: Colors.white),
-//                 margin:
-//                     EdgeInsets.only(top: 5, bottom: 5, left: 13.w, right: 13.w),
-//                 color: tpStyles.mainColor),
-//             items: const [
-//               BottomBarWithSheetItem(
-//                 icon: Icons.message_outlined,
-//               ),
-//               BottomBarWithSheetItem(icon: Icons.newspaper_outlined),
-//               BottomBarWithSheetItem(icon: Icons.explore_outlined),
-//               BottomBarWithSheetItem(icon: Icons.person_2_outlined),
-//             ],
-//           ),
-//         ));
-//   }
-// }
+    return Scaffold(
+      backgroundColor: Styles.backgroundColor,
+      body: Obx(
+        () => IndexedStack(
+          index: tabIndex.value,
+          // children: [ChatsPage(), EventsPage(), DiscoverPage(), MenuPage()],
+          children: [
+            WalletPage(),
+            Container(),
+            Container(),
+            Container(),
+            Container(),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xff1A1A1A),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.w)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 0),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(
+              top: 10.w,
+              left: 10.w,
+              right: 10.w,
+              bottom: mq.padding.bottom < 10.w ? 10.w : mq.padding.bottom),
+          child: Obx(() => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => tabIndex.value = 0,
+                    child: Icon(
+                      Icons.account_balance_wallet_sharp,
+                      color: tabIndex.value == 0
+                          ? Styles.mainColor
+                          : Styles.infoGrayColor,
+                      size: 30.w,
+                    ),
+                  ),
+                  ExpandTapWidget(
+                    tapPadding: EdgeInsets.all(20.w),
+                    onTap: () => tabIndex.value = 1,
+                    child: Icon(
+                      Icons.image_outlined,
+                      color: tabIndex.value == 1
+                          ? Styles.mainColor
+                          : Styles.infoGrayColor,
+                      size: 30.w,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => tabIndex.value = 2,
+                    onLongPress: () => {
+                      // Get.to(() => const ScheduleSearch())
+                    },
+                    child: Container(
+                      width: 50.w,
+                      height: 50.w,
+                      decoration: BoxDecoration(
+                        color: tabIndex.value == 2
+                            ? Styles.mainColor
+                            : Styles.mainColor.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(24.w),
+                      ),
+                      child: Icon(
+                        Icons.grid_view_rounded,
+                        color: const Color(0xff1A1A1A),
+                        size: 30.w,
+                      ),
+                    ),
+                  ),
+                  ExpandTapWidget(
+                    tapPadding: EdgeInsets.all(20.w),
+                    onTap: () => tabIndex.value = 3,
+                    child: Icon(
+                      Icons.manage_accounts,
+                      color: tabIndex.value == 3
+                          ? Styles.mainColor
+                          : Styles.infoGrayColor,
+                      size: 30.w,
+                    ),
+                  ),
+                  ExpandTapWidget(
+                    tapPadding: EdgeInsets.all(20.w),
+                    onTap: () => tabIndex.value = 4,
+                    child: Icon(
+                      Icons.person_2_outlined,
+                      color: tabIndex.value == 4
+                          ? Styles.mainColor
+                          : Styles.infoGrayColor,
+                      size: 30.w,
+                    ),
+                  ),
+                ],
+              )),
+        ),
+      ),
+    );
+  }
+}

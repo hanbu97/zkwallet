@@ -598,18 +598,18 @@ class _NewWalletPageState extends State<NewWalletPage>
               height: 48.w,
               child: Obx(() => ElevatedButton(
                     onPressed: () {
-                      if (verifyInputs.length != length) {
-                        EasyLoading.showError(
-                            'Please fill in all the mnemonic words'.tr);
-                        return;
-                      }
-                      if (verifyInputs.join(' ') !=
-                          polkaWallet?.mnemonicPhrase) {
-                        EasyLoading.showError(
-                            'The mnemonic words you filled in are incorrect'
-                                .tr);
-                        return;
-                      }
+                      // if (verifyInputs.length != length) {
+                      //   EasyLoading.showError(
+                      //       'Please fill in all the mnemonic words'.tr);
+                      //   return;
+                      // }
+                      // if (verifyInputs.join(' ') !=
+                      //     polkaWallet?.mnemonicPhrase) {
+                      //   EasyLoading.showError(
+                      //       'The mnemonic words you filled in are incorrect'
+                      //           .tr);
+                      //   return;
+                      // }
 
                       AppNavigator.homepage();
                     },

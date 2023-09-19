@@ -58,6 +58,7 @@ dependencies:
   google_fonts: ^6.0.0
   dropdown_button2: ^2.3.9
   bottom_bar_with_sheet: ^2.4.0
+  expand_tap_area: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +87,8 @@ flutter:
   assets:
     - assets/images/
     - assets/images/icons/
+    - assets/images/icon/
+    - assets/images/menu/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
