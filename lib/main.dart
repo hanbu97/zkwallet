@@ -1,32 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
+import 'package:flutter_rust_bridge_template/utils/route/app_view.dart';
+import 'package:get/get.dart';
 import 'ffi.dart' if (dart.library.html) 'ffi_web.dart';
+import 'utils/config/config.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
-  runApp(const MyApp());
+  Config.init(() => runApp(const ZkTransferApp()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class ZkTransferApp extends StatelessWidget {
+  const ZkTransferApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+    return AppView(
+        builder: (locale, builder) => GetMaterialApp(
+              debugShowCheckedModeBanner: false,
+              debugShowMaterialGrid: false,
+              enableLog: true,
+              builder: builder,
+              logWriterCallback: LogUtil.debug,
+              // translations: TranslationService(),
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                // DefaultCupertinoLocalizations.delegate,
+              ],
+              // fallbackLocale: TranslationService.fallbackLocale,s
+              locale: locale,
+              title: 'zkTransfer',
+              theme: ThemeData(
+                // This is the theme of your application.
+                //
+                // Try running your application with "flutter run". You'll see the
+                // application has a blue toolbar. Then, without quitting the app, try
+                // changing the primarySwatch below to Colors.green and then invoke
+                // "hot reload" (press "r" in the console where you ran "flutter run",
+                // or simply save your changes to "hot reload" in a Flutter IDE).
+                // Notice that the counter didn't reset back to zero; the application
+                // is not restarted.
+                primarySwatch: Colors.blue,
+              ),
+              home: const MyHomePage(title: 'Flutter Demo Home Page'),
+            ));
   }
 }
 
