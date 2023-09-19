@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_rust_bridge_template/ffi.dart';
+import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -305,7 +309,7 @@ class _NewWalletPageState extends State<NewWalletPage>
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  contentPadding: EdgeInsets.only(),
+                                  // contentPadding: EdgeInsets.only(),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Colors.transparent),
@@ -349,19 +353,30 @@ class _NewWalletPageState extends State<NewWalletPage>
                             width: 1000.w,
                             height: 48.w,
                             child: Obx(() => ElevatedButton(
-                                  onPressed: () {
-                                    if (agreementChecked.value) {
-                                      // showNoticePopup(context);
-                                      _createPageController.nextPage(
-                                        duration:
-                                            const Duration(milliseconds: 800),
-                                        curve: Curves.easeOutCubic,
-                                      );
-                                    } else {
-                                      EasyLoading.showError(
-                                          "Please tick the agreement before continue to complete the next"
-                                              .tr);
-                                    }
+                                  onPressed: () async {
+                                    final data = await api.generateWallet(
+                                        ss58: 137,
+                                        password: null,
+                                        length: 12,
+                                        lang: 'English');
+
+                                    LogUtil.debug(data.address);
+                                    LogUtil.debug(data.miniSecretKey);
+                                    LogUtil.debug(data.publicKey);
+                                    LogUtil.debug(data.mnemonicPhrase);
+
+                                    // if (agreementChecked.value) {
+                                    //   // showNoticePopup(context);
+                                    //   _createPageController.nextPage(
+                                    //     duration:
+                                    //         const Duration(milliseconds: 800),
+                                    //     curve: Curves.easeOutCubic,
+                                    //   );
+                                    // } else {
+                                    //   EasyLoading.showError(
+                                    //       "Please tick the agreement before continue to complete the next"
+                                    //           .tr);
+                                    // }
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: agreementChecked.value
@@ -402,7 +417,8 @@ class _NewWalletPageState extends State<NewWalletPage>
                             Text('Note it Down',
                                 style: GoogleFonts.titilliumWeb(
                                     fontSize: 25.sp,
-                                    fontWeight: FontWeight.w600)),
+                                    fontWeight: FontWeight.w600,
+                                    color: Styles.mainColor)),
                             SizedBox(
                               height: 12.w,
                             ),
@@ -410,8 +426,7 @@ class _NewWalletPageState extends State<NewWalletPage>
                                 "Dont't take screenshots to save the seed phrase. You can write down the words in order and keep them stored safely.",
                                 style: GoogleFonts.rubik(
                                     fontSize: 14.sp,
-                                    color: const Color.fromARGB(
-                                        255, 133, 140, 173))),
+                                    color: Styles.infoGrayColor)),
                             SizedBox(height: 20.w),
                             Container(
                               padding: EdgeInsets.only(

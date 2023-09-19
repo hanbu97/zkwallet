@@ -22,9 +22,14 @@ abstract class Native {
 
   FlutterRustBridgeTaskConstMeta get kMultiplyZkConstMeta;
 
-  Future<(String, String)> pwdAndLs({dynamic hint});
+  Future<PolkadotAddress> generateWallet(
+      {required int ss58,
+      String? password,
+      required int length,
+      required String lang,
+      dynamic hint});
 
-  FlutterRustBridgeTaskConstMeta get kPwdAndLsConstMeta;
+  FlutterRustBridgeTaskConstMeta get kGenerateWalletConstMeta;
 }
 
 enum Platform {
@@ -36,4 +41,18 @@ enum Platform {
   MacIntel,
   MacApple,
   Wasm,
+}
+
+class PolkadotAddress {
+  final String mnemonicPhrase;
+  final String miniSecretKey;
+  final String publicKey;
+  final String address;
+
+  const PolkadotAddress({
+    required this.mnemonicPhrase,
+    required this.miniSecretKey,
+    required this.publicKey,
+    required this.address,
+  });
 }

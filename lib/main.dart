@@ -168,10 +168,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
             TextButton(
                 onPressed: () async {
-                  final tt = await api.pwdAndLs();
-
-                  control3.text = tt.$1.toString();
-                  control4.text = tt.$2.toString();
+                  // control3.text = tt.$1.toString();
+                  // control4.text = tt.$2.toString();
 
                   // control3.text = (in1 * in2).toString();
                 },

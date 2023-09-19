@@ -2,6 +2,8 @@
 // When adding new code to your project, note that only items used
 // here will be transformed to their Dart equivalents.
 
+use crate::wallet::mnemonics::PolkadotAddress;
+
 // A plain enum without any fields. This is similar to Dart- or C-style enums.
 // flutter_rust_bridge is capable of generating code for enums with fields
 // (@freezed classes in Dart and tagged unions in C).
@@ -182,15 +184,46 @@ pub fn multiply_zk(a: i32, b: i32) -> (String, String) {
     (format!("{:?}", inputs), format!("{:?}", proof))
 }
 
-pub fn pwd_and_ls() -> (String, String) {
-    use std::process::Command;
-    let pwd = Command::new("pwd")
-        .output()
-        .expect("failed to execute process");
-    let ls = Command::new("ls")
-        .output()
-        .expect("failed to execute process");
-    let pwd = String::from_utf8(pwd.stdout).unwrap();
-    let ls = String::from_utf8(ls.stdout).unwrap();
-    (pwd, ls)
+// pub fn pwd_and_ls() -> (String, String) {
+//     use std::process::Command;
+//     let pwd = Command::new("pwd")
+//         .output()
+//         .expect("failed to execute process");
+//     let ls = Command::new("ls")
+//         .output()
+//         .expect("failed to execute process");
+//     let pwd = String::from_utf8(pwd.stdout).unwrap();
+//     let ls = String::from_utf8(ls.stdout).unwrap();
+//     (pwd, ls)
+// }
+
+pub fn generate_wallet(
+    ss58: u16,
+    password: Option<String>,
+    length: u8,
+    lang: String,
+) -> PolkadotAddress {
+    let length = match length {
+        12 => bip39::MnemonicType::Words12,
+        15 => bip39::MnemonicType::Words15,
+        18 => bip39::MnemonicType::Words18,
+        21 => bip39::MnemonicType::Words21,
+        24 => bip39::MnemonicType::Words24,
+        _ => bip39::MnemonicType::Words12,
+    };
+
+    let lang = match lang.as_str() {
+        "English" => bip39::Language::English,
+        "ChineseSimplified" => bip39::Language::ChineseSimplified,
+        "ChineseTraditional" => bip39::Language::ChineseTraditional,
+        "French" => bip39::Language::French,
+        "Italian" => bip39::Language::Italian,
+        "Japanese" => bip39::Language::Japanese,
+        "Korean" => bip39::Language::Korean,
+        "Spanish" => bip39::Language::Spanish,
+        _ => bip39::Language::English,
+    };
+
+    let data = crate::wallet::mnemonics::generate_wallet(ss58, password, length, lang);
+    data
 }

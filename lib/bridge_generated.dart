@@ -80,21 +80,31 @@ class NativeImpl implements Native {
         argNames: ["a", "b"],
       );
 
-  Future<(String, String)> pwdAndLs({dynamic hint}) {
+  Future<PolkadotAddress> generateWallet(
+      {required int ss58,
+      String? password,
+      required int length,
+      required String lang,
+      dynamic hint}) {
+    var arg0 = api2wire_u16(ss58);
+    var arg1 = _platform.api2wire_opt_String(password);
+    var arg2 = api2wire_u8(length);
+    var arg3 = _platform.api2wire_String(lang);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_pwd_and_ls(port_),
-      parseSuccessData: _wire2api___record__String_String,
+      callFfi: (port_) =>
+          _platform.inner.wire_generate_wallet(port_, arg0, arg1, arg2, arg3),
+      parseSuccessData: _wire2api_polkadot_address,
       parseErrorData: null,
-      constMeta: kPwdAndLsConstMeta,
-      argValues: [],
+      constMeta: kGenerateWalletConstMeta,
+      argValues: [ss58, password, length, lang],
       hint: hint,
     ));
   }
 
-  FlutterRustBridgeTaskConstMeta get kPwdAndLsConstMeta =>
+  FlutterRustBridgeTaskConstMeta get kGenerateWalletConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
-        debugName: "pwd_and_ls",
-        argNames: [],
+        debugName: "generate_wallet",
+        argNames: ["ss58", "password", "length", "lang"],
       );
 
   void dispose() {
@@ -129,6 +139,18 @@ class NativeImpl implements Native {
     return Platform.values[raw as int];
   }
 
+  PolkadotAddress _wire2api_polkadot_address(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return PolkadotAddress(
+      mnemonicPhrase: _wire2api_String(arr[0]),
+      miniSecretKey: _wire2api_String(arr[1]),
+      publicKey: _wire2api_String(arr[2]),
+      address: _wire2api_String(arr[3]),
+    );
+  }
+
   int _wire2api_u8(dynamic raw) {
     return raw as int;
   }
@@ -144,6 +166,17 @@ class NativeImpl implements Native {
 int api2wire_i32(int raw) {
   return raw;
 }
+
+@protected
+int api2wire_u16(int raw) {
+  return raw;
+}
+
+@protected
+int api2wire_u8(int raw) {
+  return raw;
+}
+
 // Section: finalizer
 
 class NativePlatform extends FlutterRustBridgeBase<NativeWire> {
@@ -151,6 +184,22 @@ class NativePlatform extends FlutterRustBridgeBase<NativeWire> {
 
 // Section: api2wire
 
+  @protected
+  ffi.Pointer<wire_uint_8_list> api2wire_String(String raw) {
+    return api2wire_uint_8_list(utf8.encoder.convert(raw));
+  }
+
+  @protected
+  ffi.Pointer<wire_uint_8_list> api2wire_opt_String(String? raw) {
+    return raw == null ? ffi.nullptr : api2wire_String(raw);
+  }
+
+  @protected
+  ffi.Pointer<wire_uint_8_list> api2wire_uint_8_list(Uint8List raw) {
+    final ans = inner.new_uint_8_list_0(raw.length);
+    ans.ref.ptr.asTypedList(raw.length).setAll(0, raw);
+    return ans;
+  }
 // Section: finalizer
 
 // Section: api_fill_to_wire
@@ -299,19 +348,48 @@ class NativeWire implements FlutterRustBridgeWireBase {
   late final _wire_multiply_zk =
       _wire_multiply_zkPtr.asFunction<void Function(int, int, int)>();
 
-  void wire_pwd_and_ls(
+  void wire_generate_wallet(
     int port_,
+    int ss58,
+    ffi.Pointer<wire_uint_8_list> password,
+    int length,
+    ffi.Pointer<wire_uint_8_list> lang,
   ) {
-    return _wire_pwd_and_ls(
+    return _wire_generate_wallet(
       port_,
+      ss58,
+      password,
+      length,
+      lang,
     );
   }
 
-  late final _wire_pwd_and_lsPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
-          'wire_pwd_and_ls');
-  late final _wire_pwd_and_ls =
-      _wire_pwd_and_lsPtr.asFunction<void Function(int)>();
+  late final _wire_generate_walletPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Uint16,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Uint8,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_generate_wallet');
+  late final _wire_generate_wallet = _wire_generate_walletPtr.asFunction<
+      void Function(int, int, ffi.Pointer<wire_uint_8_list>, int,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
+    int len,
+  ) {
+    return _new_uint_8_list_0(
+      len,
+    );
+  }
+
+  late final _new_uint_8_list_0Ptr = _lookup<
+          ffi
+          .NativeFunction<ffi.Pointer<wire_uint_8_list> Function(ffi.Int32)>>(
+      'new_uint_8_list_0');
+  late final _new_uint_8_list_0 = _new_uint_8_list_0Ptr
+      .asFunction<ffi.Pointer<wire_uint_8_list> Function(int)>();
 
   void free_WireSyncReturn(
     WireSyncReturn ptr,
@@ -329,6 +407,13 @@ class NativeWire implements FlutterRustBridgeWireBase {
 }
 
 final class _Dart_Handle extends ffi.Opaque {}
+
+final class wire_uint_8_list extends ffi.Struct {
+  external ffi.Pointer<ffi.Uint8> ptr;
+
+  @ffi.Int32()
+  external int len;
+}
 
 typedef DartPostCObjectFnType = ffi.Pointer<
     ffi.NativeFunction<

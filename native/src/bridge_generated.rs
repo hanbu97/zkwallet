@@ -20,6 +20,8 @@ use std::sync::Arc;
 
 // Section: imports
 
+use crate::wallet::mnemonics::PolkadotAddress;
+
 // Section: wire functions
 
 fn wire_platform_impl(port_: MessagePort) {
@@ -60,14 +62,33 @@ fn wire_multiply_zk_impl(
         },
     )
 }
-fn wire_pwd_and_ls_impl(port_: MessagePort) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, (String, String), _>(
+fn wire_generate_wallet_impl(
+    port_: MessagePort,
+    ss58: impl Wire2Api<u16> + UnwindSafe,
+    password: impl Wire2Api<Option<String>> + UnwindSafe,
+    length: impl Wire2Api<u8> + UnwindSafe,
+    lang: impl Wire2Api<String> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, PolkadotAddress, _>(
         WrapInfo {
-            debug_name: "pwd_and_ls",
+            debug_name: "generate_wallet",
             port: Some(port_),
             mode: FfiCallMode::Normal,
         },
-        move || move |task_callback| Result::<_, ()>::Ok(pwd_and_ls()),
+        move || {
+            let api_ss58 = ss58.wire2api();
+            let api_password = password.wire2api();
+            let api_length = length.wire2api();
+            let api_lang = lang.wire2api();
+            move |task_callback| {
+                Result::<_, ()>::Ok(generate_wallet(
+                    api_ss58,
+                    api_password,
+                    api_length,
+                    api_lang,
+                ))
+            }
+        },
     )
 }
 // Section: wrapper structs
@@ -92,11 +113,24 @@ where
         (!self.is_null()).then(|| self.wire2api())
     }
 }
+
 impl Wire2Api<i32> for i32 {
     fn wire2api(self) -> i32 {
         self
     }
 }
+
+impl Wire2Api<u16> for u16 {
+    fn wire2api(self) -> u16 {
+        self
+    }
+}
+impl Wire2Api<u8> for u8 {
+    fn wire2api(self) -> u8 {
+        self
+    }
+}
+
 // Section: impl IntoDart
 
 impl support::IntoDart for Platform {
@@ -116,6 +150,24 @@ impl support::IntoDart for Platform {
 }
 impl support::IntoDartExceptPrimitive for Platform {}
 impl rust2dart::IntoIntoDart<Platform> for Platform {
+    fn into_into_dart(self) -> Self {
+        self
+    }
+}
+
+impl support::IntoDart for PolkadotAddress {
+    fn into_dart(self) -> support::DartAbi {
+        vec![
+            self.mnemonic_phrase.into_into_dart().into_dart(),
+            self.mini_secret_key.into_into_dart().into_dart(),
+            self.public_key.into_into_dart().into_dart(),
+            self.address.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl support::IntoDartExceptPrimitive for PolkadotAddress {}
+impl rust2dart::IntoIntoDart<PolkadotAddress> for PolkadotAddress {
     fn into_into_dart(self) -> Self {
         self
     }
