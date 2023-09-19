@@ -28,9 +28,9 @@ class ImageRes {
   static const zkLogo = "$_dir/zklogo.png";
   static const zkTransfer = "$_dir/zktransfer.png";
 
-  // // onboarding screen
-  // static const human = "$_dir/human.png";
-  // static const onboardResource = "$_dir/onboard_crypto.png";
-  // static const onboardTeam = "$_dir/onboard_team.png";
-  // static const onboardStart = "$_dir/onboard_start.png";
+  // onboarding screen
+  static const human = "$_dir/human.png";
+  static const onboardResource = "$_dir/onboard_crypto.png";
+  static const onboardTeam = "$_dir/onboard_team.png";
+  static const onboardStart = "$_dir/onboard_start.png";
 }

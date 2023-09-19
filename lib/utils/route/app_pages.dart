@@ -1,3 +1,5 @@
+import 'package:flutter_rust_bridge_template/screens/onboarding/binding.dart';
+import 'package:flutter_rust_bridge_template/screens/onboarding/screen.dart';
 import 'package:get/get.dart';
 
 import '../../screens/splash/binding.dart';
@@ -25,6 +27,11 @@ class AppPages {
       name: AppRoutes.splash,
       page: () => SplashPage(),
       binding: SplashBinding(),
+    ),
+    _pageBuilder(
+      name: AppRoutes.onBoarding,
+      page: () => OnboardingScreen(),
+      binding: OnboardingBinding(),
     ),
   ];
 }

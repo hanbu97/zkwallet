@@ -9,9 +9,9 @@ class AppNavigator {
     // Get.to(Get.to(TgTestScreen()));
   }
 
-  // static void newWallet() {
-  //   Get.offAllNamed(AppRoutes.newWallet);
-  // }
+  static void newWallet() {
+    Get.offAllNamed(AppRoutes.newWallet);
+  }
 
   // static void homepage() {
   //   Get.offAllNamed(AppRoutes.home);

@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 class Styles {
   Styles._();
 
-  static Color appbgcolor_white = const Color(0xFFFFFFFF);
+  static Color mainWhite = const Color(0xFFFFFFFF);
+
+  static Color backgroundColor = Colors.black;
+
+  static Color mainColor = const Color(0xFF00FFC4);
+  static Color mainInactive = const Color(0xff1F1F1F);
+
   static Color appbgcolor = const Color(0xFFF6F6F6); // 页面背景色
   static Color warinBgcolor = const Color(0xFFFAE5E7); // 警告背景色
   static Color warinTextcolor = const Color(0xFFE7573E); // 警告字体颜色

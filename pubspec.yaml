@@ -55,6 +55,7 @@ dependencies:
   visibility_detector: ^0.4.0+2
   getwidget: ^4.0.0
   permission_handler: ^11.0.0
+  google_fonts: ^6.0.0
 
 dev_dependencies:
   flutter_test:
