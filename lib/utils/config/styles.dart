@@ -6,6 +6,9 @@ class Styles {
   static Color mainWhite = const Color(0xFFFFFFFF);
 
   static Color backgroundColor = Colors.black;
+  // static Color contentBackground = const Color(0xff263530);
+  static Color contentColor = const Color(0xffE0E6E4);
+  static Color contentBackground = const Color(0xFF303033);
 
   static Color mainColor = const Color(0xFF00FFC4);
   static Color mainColorDark = const Color(0xff00AA83);

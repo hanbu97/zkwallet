@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:expand_tap_area/expand_tap_area.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rust_bridge_template/screens/home/receive/receive.dart';
 import 'package:flutter_rust_bridge_template/utils/config/images.dart';
 import 'package:flutter_rust_bridge_template/utils/extension/custom_ext.dart';
 import 'package:flutter_rust_bridge_template/utils/string/string_utils.dart';
@@ -221,22 +222,33 @@ class WalletPage extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Container(
-                                height: 48.w,
-                                width: 48.w,
-                                padding: EdgeInsets.all(11.w),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16.w),
-                                  color: Styles.mainColorDark,
-                                ),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.download,
-                                      color: Colors.white,
-                                      size: 22.w,
-                                    ),
-                                  ],
+                              ExpandTapWidget(
+                                onTap: () {
+                                  Get.to(ReceivePage(
+                                      wallet:
+                                          walletLogic.selectedWallet.address!));
+                                },
+                                tapPadding: EdgeInsets.all(10.w),
+                                child: Container(
+                                  height: 48.w,
+                                  width: 48.w,
+                                  padding: EdgeInsets.all(11.w),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16.w),
+                                    color: Styles.mainColorDark,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 2.w,
+                                      ),
+                                      Icon(
+                                        Icons.download,
+                                        color: Colors.white,
+                                        size: 22.w,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               Container(
