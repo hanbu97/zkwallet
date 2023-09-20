@@ -5,12 +5,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_rust_bridge_template/ffi.dart';
 import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
+import 'package:flutter_rust_bridge_template/utils/state/data_sp.dart';
 import 'package:flutter_rust_bridge_template/widgets/agreements/encrypt_mnemonics.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../models/wallet/wallet_types.dart';
+import '../../../models/wallet/wallets.dart';
+import '../../../models/wallet/wallets_group.dart';
 import '../../../utils/config/styles.dart';
+import '../../../utils/encryption/general.dart';
 import '../../../utils/route/app_navigator.dart';
+import '../../../utils/storage/general.dart';
 import '../../../widgets/agreements/create_wallet.dart';
 import '../../../widgets/selectDown.dart';
 import '/utils/extension/custom_ext.dart';
@@ -378,9 +384,9 @@ class _NewWalletPageState extends State<NewWalletPage>
                                 polkaWallet = data;
                               });
 
-                              // LogUtil.debug(polkaWallet?.address);
-                              // LogUtil.debug(polkaWallet?.miniSecretKey);
-                              // LogUtil.debug(polkaWallet?.publicKey);
+                              LogUtil.debug(polkaWallet?.address);
+                              LogUtil.debug(polkaWallet?.miniSecretKey);
+                              LogUtil.debug(polkaWallet?.publicKey);
                               // LogUtil.debug(polkaWallet?.mnemonicPhrase);
 
                               completedCreateSteps[0] = true;
@@ -597,19 +603,48 @@ class _NewWalletPageState extends State<NewWalletPage>
               width: 1000.w,
               height: 48.w,
               child: Obx(() => ElevatedButton(
-                    onPressed: () {
-                      // if (verifyInputs.length != length) {
-                      //   EasyLoading.showError(
-                      //       'Please fill in all the mnemonic words'.tr);
-                      //   return;
-                      // }
-                      // if (verifyInputs.join(' ') !=
-                      //     polkaWallet?.mnemonicPhrase) {
-                      //   EasyLoading.showError(
-                      //       'The mnemonic words you filled in are incorrect'
-                      //           .tr);
-                      //   return;
-                      // }
+                    onPressed: () async {
+                      if (verifyInputs.length != length) {
+                        EasyLoading.showError(
+                            'Please fill in all the mnemonic words'.tr);
+                        return;
+                      }
+                      if (verifyInputs.join(' ') !=
+                          polkaWallet?.mnemonicPhrase) {
+                        EasyLoading.showError(
+                            'The mnemonic words you filled in are incorrect'
+                                .tr);
+                        return;
+                      }
+
+                      // safe save wallet
+                      String mnemonicStr = "";
+                      mnemonicStr = verifyInputs.join(' ');
+                      mnemonicStr = Encryption.encrypt(mnemonicStr,
+                          passwdConfirm.text, EncryptionMethod.fernet);
+
+                      late WalletGroup walletGroup;
+                      final wallet = Wallet(
+                          name: "0".toString(),
+                          address: polkaWallet!.address,
+                          secretKey: polkaWallet!.miniSecretKey,
+                          mnemonics: mnemonicStr,
+                          walletMode: 0);
+
+                      final walletGroupIdx = DataSp.increaseWalletGroupMaxID();
+                      final walletType = WalletType(name: "vara-testnet");
+                      walletGroup = WalletGroup(
+                          idx: walletGroupIdx,
+                          name: polkaWallet!.address,
+                          mnemonics: [mnemonicStr],
+                          wallets: [wallet],
+                          walletTypes: [walletType]);
+
+                      DataSp.addWalletGroup(walletGroup);
+
+                      // var walletGroupRead = walletGroup.toWalletGroupRead();
+                      // DataSp.addWalletGroupRead(walletGroupRead);
+                      // await dbAdd(HiveDBName.walletGroup, walletGroup);
 
                       AppNavigator.homepage();
                     },

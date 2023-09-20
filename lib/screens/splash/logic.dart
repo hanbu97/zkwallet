@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '../../utils/state/data_sp.dart';
 import '/utils/route/app_navigator.dart';
 import '/utils/log/logger.dart';
 import 'package:get/get.dart';
@@ -39,8 +40,12 @@ class SplashLogic extends GetxController {
 
     // is wallet exist
     // init rpc connection
-
-    AppNavigator.startOnboarding();
+    if (DataSp.getWalletGroupMaxID() > 0) {
+      AppNavigator.homepage();
+    } else {
+      AppNavigator.startOnboarding();
+    }
+    // AppNavigator.startOnboarding();
   }
 
   // _login() async {

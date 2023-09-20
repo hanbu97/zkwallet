@@ -35,8 +35,26 @@ class SpUtil {
   }
 
   /// put object list.
+  Future<bool>? putObjectListNew<T>(String key, List<T> list) {
+    final dataList = list.map((value) => json.encode(value)).toList();
+    return prefs?.setStringList(key, dataList);
+  }
+
+  /// get obj list.
+  List<T>? getObjListNew<T>(
+    String key,
+    T Function(Map v) fromJson, {
+    List<T>? defValue = const [],
+  }) {
+    List<Map>? dataList = getObjectList(key);
+    List<T>? list = dataList?.map((value) => fromJson(value)).toList();
+    return list ?? defValue;
+  }
+
+  /// put object list.
   Future<bool>? putObjectList(String key, List<Object> list) {
     final dataList = list.map((value) => json.encode(value)).toList();
+
     return prefs?.setStringList(key, dataList);
   }
 

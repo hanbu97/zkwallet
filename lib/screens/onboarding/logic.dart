@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_rust_bridge_template/utils/route/app_navigator.dart';
+import 'package:flutter_rust_bridge_template/utils/state/data_sp.dart';
 
 import '/utils/log/logger.dart';
 import 'package:get/get.dart';
@@ -17,7 +18,8 @@ class OnboardingLogic extends GetxController {
 
   _loadStartData() async {
     await Future.delayed(const Duration(seconds: 2));
-    AppNavigator.startOnboarding();
+
+    // AppNavigator.startOnboarding();
   }
 
   @override

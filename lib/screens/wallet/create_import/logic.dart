@@ -36,7 +36,7 @@ class NewWalletLogic extends GetxController {
 
   _loadStartData() async {
     await Future.delayed(const Duration(seconds: 2));
-    AppNavigator.startOnboarding();
+    // AppNavigator.startOnboarding();
   }
 
   // _login() async {

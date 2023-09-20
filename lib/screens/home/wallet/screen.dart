@@ -1,6 +1,10 @@
+import 'dart:math';
+
+import 'package:expand_tap_area/expand_tap_area.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rust_bridge_template/utils/config/images.dart';
 import 'package:flutter_rust_bridge_template/utils/extension/custom_ext.dart';
+import 'package:flutter_rust_bridge_template/utils/state/data_sp.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -21,29 +25,42 @@ class WalletPage extends StatelessWidget {
         elevation: 0,
         title: Row(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
-              decoration: BoxDecoration(
-                  color: const Color(0xff263530),
-                  borderRadius: BorderRadius.circular(20.w)),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Gshock-okk',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: const Color(0xffE0E6E4),
-                      fontWeight: FontWeight.w600,
+            ExpandTapWidget(
+              onTap: () {
+                final data = DataSp.getWalletGroupRead();
+                data?.forEach((element) {
+                  final wa = element.wallets;
+
+                  wa.forEach((element) {
+                    print(element.toJson());
+                  });
+                });
+              },
+              tapPadding: EdgeInsets.all(10.w),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
+                decoration: BoxDecoration(
+                    color: const Color(0xff263530),
+                    borderRadius: BorderRadius.circular(20.w)),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Gshock-okk',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: const Color(0xffE0E6E4),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  Icon(
-                    Icons.swap_horiz,
-                    color: const Color(0xffE0E6E4),
-                    // color: Styles.backgroundColor,
-                    size: 16.w,
-                  )
-                ],
+                    Icon(
+                      Icons.swap_horiz,
+                      color: const Color(0xffE0E6E4),
+                      // color: Styles.backgroundColor,
+                      size: 16.w,
+                    )
+                  ],
+                ),
               ),
             ),
           ],

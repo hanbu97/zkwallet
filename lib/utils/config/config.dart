@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter_openim_sdk/flutter_openim_sdk.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../models/wallet/wallet_types.dart';
+import '../../models/wallet/wallets.dart';
+import '../../models/wallet/wallets_group.dart';
+import '../../models/wallet/wallets_group_read.dart';
 import '../state/data_sp.dart';
-import '/utils/log/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Config {
@@ -16,6 +19,14 @@ class Config {
       cachePath = (await getApplicationDocumentsDirectory()).path;
       await DataSp.init();
       await Hive.initFlutter(cachePath);
+
+      await Hive.initFlutter();
+      Hive.registerAdapter(TokenInfoAdapter());
+      Hive.registerAdapter(WalletGroupAdapter());
+      Hive.registerAdapter(WalletGroupReadAdapter());
+      Hive.registerAdapter(WalletTypeAdapter());
+      Hive.registerAdapter(WalletAdapter());
+      Hive.registerAdapter(WalletReadAdapter());
     } catch (_) {}
 
     // init tdlib
