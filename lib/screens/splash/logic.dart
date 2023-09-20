@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:vara_sdk/api/types/networkParams.dart';
+import 'package:vara_sdk/polkawallet_sdk.dart';
+import 'package:vara_sdk/storage/keyring.dart';
+
 import '../../utils/state/data_sp.dart';
 import '/utils/route/app_navigator.dart';
 import '/utils/log/logger.dart';
@@ -36,7 +40,24 @@ class SplashLogic extends GetxController {
   }
 
   _loadStartData() async {
-    await Future.delayed(const Duration(seconds: 2));
+    // init polka api
+    final WalletSDK sdk = WalletSDK();
+    final Keyring keyring = Keyring();
+
+    await keyring.init([0, 2]);
+    await sdk.init(keyring);
+
+    DataSp.keyRing = keyring;
+    DataSp.varaSdk = sdk;
+
+    final node = NetworkParams();
+    node.name = 'VARATest';
+    node.endpoint = 'wss://testnet.vara.rs';
+    node.ss58 = 137;
+
+    final _ = await DataSp.varaSdk.api.connectNode(DataSp.keyRing, [node]);
+
+    // await Future.delayed(const Duration(seconds: 2));
 
     // is wallet exist
     // init rpc connection

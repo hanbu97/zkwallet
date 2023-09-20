@@ -5,21 +5,60 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rust_bridge_template/screens/home/receive/receive.dart';
 import 'package:flutter_rust_bridge_template/utils/config/images.dart';
 import 'package:flutter_rust_bridge_template/utils/extension/custom_ext.dart';
+import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
+import 'package:flutter_rust_bridge_template/utils/state/data_sp.dart';
 import 'package:flutter_rust_bridge_template/utils/string/string_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:vara_sdk/api/types/balanceData.dart';
 
 import '../../../utils/config/styles.dart';
 import 'logic.dart';
 
-class WalletPage extends StatelessWidget {
-  WalletPage({super.key});
+class WalletPage extends StatefulWidget {
+  const WalletPage({super.key});
+
+  @override
+  State<WalletPage> createState() => _WalletPageState();
+}
+
+class _WalletPageState extends State<WalletPage> {
+  BalanceData? _balance;
+  String? _msgChannel;
+
+  late WalletLogic walletLogic;
+
+  Future<void> _subscribeBalance() async {
+    final channel = await DataSp.varaSdk.api.account
+        .subscribeBalance(walletLogic.selectedWallet.address, (res) {
+      setState(() {
+        _balance = res;
+      });
+    });
+    setState(() {
+      _msgChannel = channel;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    walletLogic = Get.find<WalletLogic>();
+    _subscribeBalance();
+  }
+
+  @override
+  void dispose() {
+    if (_msgChannel != null) {
+      DataSp.varaSdk.api.unsubscribeMessage(_msgChannel!);
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    final walletLogic = Get.find<WalletLogic>();
 
     return Scaffold(
       backgroundColor: Styles.backgroundColor,
@@ -29,7 +68,13 @@ class WalletPage extends StatelessWidget {
         title: Row(
           children: [
             ExpandTapWidget(
-              onTap: () {
+              onTap: () async {
+                final wallet = walletLogic.selectedWallet.address;
+                final res =
+                    await DataSp.varaSdk.api.account.queryBalance(wallet);
+
+                LogUtil.debug(res?.availableBalance);
+
                 // final data = DataSp.getWalletGroupRead();
                 // data?.forEach((element) {
                 //   final wa = element.wallets;
@@ -38,8 +83,6 @@ class WalletPage extends StatelessWidget {
                 //     print(element.toJson());
                 //   });
                 // });
-
-                print(walletLogic.selectedWallet.toJson());
               },
               tapPadding: EdgeInsets.all(10.w),
               child: Container(
@@ -189,7 +232,7 @@ class WalletPage extends StatelessWidget {
                           padding: EdgeInsets.symmetric(horizontal: 21.w),
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            '\$ 12,3455.00',
+                            '\$ ${StringUtils.toDotDouble(_balance?.freeBalance)}',
                             style: GoogleFonts.titilliumWeb(
                               fontSize: 32.sp,
                               color: Styles.mainWhite,

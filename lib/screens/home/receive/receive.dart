@@ -97,6 +97,9 @@ class _ReceivePageState extends State<ReceivePage> {
         ),
         body: Column(
           children: [
+            SizedBox(
+              height: 10.w,
+            ),
             Expanded(
                 flex: 10,
                 child: Padding(
@@ -104,8 +107,8 @@ class _ReceivePageState extends State<ReceivePage> {
                   child: Container(
                       decoration: BoxDecoration(
                           color: Styles.contentBackground,
-                          border: Border.all(color: Styles.mainColor),
-                          borderRadius: BorderRadius.circular(15.w)),
+                          // border: Border.all(color: Styles.mainColor),
+                          borderRadius: BorderRadius.circular(30.w)),
                       width: double.infinity,
                       child: Column(
                         children: [
@@ -164,21 +167,25 @@ class _ReceivePageState extends State<ReceivePage> {
                                 ),
                               )),
                           SizedBox(
-                            height: 50.h,
+                            height: 30.w,
                           ),
                           Expanded(
                               flex: 3,
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: Styles.backgroundColor,
-                                    border: Border.all(color: Styles.mainColor),
+                                    border: Border.all(
+                                        color: Styles.mainColor, width: 0.35),
                                     borderRadius: BorderRadius.vertical(
-                                        bottom: Radius.circular(15.w))),
+                                        bottom: Radius.circular(30.w))),
                                 child: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 10.h, horizontal: 20.w),
                                     child: Column(
                                       children: [
+                                        SizedBox(
+                                          height: 15.w,
+                                        ),
                                         Expanded(
                                           flex: 1,
                                           child: Container(
@@ -227,20 +234,23 @@ class _ReceivePageState extends State<ReceivePage> {
                                                               .spaceBetween,
                                                       children: [
                                                         TextButton.icon(
-                                                          style: TextButton
-                                                              .styleFrom(
-                                                                  side:
-                                                                      BorderSide(
-                                                                    color: Styles
-                                                                        .mainColor,
-                                                                  ),
-                                                                  padding: EdgeInsets
-                                                                      .symmetric(
-                                                                          horizontal: 10
-                                                                              .w),
-                                                                  backgroundColor:
-                                                                      Styles
-                                                                          .contentBackground),
+                                                          style: TextButton.styleFrom(
+                                                              side: BorderSide(
+                                                                  color: Styles
+                                                                      .mainColor,
+                                                                  width: 0.5),
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(8
+                                                                              .w)),
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          10.w),
+                                                              backgroundColor:
+                                                                  Styles
+                                                                      .contentBackground),
                                                           onPressed: () => {},
                                                           icon: const Icon(
                                                             Icons.share,
@@ -256,8 +266,13 @@ class _ReceivePageState extends State<ReceivePage> {
                                                         TextButton.icon(
                                                             style: TextButton
                                                                 .styleFrom(
+                                                                    shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(8
+                                                                            .w)),
                                                                     side:
                                                                         BorderSide(
+                                                                      width:
+                                                                          0.5,
                                                                       color: Styles
                                                                           .mainColor,
                                                                     ),
@@ -272,13 +287,11 @@ class _ReceivePageState extends State<ReceivePage> {
                                                                   ClipboardData(
                                                                       text: widget
                                                                           .wallet));
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .showSnackBar(
-                                                                const SnackBar(
-                                                                    content: Text(
-                                                                        'Address copied')),
-                                                              );
+                                                              Get.snackbar(
+                                                                  'Receive',
+                                                                  'Address copied',
+                                                                  colorText: Styles
+                                                                      .mainWhite);
                                                             },
                                                             icon: const Icon(
                                                               Icons.copy,

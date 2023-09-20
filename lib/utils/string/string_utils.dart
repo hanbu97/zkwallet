@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:decimal/decimal.dart';
+
 class StringUtils {
   StringUtils._();
 
@@ -11,5 +15,19 @@ class StringUtils {
           middle +
           input.substring(input.length - halfLength);
     }
+  }
+
+  static double toDotDouble(String input) {
+    BigInt decimalBalance =
+        BigInt.parse(input.toString().replaceFirst('0x', ''), radix: 16);
+
+    final balance = decimalBalance / BigInt.from(10).pow(12);
+    return balance;
+  }
+}
+
+extension HexToDotBalance on String {
+  double toDotBalance() {
+    return StringUtils.toDotDouble(this);
   }
 }

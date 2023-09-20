@@ -8,6 +8,8 @@ import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
 import 'package:get/get.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vara_sdk/polkawallet_sdk.dart';
+import 'package:vara_sdk/storage/keyring.dart';
 
 import '../../models/wallet/wallets.dart';
 import '../config/config.dart';
@@ -28,11 +30,18 @@ class DataSp {
   static const _maxWalletGroupIdx = '_maxWalletGroupIdx';
 
   // managers
+  // late WalletSDK varaSdk;
+  static late WalletSDK varaSdk;
+  static late Keyring keyRing;
 
-  DataSp._();
+  DataSp._() {
+    // varaSdk = WalletSDK();
+  }
 
   static init() async {
     await SpUtil().init();
+    varaSdk = WalletSDK();
+    keyRing = Keyring();
   }
 
   //  wallet
