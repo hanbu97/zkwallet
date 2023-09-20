@@ -175,7 +175,7 @@ class _ReceivePageState extends State<ReceivePage> {
                                 decoration: BoxDecoration(
                                     color: Styles.backgroundColor,
                                     border: Border.all(
-                                        color: Styles.mainColor, width: 0.35),
+                                        color: Styles.mainColor, width: 0.6),
                                     borderRadius: BorderRadius.vertical(
                                         bottom: Radius.circular(30.w))),
                                 child: Padding(
