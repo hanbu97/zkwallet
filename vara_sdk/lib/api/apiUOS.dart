@@ -1,6 +1,6 @@
-import 'package:polkawallet_sdk/api/api.dart';
-import 'package:polkawallet_sdk/api/types/txInfoData.dart';
-import 'package:polkawallet_sdk/service/uos.dart';
+import 'package:vara_sdk/api/api.dart';
+import 'package:vara_sdk/api/types/txInfoData.dart';
+import 'package:vara_sdk/service/uos.dart';
 
 /// Support offline-signature as a hot-wallet:
 /// 1. makeQrCode

@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:polkawallet_sdk/api/api.dart';
-import 'package:polkawallet_sdk/api/types/staking/accountBondedInfo.dart';
-import 'package:polkawallet_sdk/api/types/staking/ownStashInfo.dart';
-import 'package:polkawallet_sdk/service/staking.dart';
+import 'package:vara_sdk/api/api.dart';
+import 'package:vara_sdk/api/types/staking/accountBondedInfo.dart';
+import 'package:vara_sdk/api/types/staking/ownStashInfo.dart';
+import 'package:vara_sdk/service/staking.dart';
 
 class ApiStaking {
   ApiStaking(this.apiRoot, this.service);

@@ -1,22 +1,22 @@
 import 'dart:convert';
 
-import 'package:polkawallet_sdk/api/apiAccount.dart';
-import 'package:polkawallet_sdk/api/apiAssets.dart';
-import 'package:polkawallet_sdk/api/apiBridge.dart';
-import 'package:polkawallet_sdk/api/apiGov.dart';
-import 'package:polkawallet_sdk/api/apiGov2.dart';
-import 'package:polkawallet_sdk/api/apiKeyring.dart';
-import 'package:polkawallet_sdk/api/apiParachain.dart';
-import 'package:polkawallet_sdk/api/apiRecovery.dart';
-import 'package:polkawallet_sdk/api/apiSetting.dart';
-import 'package:polkawallet_sdk/api/apiStaking.dart';
-import 'package:polkawallet_sdk/api/apiTx.dart';
-import 'package:polkawallet_sdk/api/apiUOS.dart';
-import 'package:polkawallet_sdk/api/apiWalletConnect.dart';
-import 'package:polkawallet_sdk/api/subscan.dart';
-import 'package:polkawallet_sdk/api/types/networkParams.dart';
-import 'package:polkawallet_sdk/service/index.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
+import 'package:vara_sdk/api/apiAccount.dart';
+import 'package:vara_sdk/api/apiAssets.dart';
+import 'package:vara_sdk/api/apiBridge.dart';
+import 'package:vara_sdk/api/apiGov.dart';
+import 'package:vara_sdk/api/apiGov2.dart';
+import 'package:vara_sdk/api/apiKeyring.dart';
+import 'package:vara_sdk/api/apiParachain.dart';
+import 'package:vara_sdk/api/apiRecovery.dart';
+import 'package:vara_sdk/api/apiSetting.dart';
+import 'package:vara_sdk/api/apiStaking.dart';
+import 'package:vara_sdk/api/apiTx.dart';
+import 'package:vara_sdk/api/apiUOS.dart';
+import 'package:vara_sdk/api/apiWalletConnect.dart';
+import 'package:vara_sdk/api/subscan.dart';
+import 'package:vara_sdk/api/types/networkParams.dart';
+import 'package:vara_sdk/service/index.dart';
+import 'package:vara_sdk/storage/keyring.dart';
 
 /// The [PolkawalletApi] instance is the wrapper of `polkadot-js/api`.
 /// It provides:

@@ -1,6 +1,6 @@
-import 'package:polkawallet_sdk/api/api.dart';
-import 'package:polkawallet_sdk/api/types/balanceData.dart';
-import 'package:polkawallet_sdk/service/account.dart';
+import 'package:vara_sdk/api/api.dart';
+import 'package:vara_sdk/api/types/balanceData.dart';
+import 'package:vara_sdk/service/account.dart';
 import 'package:decimal/decimal.dart';
 
 class ApiAccount {

@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:polkawallet_sdk/api/api.dart';
-import 'package:polkawallet_sdk/api/types/gov/genExternalLinksParams.dart';
-import 'package:polkawallet_sdk/api/types/gov/referendumV2Data.dart';
-import 'package:polkawallet_sdk/service/gov2.dart';
+import 'package:vara_sdk/api/api.dart';
+import 'package:vara_sdk/api/types/gov/genExternalLinksParams.dart';
+import 'package:vara_sdk/api/types/gov/referendumV2Data.dart';
+import 'package:vara_sdk/service/gov2.dart';
 
 class ApiGov2 {
   ApiGov2(this.apiRoot, this.service);

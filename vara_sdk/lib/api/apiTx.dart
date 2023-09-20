@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:polkawallet_sdk/api/api.dart';
-import 'package:polkawallet_sdk/api/types/txInfoData.dart';
-import 'package:polkawallet_sdk/service/tx.dart';
+import 'package:vara_sdk/api/api.dart';
+import 'package:vara_sdk/api/types/txInfoData.dart';
+import 'package:vara_sdk/service/tx.dart';
 
 class ApiTx {
   ApiTx(this.apiRoot, this.service);

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:polkawallet_sdk/service/index.dart';
+import 'package:vara_sdk/service/index.dart';
 
 class ServiceTx {
   ServiceTx(this.serviceRoot);

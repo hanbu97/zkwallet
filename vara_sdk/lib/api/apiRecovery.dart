@@ -1,6 +1,6 @@
-import 'package:polkawallet_sdk/api/api.dart';
-import 'package:polkawallet_sdk/api/types/recoveryInfo.dart';
-import 'package:polkawallet_sdk/service/recovery.dart';
+import 'package:vara_sdk/api/api.dart';
+import 'package:vara_sdk/api/types/recoveryInfo.dart';
+import 'package:vara_sdk/service/recovery.dart';
 
 class ApiRecovery {
   ApiRecovery(this.apiRoot, this.service);

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:polkawallet_sdk/api/apiKeyring.dart';
-import 'package:polkawallet_sdk/api/types/addressIconData.dart';
-import 'package:polkawallet_sdk/service/index.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
+import 'package:vara_sdk/api/apiKeyring.dart';
+import 'package:vara_sdk/api/types/addressIconData.dart';
+import 'package:vara_sdk/service/index.dart';
+import 'package:vara_sdk/storage/keyring.dart';
 
 class ServiceKeyring {
   ServiceKeyring(this.serviceRoot);

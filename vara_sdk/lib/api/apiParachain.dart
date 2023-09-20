@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:polkawallet_sdk/api/api.dart';
-import 'package:polkawallet_sdk/api/types/parachain/auctionData.dart';
-import 'package:polkawallet_sdk/api/types/parachain/parasOverviewData.dart';
-import 'package:polkawallet_sdk/service/parachain.dart';
+import 'package:vara_sdk/api/api.dart';
+import 'package:vara_sdk/api/types/parachain/auctionData.dart';
+import 'package:vara_sdk/api/types/parachain/parasOverviewData.dart';
+import 'package:vara_sdk/service/parachain.dart';
 
 class ApiParachain {
   ApiParachain(this.apiRoot, this.service);

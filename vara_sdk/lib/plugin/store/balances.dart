@@ -1,5 +1,5 @@
 import 'package:mobx/mobx.dart';
-import 'package:polkawallet_sdk/api/types/balanceData.dart';
+import 'package:vara_sdk/api/types/balanceData.dart';
 
 part 'balances.g.dart';
 

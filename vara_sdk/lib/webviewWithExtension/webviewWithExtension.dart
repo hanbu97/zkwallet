@@ -6,10 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:polkawallet_sdk/api/api.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
-import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
-import 'package:polkawallet_sdk/webviewWithExtension/types/signExtrinsicParam.dart';
+import 'package:vara_sdk/api/api.dart';
+import 'package:vara_sdk/storage/keyring.dart';
+import 'package:vara_sdk/storage/types/keyPairData.dart';
+import 'package:vara_sdk/webviewWithExtension/types/signExtrinsicParam.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

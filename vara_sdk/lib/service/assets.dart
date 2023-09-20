@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:polkawallet_sdk/service/index.dart';
+import 'package:vara_sdk/service/index.dart';
 
 class ServiceAssets {
   ServiceAssets(this.serviceRoot);

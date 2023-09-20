@@ -1,7 +1,7 @@
-import 'package:polkawallet_sdk/api/api.dart';
-import 'package:polkawallet_sdk/api/types/walletConnect/pairingData.dart';
-import 'package:polkawallet_sdk/api/types/walletConnect/payloadData.dart';
-import 'package:polkawallet_sdk/service/walletConnect.dart';
+import 'package:vara_sdk/api/api.dart';
+import 'package:vara_sdk/api/types/walletConnect/pairingData.dart';
+import 'package:vara_sdk/api/types/walletConnect/payloadData.dart';
+import 'package:vara_sdk/service/walletConnect.dart';
 
 class ApiWalletConnect {
   ApiWalletConnect(this.apiRoot, this.service);

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:polkawallet_sdk/api/types/networkParams.dart';
-import 'package:polkawallet_sdk/service/localServer.dart';
+import 'package:vara_sdk/api/types/networkParams.dart';
+import 'package:vara_sdk/service/localServer.dart';
 
 class WebViewRunner {
   HeadlessInAppWebView? _web;

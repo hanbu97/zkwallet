@@ -4,10 +4,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:polkawallet_sdk/api/api.dart';
-import 'package:polkawallet_sdk/service/index.dart';
-import 'package:polkawallet_sdk/service/webViewRunner.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
+import 'package:vara_sdk/api/api.dart';
+import 'package:vara_sdk/service/index.dart';
+import 'package:vara_sdk/service/webViewRunner.dart';
+import 'package:vara_sdk/storage/keyring.dart';
 
 /// SDK launchs a hidden webView to run polkadot.js/api for interacting
 /// with the substrate-based block-chain network.
