@@ -10,6 +10,7 @@ abstract class AppRoutes {
 
   // home
   static const home = '/home';
+  static const wallet = '/wallet';
 }
 
 extension RoutesExtension on String {

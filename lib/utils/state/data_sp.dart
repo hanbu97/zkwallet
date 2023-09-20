@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../models/wallet/wallets.dart';
 import '../config/config.dart';
 import '../storage/general.dart';
 import 'sp_util.dart';
@@ -22,6 +23,8 @@ class DataSp {
   static const _walletGroupRead = '%s_walletGroupRead';
 
   // wallet
+  static const _selectedWalletGroupIdx = '%s_selectedWalletGroupIdx';
+  static const _selectedWalletIdx = '%s_selectedWalletIdx';
   static const _maxWalletGroupIdx = '_maxWalletGroupIdx';
 
   // managers
@@ -33,6 +36,22 @@ class DataSp {
   }
 
   //  wallet
+  static int getSelectedWalletGroupIdx() {
+    return SpUtil().getInt(getKey(_selectedWalletGroupIdx), defValue: 0) ?? 0;
+  }
+
+  static int getSelectedWalletIdx() {
+    return SpUtil().getInt(getKey(_selectedWalletIdx), defValue: 0) ?? 0;
+  }
+
+  static WalletRead get selectedWalletRead {
+    var walletGroupIdx = getSelectedWalletGroupIdx();
+    var walletIdx = getSelectedWalletIdx();
+    var walletGroup = walletGroupRead[walletGroupIdx];
+    var wallet = walletGroup.wallets[walletIdx];
+    return wallet;
+  }
+
   static int getWalletGroupMaxID() {
     return SpUtil().getInt(_maxWalletGroupIdx, defValue: 0) ?? 0;
   }

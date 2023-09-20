@@ -4,12 +4,13 @@ import 'package:expand_tap_area/expand_tap_area.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rust_bridge_template/utils/config/images.dart';
 import 'package:flutter_rust_bridge_template/utils/extension/custom_ext.dart';
-import 'package:flutter_rust_bridge_template/utils/state/data_sp.dart';
+import 'package:flutter_rust_bridge_template/utils/string/string_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../utils/config/styles.dart';
+import 'logic.dart';
 
 class WalletPage extends StatelessWidget {
   WalletPage({super.key});
@@ -17,6 +18,7 @@ class WalletPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
+    final walletLogic = Get.find<WalletLogic>();
 
     return Scaffold(
       backgroundColor: Styles.backgroundColor,
@@ -27,14 +29,16 @@ class WalletPage extends StatelessWidget {
           children: [
             ExpandTapWidget(
               onTap: () {
-                final data = DataSp.getWalletGroupRead();
-                data?.forEach((element) {
-                  final wa = element.wallets;
+                // final data = DataSp.getWalletGroupRead();
+                // data?.forEach((element) {
+                //   final wa = element.wallets;
 
-                  wa.forEach((element) {
-                    print(element.toJson());
-                  });
-                });
+                //   wa.forEach((element) {
+                //     print(element.toJson());
+                //   });
+                // });
+
+                print(walletLogic.selectedWallet.toJson());
               },
               tapPadding: EdgeInsets.all(10.w),
               child: Container(
@@ -46,7 +50,10 @@ class WalletPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Gshock-okk',
+                      // 'Gshock-okk',
+                      StringUtils.truncateString(
+                          walletLogic.selectedWallet.address!,
+                          maxLength: 20),
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: const Color(0xffE0E6E4),
