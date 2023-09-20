@@ -65,6 +65,8 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   path_provider: ^2.1.1
   qr_flutter: 4.0.0
+  vara_sdk:
+    path: vara_sdk
 
 dev_dependencies:
   flutter_test:
