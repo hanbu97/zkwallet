@@ -44,7 +44,7 @@ class SplashLogic extends GetxController {
     final WalletSDK sdk = WalletSDK();
     final Keyring keyring = Keyring();
 
-    await keyring.init([0, 2]);
+    await keyring.init([137]);
     await sdk.init(keyring);
 
     DataSp.keyRing = keyring;

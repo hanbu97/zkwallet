@@ -183,7 +183,7 @@ class _WalletPageState extends State<WalletPage> {
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                         colors: [
-                          Color.fromRGBO(2, 86, 255, 0.6),
+                          const Color.fromRGBO(2, 86, 255, 0.6),
                           Styles.mainColor,
                         ],
                       ),
@@ -233,7 +233,7 @@ class _WalletPageState extends State<WalletPage> {
                           padding: EdgeInsets.symmetric(horizontal: 21.w),
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            '\$ ${StringUtils.toDotDouble(_balance?.freeBalance ?? '0x0')}',
+                            '\$ ${StringUtils.toDotDoubleStr(_balance?.freeBalance ?? '0x0')}',
                             style: GoogleFonts.titilliumWeb(
                               fontSize: 32.sp,
                               color: Styles.mainWhite,

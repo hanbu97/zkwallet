@@ -98,12 +98,12 @@ class _ReceivePageState extends State<ReceivePage> {
         body: Column(
           children: [
             SizedBox(
-              height: 10.w,
+              height: 15.w,
             ),
             Expanded(
                 flex: 10,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
                   child: Container(
                       decoration: BoxDecoration(
                           color: Styles.contentBackground,

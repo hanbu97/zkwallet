@@ -15,6 +15,14 @@ class LogUtil {
     }
   }
 
+  static void error(dynamic text, {bool isError = false}) {
+    if (isError) {
+      logger.e('** $text, isError [$isError]');
+    } else {
+      logger.e('** $text');
+    }
+  }
+
   static void print(dynamic text, {bool isError = false}) {
     if (isError) {
       logger.d('** $text, isError [$isError]');

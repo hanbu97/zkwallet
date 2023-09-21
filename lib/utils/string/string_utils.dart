@@ -17,6 +17,11 @@ class StringUtils {
     }
   }
 
+  static String toDotDoubleStr(String input, {precision = 3}) {
+    final d = toDotDouble(input);
+    return d.toStringAsFixed(precision);
+  }
+
   static double toDotDouble(String input) {
     BigInt decimalBalance =
         BigInt.parse(input.toString().replaceFirst('0x', ''), radix: 16);
@@ -24,10 +29,30 @@ class StringUtils {
     final balance = decimalBalance / BigInt.from(10).pow(12);
     return balance;
   }
+
+  static double toDouble(String input) {
+    BigInt decimalBalance = BigInt.parse(input.toString());
+    final balance = decimalBalance / BigInt.from(10).pow(12);
+    return balance;
+  }
+
+  static String toDotBigIntStr(String input) {
+    BigInt decimalBalance = BigInt.parse(input.toString());
+    final balance = decimalBalance * BigInt.from(10).pow(12);
+    return balance.toString();
+  }
 }
 
 extension HexToDotBalance on String {
+  String toBigIntStr() {
+    return StringUtils.toDotBigIntStr(this);
+  }
+
   double toDotBalance() {
     return StringUtils.toDotDouble(this);
+  }
+
+  double toBalance() {
+    return StringUtils.toDouble(this);
   }
 }

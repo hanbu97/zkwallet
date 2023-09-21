@@ -39,6 +39,8 @@ class BridgeRunner {
     _jsCode = jsCode;
 
     if (_web == null) {
+      await _web?.webViewController.clearCache();
+
       _web = new HeadlessInAppWebView(
         windowId: 2,
         initialOptions: InAppWebViewGroupOptions(

@@ -45,6 +45,10 @@ class DataSp {
   }
 
   //  wallet
+  static void setSS58(int ss58) {
+    keyRing.setSS58(ss58);
+  }
+
   static int getSelectedWalletGroupIdx() {
     return SpUtil().getInt(getKey(_selectedWalletGroupIdx), defValue: 0) ?? 0;
   }

@@ -200,9 +200,11 @@ abstract class PolkawalletPlugin implements PolkawalletPluginBase {
 abstract class PolkawalletPluginBase {
   /// A plugin's basic info, including: name, primaryColor and icons.
   final basic = PluginBasicData(
-      name: 'kusama', primaryColor: Colors.black as MaterialColor?);
+      name: 'kusama',
+      primaryColor: Colors.black as MaterialColor?,
+      jsCodeVersion: 10086);
 
-  /// Plugin should define a list of node to connect
+  /// Plugin should definsss a list of node to connect
   /// for users of Polkawallet App.
   List<NetworkParams> get nodeList => [];
 

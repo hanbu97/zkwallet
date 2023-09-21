@@ -68,6 +68,7 @@ dependencies:
   vara_sdk:
     path: vara_sdk
   decimal: ^2.3.3
+  cryptography: ^2.6.0
 
 dev_dependencies:
   flutter_test:

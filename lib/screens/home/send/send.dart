@@ -1,11 +1,27 @@
+import 'dart:convert';
+
+import 'package:cryptography/cryptography.dart';
+import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_rust_bridge_template/utils/config/styles.dart';
+import 'package:flutter_rust_bridge_template/utils/encryption/general.dart';
+import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
+import 'package:flutter_rust_bridge_template/utils/rand/rand_string.dart';
+import 'package:flutter_rust_bridge_template/utils/state/data_sp.dart';
+import 'package:flutter_rust_bridge_template/utils/storage/general.dart';
+import 'package:flutter_rust_bridge_template/widgets/confirm/confirm_text_pin.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vara_sdk/api/apiKeyring.dart';
 import 'package:vara_sdk/api/types/balanceData.dart';
+import 'package:vara_sdk/api/types/txInfoData.dart';
+import 'package:vara_sdk/plugin/index.dart';
+import 'package:vara_sdk/storage/keyring.dart';
 
+import '../../../utils/string/string_utils.dart';
 import 'widgets/gas_select.dart';
 
 class SendPage extends StatefulWidget {
@@ -23,14 +39,11 @@ class SendPage extends StatefulWidget {
 }
 
 class _SendPageState extends State<SendPage> {
-  var _selectedGas = 1;
-  var _balance = 0.0;
+  double _estimateGas = 0.0;
 
   // controllers
-  final _addressController = TextEditingController();
+  final _receiverController = TextEditingController();
   final _amountController = TextEditingController();
-
-  final _notesController = TextEditingController();
 
   Future<void> _getBalance() async {
     setState(() {
@@ -38,16 +51,69 @@ class _SendPageState extends State<SendPage> {
     });
   }
 
-  void _handleButtonPressed(int index) {
+  void estimateGas() async {
+    final sender = TxSenderData(widget.wallet, null);
+    final txInfo = TxInfoData('balances', 'transfer', sender);
+
+    final res = await DataSp.varaSdk.api.tx
+        .estimateFees(txInfo, [widget.wallet, '10000000000']);
+
     setState(() {
-      _selectedGas = index;
+      _estimateGas = res.partialFee.toString().toBalance();
     });
+  }
+
+  Future<Map<dynamic, dynamic>?> sendTx(String value) async {
+    final data = await dbGetGroupWallet(
+        HiveDBName.walletGroup, DataSp.selectedWalletRead.address!);
+    final mnemonics =
+        Encryption.decrypt(data.mnemonics, value, EncryptionMethod.fernet);
+
+    final tmpPassword = generateRandomString(16);
+    final json = await DataSp.varaSdk.api.keyring.importAccount(
+      DataSp.keyRing,
+      keyType: KeyType.mnemonic,
+      key: mnemonics,
+      name: tmpPassword.substring(0, 8),
+      password: tmpPassword,
+    );
+    final acc = await DataSp.varaSdk.api.keyring.addAccount(
+      DataSp.keyRing,
+      keyType: KeyType.mnemonic,
+      acc: json!,
+      password: tmpPassword,
+    );
+
+    LogUtil.debug(acc.toJson());
+
+    final sender = TxSenderData(
+      DataSp.keyRing.keyPairs[0].address,
+      DataSp.keyRing.keyPairs[0].pubKey,
+    );
+    final txInfo = TxInfoData('balances', 'transfer', sender);
+
+    final hash = await DataSp.varaSdk.api.tx.signAndSend(
+      txInfo,
+      [
+        // params.to
+        // _testAddressGav,
+        // 'GvrJix8vF8iKgsTAfuazEDrBibiM6jgG66C6sT2W56cEZr3',
+        _receiverController.text,
+        // params.amount
+        // '10000000000'
+        _amountController.text.toBigIntStr()
+      ],
+      tmpPassword,
+    );
+
+    return hash;
   }
 
   @override
   void initState() {
     super.initState();
     _getBalance();
+    estimateGas();
   }
 
   @override
@@ -89,7 +155,7 @@ class _SendPageState extends State<SendPage> {
                     Text(
                       "Receiver",
                       style: TextStyle(
-                          color: Colors.grey,
+                          color: Styles.infoGrayColor,
                           fontSize: 16.w,
                           fontWeight: FontWeight.w700),
                     ),
@@ -97,7 +163,7 @@ class _SendPageState extends State<SendPage> {
                   ],
                 ),
                 SizedBox(
-                  height: 10.w,
+                  height: 15.w,
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -105,17 +171,16 @@ class _SendPageState extends State<SendPage> {
                       borderRadius: BorderRadius.circular(12.w)),
                   padding: EdgeInsets.only(left: 15.w),
                   child: TextField(
-                    // controller: passwdConfirm,
+                    controller: _receiverController,
                     style: TextStyle(
                       color: Styles.titleColor,
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
                     ),
-                    // obscureText: showConfirmPasswd,
                     decoration: InputDecoration(
                       fillColor: Colors.transparent,
                       filled: true,
-                      hintText: 'Password confirm',
+                      hintText: 'Send to Address',
                       hintStyle: TextStyle(
                         color: Styles.infoGrayColor,
                         fontSize: 14.sp,
@@ -135,7 +200,7 @@ class _SendPageState extends State<SendPage> {
             ),
           ),
           SizedBox(
-            height: 30.w,
+            height: 40.w,
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -150,212 +215,107 @@ class _SendPageState extends State<SendPage> {
                     Text(
                       "Amount",
                       style: TextStyle(
-                          color: Colors.grey,
+                          color: Styles.infoGrayColor,
                           fontSize: 16.w,
                           fontWeight: FontWeight.w700),
                     ),
                     const Expanded(child: SizedBox()),
+                    Text(
+                      StringUtils.toDotDouble(
+                              widget.balance?.freeBalance ?? '0x0')
+                          .toString(),
+                      style: TextStyle(
+                          color: Styles.mainColor, fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(
+                      width: 6.w,
+                    )
                   ],
                 ),
                 SizedBox(
-                  height: 10.w,
+                  height: 15.w,
                 ),
                 Container(
                   decoration: BoxDecoration(
                       border: Border.all(width: 1, color: Styles.mainColor),
                       borderRadius: BorderRadius.circular(12.w)),
                   padding: EdgeInsets.only(left: 15.w),
-                  child: TextField(
-                    // controller: passwdConfirm,
-                    style: TextStyle(
-                      color: Styles.titleColor,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    // obscureText: showConfirmPasswd,
-                    decoration: InputDecoration(
-                      fillColor: Colors.transparent,
-                      filled: true,
-                      hintText: 'Password confirm',
-                      hintStyle: TextStyle(
-                        color: Styles.infoGrayColor,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      contentPadding: EdgeInsets.only(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                    ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: TextField(
+                        controller: _amountController,
+                        style: TextStyle(
+                          color: Styles.titleColor,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        decoration: InputDecoration(
+                          fillColor: Colors.transparent,
+                          filled: true,
+                          hintText: 'Please enter the transfer amount',
+                          hintStyle: TextStyle(
+                            color: Styles.infoGrayColor,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          contentPadding: const EdgeInsets.only(),
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                        ),
+                      )),
+                      TextButton(
+                          onPressed: () {
+                            _amountController.text = (StringUtils.toDotDouble(
+                                        widget.balance?.freeBalance ?? '0x0') -
+                                    _estimateGas * 2)
+                                .floor()
+                                .toString();
+                          },
+                          child: Text(
+                            'MAX',
+                            style: TextStyle(color: Styles.mainColor),
+                          ))
+                    ],
                   ),
                 )
               ],
             ),
           ),
-          Container(
-              color: Colors.white,
-              // padding: EdgeInsets.symmetric(vertical: 10),
-              child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Receiver",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          Expanded(child: SizedBox()),
-                          Icon(Icons.book)
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20.w,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 6,
-                            child: TextField(
-                              controller: _addressController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Please enter receiving address'.tr,
-                              ),
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 1,
-                            child: SizedBox(),
-                          )
-                        ],
-                      )
-                    ],
-                  ))),
-          SizedBox(
-            height: 10,
+          const SizedBox(
+            height: 100,
           ),
           Container(
-              color: Colors.white,
-              // padding: EdgeInsets.symmetric(vertical: 10),
-              child: Padding(
-                  padding: EdgeInsets.only(top: 15, left: 15, right: 15),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Amount",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          Expanded(child: SizedBox()),
-                          Text(
-                            "FIL >",
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        height: 50,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _amountController,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Please enter amount'.tr,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 30,
-                              height: 18,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border:
-                                    Border.all(color: Colors.black, width: 1),
-                              ),
-                              child: InkWell(
-                                  borderRadius: BorderRadius.circular(4),
-                                  onTap: () {
-                                    // TODO: 按钮点击事件
-                                    setState(() {
-                                      _amountController.text =
-                                          _balance.toString();
-                                    });
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Text(
-                                        'ALL',
-                                        style: TextStyle(fontSize: 10),
-                                      ),
-                                    ],
-                                  )),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Divider(),
-                      Row(
-                        children: [
-                          Text(
-                            "Balance",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          Expanded(child: SizedBox()),
-                          Text(
-                            _balance.toString(),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  ))),
-          SizedBox(
-            height: 10,
-          ),
-          const SizedBox(),
-          Container(
-              color: Colors.white,
-              // padding: EdgeInsets.symmetric(vertical: 10),
-              child: Padding(
-                  padding: EdgeInsets.only(top: 15, right: 15, left: 15),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Estimated Fee",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          Expanded(child: SizedBox()),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Padding(
-                          padding: EdgeInsets.all(5),
-                          child: GasButtonRow(
-                            labels: ["Slow", "REC", "Fast", "Customize"],
-                            onButtonPressed: _handleButtonPressed,
-                            // onButtonPressed: () => {},
-                          )),
-                    ],
-                  ))),
-          SizedBox(
-            height: 10,
-          ),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.r),
+                color: Styles.backgroundColor,
+              ),
+              child: Column(children: [
+                Row(
+                  children: [
+                    Text(
+                      "Estimated Gas",
+                      style: TextStyle(
+                          color: Styles.infoGrayColor,
+                          fontSize: 14.w,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    const Expanded(child: SizedBox()),
+                    Text(
+                      _estimateGas.toString(),
+                      style: TextStyle(
+                          color: Styles.mainColor,
+                          fontSize: 12.w,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                )
+              ])),
           const Expanded(child: SizedBox()),
           SafeArea(
             top: false,
@@ -365,19 +325,32 @@ class _SendPageState extends State<SendPage> {
                 width: 1000.w,
                 height: 48.w,
                 child: ElevatedButton(
-                  onPressed: () {},
-                  //   completedCreateSteps[1] = true;
-                  //   _createPageController.nextPage(
-                  //     duration: const Duration(milliseconds: 800),
-                  //     curve: Curves.easeOutCubic,
-                  //   );
+                  onPressed: () async {
+                    confirmTextPin().then((value) async {
+                      try {
+                        EasyLoading.show(status: 'Sending...');
 
-                  //   // init verify datas
-                  //   verifyInputs.value = [];
-                  //   var _t = _words.toList();
-                  //   _t.shuffle();
-                  //   verifyTabs.value = _t;
-                  // },
+                        final hash = await sendTx(value ?? '');
+                        if (hash != null) {
+                          LogUtil.debug('sendTx  $value');
+                          EasyLoading.dismiss();
+                          Get.snackbar('Send',
+                              'Send ${_amountController.text} VARA to ${_receiverController.text} success!}',
+                              colorText: Styles.mainWhite);
+
+                          // Get.back();
+                          Navigator.pop(context);
+                        } else {
+                          EasyLoading.dismiss();
+                          EasyLoading.showError('Hash is null');
+                        }
+                      } catch (err) {
+                        EasyLoading.dismiss();
+                        EasyLoading.showError(err.toString());
+                        LogUtil.debug('sendTx  ${err.toString()}');
+                      }
+                    });
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Styles.mainColor,
                     textStyle: GoogleFonts.rubik(fontSize: 18.sp),
@@ -394,6 +367,9 @@ class _SendPageState extends State<SendPage> {
                 // child: Obx(() => ),
               ),
             ),
+          ),
+          SizedBox(
+            height: 32.w,
           ),
         ],
       ),
