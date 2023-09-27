@@ -202,7 +202,7 @@ abstract class PolkawalletPluginBase {
   final basic = PluginBasicData(
       name: 'kusama',
       primaryColor: Colors.black as MaterialColor?,
-      jsCodeVersion: 10086);
+      jsCodeVersion: 10666);
 
   /// Plugin should definsss a list of node to connect
   /// for users of Polkawallet App.

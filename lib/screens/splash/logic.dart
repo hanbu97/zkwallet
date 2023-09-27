@@ -52,7 +52,8 @@ class SplashLogic extends GetxController {
 
     final node = NetworkParams();
     node.name = 'VARATest';
-    node.endpoint = 'wss://testnet.vara.rs';
+    // node.endpoint = 'wss://testnet.vara.rs';
+    node.endpoint = 'wss://vit.vara-network.io';
     node.ss58 = 137;
 
     final _ = await DataSp.varaSdk.api.connectNode(DataSp.keyRing, [node]);

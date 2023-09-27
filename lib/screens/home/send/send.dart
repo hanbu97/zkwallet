@@ -69,7 +69,8 @@ class _SendPageState extends State<SendPage> {
     final mnemonics =
         Encryption.decrypt(data.mnemonics, value, EncryptionMethod.fernet);
 
-    final tmpPassword = generateRandomString(16);
+    final tmpPassword = '12345678910';
+    // = generateRandomString(16);
     final json = await DataSp.varaSdk.api.keyring.importAccount(
       DataSp.keyRing,
       keyType: KeyType.mnemonic,
@@ -87,8 +88,8 @@ class _SendPageState extends State<SendPage> {
     LogUtil.debug(acc.toJson());
 
     final sender = TxSenderData(
-      DataSp.keyRing.keyPairs[0].address,
-      DataSp.keyRing.keyPairs[0].pubKey,
+      DataSp.keyRing.keyPairs.last.address,
+      DataSp.keyRing.keyPairs.last.pubKey,
     );
     final txInfo = TxInfoData('balances', 'transfer', sender);
 
@@ -334,12 +335,12 @@ class _SendPageState extends State<SendPage> {
                         if (hash != null) {
                           LogUtil.debug('sendTx  $value');
                           EasyLoading.dismiss();
-                          Get.snackbar('Send',
+
+                          Get.back();
+                          Get.snackbar('Send Success',
                               'Send ${_amountController.text} VARA to ${_receiverController.text} success!}',
                               colorText: Styles.mainWhite);
-
-                          // Get.back();
-                          Navigator.pop(context);
+                          // Navigator.pop(context);
                         } else {
                           EasyLoading.dismiss();
                           EasyLoading.showError('Hash is null');

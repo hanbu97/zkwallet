@@ -2,12 +2,15 @@ import 'dart:math';
 
 import 'package:expand_tap_area/expand_tap_area.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rust_bridge_template/main.dart';
 import 'package:flutter_rust_bridge_template/screens/home/receive/receive.dart';
 import 'package:flutter_rust_bridge_template/screens/home/send/send.dart';
 import 'package:flutter_rust_bridge_template/utils/config/images.dart';
 import 'package:flutter_rust_bridge_template/utils/extension/custom_ext.dart';
 import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
 import 'package:flutter_rust_bridge_template/utils/state/data_sp.dart';
+import 'package:flutter_rust_bridge_template/utils/state/sp_util.dart';
+import 'package:flutter_rust_bridge_template/utils/storage/general.dart';
 import 'package:flutter_rust_bridge_template/utils/string/string_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -121,38 +124,55 @@ class _WalletPageState extends State<WalletPage> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/images/icons/eth.png',
-                width: 16.w,
-                height: 16.w,
+              // Image.asset(
+              //   'assets/images/icons/eth.png',
+              //   width: 16.w,
+              //   height: 16.w,
+              // ),
+              // SizedBox(
+              //   width: 4.w,
+              // ),
+
+              GestureDetector(
+                onTap: () {
+                  Get.to(MyHomePage(
+                    title: 'zk',
+                  ));
+                },
+                child: Text('VARA',
+                    style: GoogleFonts.titilliumWeb(
+                        fontSize: 14.sp,
+                        color: Styles.titleColor,
+                        fontWeight: FontWeight.w600)),
               ),
-              SizedBox(
-                width: 4.w,
-              ),
-              Text('VARA',
-                  style: GoogleFonts.titilliumWeb(
-                      fontSize: 14.sp,
-                      color: Styles.titleColor,
-                      fontWeight: FontWeight.w600)),
             ],
           ),
           SizedBox(
             width: 10.w,
           ),
-          Container(
-            width: 39.w,
-            height: 39.w,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.white,
-                width: 2.0, // you can adjust the width as you need
+          GestureDetector(
+            onTap: () async {
+              await dbClear(HiveDBName.walletGroup);
+              await SpUtil().clear();
+              // Get.to(MyHomePage(
+              //   title: 'zk',
+              // ));
+            },
+            child: Container(
+              width: 39.w,
+              height: 39.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white,
+                  width: 2.0, // you can adjust the width as you need
+                ),
               ),
+              child: ClipOval(
+                  child: ImageRes.zkLogo.toImage
+                    ..width = 39.w
+                    ..height = 39.w),
             ),
-            child: ClipOval(
-                child: ImageRes.zkLogo.toImage
-                  ..width = 39.w
-                  ..height = 39.w),
           ),
           SizedBox(
             width: 12.w,

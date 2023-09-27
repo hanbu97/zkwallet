@@ -35,7 +35,6 @@ Future<void> dbClear(HiveDBName db) async {
   final encryptedBox = await Hive.openBox(hiveDBNameToString(db),
       encryptionCipher: HiveAesCipher(dbKey));
   encryptedBox.clear();
-
   return;
 }
 
