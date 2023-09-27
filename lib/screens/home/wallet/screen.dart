@@ -12,6 +12,7 @@ import 'package:flutter_rust_bridge_template/utils/state/data_sp.dart';
 import 'package:flutter_rust_bridge_template/utils/state/sp_util.dart';
 import 'package:flutter_rust_bridge_template/utils/storage/general.dart';
 import 'package:flutter_rust_bridge_template/utils/string/string_utils.dart';
+import 'package:flutter_rust_bridge_template/widgets/assets/coin_icon.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -392,8 +393,24 @@ class _WalletPageState extends State<WalletPage> {
                   height: 10.w,
                 ),
                 MenuItem(
-                  name: 'DOT',
+                  name: 'ZKP',
                   logo: 'assets/images/zklogo.png',
+                  routeName: '/createWallet',
+                  desp: '\$1.92',
+                ),
+                SizedBox(
+                  height: 10.w,
+                ),
+                MenuItem(
+                  name: 'VARA',
+                  routeName: '/createWallet',
+                  desp: '\$2.52',
+                ),
+                SizedBox(
+                  height: 10.w,
+                ),
+                MenuItem(
+                  name: 'DOT',
                   routeName: '/createWallet',
                   desp: '\$7.22',
                 ),
@@ -401,28 +418,9 @@ class _WalletPageState extends State<WalletPage> {
                   height: 10.w,
                 ),
                 MenuItem(
-                  name: 'DOT',
-                  logo: 'assets/images/zklogo.png',
+                  name: 'BTC',
                   routeName: '/createWallet',
-                  desp: '\$7.22',
-                ),
-                SizedBox(
-                  height: 10.w,
-                ),
-                MenuItem(
-                  name: 'DOT',
-                  logo: 'assets/images/zklogo.png',
-                  routeName: '/createWallet',
-                  desp: '\$7.22',
-                ),
-                SizedBox(
-                  height: 10.w,
-                ),
-                MenuItem(
-                  name: 'DOT',
-                  logo: 'assets/images/zklogo.png',
-                  routeName: '/createWallet',
-                  desp: '\$7.22',
+                  desp: '\$26,225.40',
                 ),
               ],
             ),
@@ -438,10 +436,17 @@ class _WalletPageState extends State<WalletPage> {
 
 // 操作按钮组件
 class MenuItem extends StatelessWidget {
-  const MenuItem({Key? key, this.name, this.logo, this.routeName, this.desp})
+  const MenuItem(
+      {Key? key,
+      required this.name,
+      this.logo,
+      this.routeName,
+      this.desp,
+      this.amount})
       : super(key: key);
-  final name; // 名称
-  final logo; // logo
+  final String name; // 名称
+  final String? logo; // logo
+  final double? amount;
   final routeName; // 路由跳转地址
   final desp;
   @override
@@ -458,26 +463,26 @@ class MenuItem extends StatelessWidget {
               SizedBox(
                 width: 12.w,
               ),
-              // Image.asset(
-              //   logo,
-              //   width: 32.w,
-              //   height: 32.w,
-              // ),
+
               Container(
-                width: 39.w,
-                height: 39.w,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2.0, // you can adjust the width as you need
+                  width: 39.w,
+                  height: 39.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2.0, // you can adjust the width as you need
+                    ),
                   ),
-                ),
-                child: ClipOval(
-                    child: ImageRes.zkLogo.toImage
-                      ..width = 32.w
-                      ..height = 32.w),
-              ),
+                  child: ClipOval(
+                      child: logo == null
+                          ? Container(
+                              color: Colors.white,
+                              child: Center(
+                                child: coinIcon(name),
+                              ),
+                            )
+                          : (logo!).toImage)),
               SizedBox(width: 11.w),
               Expanded(
                   child: Row(

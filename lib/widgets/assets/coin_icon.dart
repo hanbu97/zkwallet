@@ -1,13 +1,14 @@
 // if icon exists in assets, use it, else Icons.help
 // import 'package:bizhi/utils/file.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-Future<SvgPicture?> tryLoadSvg(String path) async {
+Future<Widget?> tryLoadSvg(String path) async {
   try {
     final bytes = await rootBundle.load(path);
     final svg = SvgPicture.memory(
@@ -16,19 +17,29 @@ Future<SvgPicture?> tryLoadSvg(String path) async {
     );
     return svg;
   } catch (e) {
-    return null;
+    try {
+      final pngPath = path.replaceFirst('.svg', '.png');
+      LogUtil.debug(pngPath);
+      final image = await rootBundle.load(pngPath);
+      return Image.memory(
+        image.buffer.asUint8List(),
+        fit: BoxFit.cover,
+      );
+    } catch (e) {
+      return null;
+    }
   }
 }
 
-Widget getCoinIcon(String coin) {
+Widget coinIcon(String coin) {
   var imgDir = coin.toLowerCase();
-  imgDir = 'assets/coins/$imgDir.svg';
+  imgDir = 'assets/images/coins/$imgDir.svg';
   String imgUrl =
       'https://assets.coincap.io/assets/icons/${coin.toLowerCase()}@2x.png';
 
-  return FutureBuilder<SvgPicture?>(
+  return FutureBuilder<Widget?>(
     future: tryLoadSvg(imgDir),
-    builder: (BuildContext context, AsyncSnapshot<SvgPicture?> snapshot) {
+    builder: (BuildContext context, AsyncSnapshot<Widget?> snapshot) {
       // print("loading icon: " + coin);
       if (snapshot.connectionState == ConnectionState.done) {
         if (snapshot.hasData && snapshot.data != null) {
