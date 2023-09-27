@@ -22,7 +22,7 @@ Future<SvgPicture?> tryLoadSvg(String path) async {
 
 Widget getCoinIcon(String coin) {
   var imgDir = coin.toLowerCase();
-  imgDir = 'assets/logos/color/$imgDir.svg';
+  imgDir = 'assets/coins/$imgDir.svg';
   String imgUrl =
       'https://assets.coincap.io/assets/icons/${coin.toLowerCase()}@2x.png';
 
