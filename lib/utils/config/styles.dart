@@ -37,7 +37,7 @@ class Styles {
   static TextStyle contentWhite = GoogleFonts.rubik(
     color: mainWhite,
     fontSize: 16.sp,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w500,
   );
   static TextStyle contentWhiteSmall = GoogleFonts.rubik(
     color: mainWhite,

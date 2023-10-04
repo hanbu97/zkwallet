@@ -53,6 +53,10 @@ class DataSp {
     return SpUtil().getInt(getKey(_selectedWalletGroupIdx), defValue: 0) ?? 0;
   }
 
+  static int get selectedWalletGroupId => getSelectedWalletGroupIdx();
+  static String get selectedWalletGroupName =>
+      walletGroupRead[getSelectedWalletGroupIdx()].name;
+
   static int getSelectedWalletIdx() {
     return SpUtil().getInt(getKey(_selectedWalletIdx), defValue: 0) ?? 0;
   }

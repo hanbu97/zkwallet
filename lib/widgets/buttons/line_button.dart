@@ -40,7 +40,7 @@ class LineButton extends StatelessWidget {
                 : SizedBox(),
             subtitle == null
                 ? Padding(
-                    padding: EdgeInsets.all(15),
+                    padding: EdgeInsets.all(15.w),
                     child: Text(
                       title,
                       style: Styles.contentWhite,

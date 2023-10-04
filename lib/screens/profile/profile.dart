@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rust_bridge_template/screens/profile/pages/wallet_management.dart';
 import 'package:flutter_rust_bridge_template/screens/profile/widgets/decoration.dart';
 import 'package:flutter_rust_bridge_template/utils/config/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:pixelarticons/pixelarticons.dart';
 
 import '../../widgets/assets/backgroud_icon.dart';
 import '../../widgets/buttons/line_button.dart';
+import 'pages/wallet_types.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -36,6 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: Stack(
         children: [
           SingleChildScrollView(
+            // physics: const ClampingScrollPhysics(),
             child: Column(
               children: [
                 // SizedBox(
@@ -54,14 +57,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         iconColor: Styles.mainColor,
                         size: 28.w,
                       ),
-                      page: ProfilePage(),
+                      page: ConfigWallet(),
                       ctx: context,
                       title: "Wallet Config",
                       subtitle: "Config Wallet Types and Networks",
                     ),
                     Styles.lineSpacerV(),
                     LineButton(
-                      page: ProfilePage(),
+                      page: ManageWallet(),
                       ctx: context,
                       title: "Wallet Management",
                       icon: RoundIcon(
@@ -137,13 +140,11 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           Positioned(
-            bottom: Styles.paramsSmallSpacerV,
-            left: 0,
-            right: 0,
-            child: Padding(
-              // color: Styles.backgroundColor,
-              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
-              child: InkWell(
+              bottom: Styles.paramsSmallSpacerV,
+              left: 0,
+              right: 0,
+              child: Styles.contentPadding(
+                  child: InkWell(
                 child: Ink(
                   height: 50.w,
                   decoration: BoxDecoration(
@@ -165,9 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 onTap: () async {},
-              ),
-            ),
-          ),
+              ))),
         ],
       ),
     );
