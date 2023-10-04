@@ -47,6 +47,7 @@ class _NewWalletPageState extends State<NewWalletPage>
 
   late int length;
   late String lang;
+  final nameController = TextEditingController();
   final passwd = TextEditingController();
   final passwdConfirm = TextEditingController();
 
@@ -144,25 +145,67 @@ class _NewWalletPageState extends State<NewWalletPage>
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
-          height: 32.w,
+          height: 20.w,
         ),
         Text('Create Wallet',
             style: GoogleFonts.titilliumWeb(
                 fontSize: 32.sp,
                 fontWeight: FontWeight.w600,
                 color: Styles.mainColor)),
-        SizedBox(
-          height: 12.w,
-        ),
         Text('Establish your new wallet.',
             style: GoogleFonts.rubik(
                 fontSize: 14.sp, color: Styles.infoGrayColor)),
-        SizedBox(height: 20.w),
+        SizedBox(
+          height: 28.w,
+        ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
+          child: SingleChildScrollView(
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'Wallet Name',
+                style: GoogleFonts.rubik(
+                    color: Styles.titleColor,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 12.w),
+              Container(
+                height: 30.w,
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  color: Styles.backgroundColor,
+                ),
+                child: TextField(
+                  controller: nameController,
+                  style: TextStyle(
+                    color: Styles.titleColor,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  decoration: InputDecoration(
+                    fillColor: Colors.transparent,
+                    filled: true,
+                    hintText: 'Please input name of wallet',
+                    hintStyle: TextStyle(
+                      color: Styles.infoGrayColor,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    contentPadding: EdgeInsets.only(),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.w),
               Text(
                 'Mnemonics Length',
                 style: GoogleFonts.rubik(
@@ -173,7 +216,7 @@ class _NewWalletPageState extends State<NewWalletPage>
               ),
               SizedBox(height: 12.w),
               Container(
-                height: 54.w,
+                height: 30.w,
                 // padding: EdgeInsets.symmetric(horizontal: 16.w),
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
@@ -200,7 +243,7 @@ class _NewWalletPageState extends State<NewWalletPage>
               ),
               SizedBox(height: 12.w),
               Container(
-                height: 54.w,
+                height: 30.w,
                 // padding: EdgeInsets.symmetric(horizontal: 16.w),
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
@@ -236,7 +279,7 @@ class _NewWalletPageState extends State<NewWalletPage>
               ),
               SizedBox(height: 12.w),
               Container(
-                height: 54.w,
+                height: 30.w,
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
@@ -336,7 +379,7 @@ class _NewWalletPageState extends State<NewWalletPage>
                 initAgree: encryptMnemonicChecked,
               ),
             ],
-          ),
+          )),
         ),
         const Expanded(child: SizedBox()),
         SafeArea(

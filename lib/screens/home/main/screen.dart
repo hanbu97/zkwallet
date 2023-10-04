@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../utils/config/styles.dart';
+import '../../profile/profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> {
             Container(),
             Container(),
             Container(),
-            Container(),
+            ProfilePage(),
           ],
         ),
       ),
@@ -62,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                     behavior: HitTestBehavior.opaque,
                     onTap: () => tabIndex.value = 0,
                     child: Icon(
-                      Icons.account_balance_wallet_sharp,
+                      Icons.account_balance_wallet_outlined,
                       color: tabIndex.value == 0
                           ? Styles.mainColor
                           : Styles.infoGrayColor,
@@ -105,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                     tapPadding: EdgeInsets.all(20.w),
                     onTap: () => tabIndex.value = 3,
                     child: Icon(
-                      Icons.manage_accounts,
+                      Icons.people_alt_outlined,
                       color: tabIndex.value == 3
                           ? Styles.mainColor
                           : Styles.infoGrayColor,

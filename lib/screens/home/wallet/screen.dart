@@ -79,15 +79,6 @@ class _WalletPageState extends State<WalletPage> {
                     await DataSp.varaSdk.api.account.queryBalance(wallet);
 
                 LogUtil.debug(res?.availableBalance);
-
-                // final data = DataSp.getWalletGroupRead();
-                // data?.forEach((element) {
-                //   final wa = element.wallets;
-
-                //   wa.forEach((element) {
-                //     print(element.toJson());
-                //   });
-                // });
               },
               tapPadding: EdgeInsets.all(10.w),
               child: Container(
@@ -181,165 +172,149 @@ class _WalletPageState extends State<WalletPage> {
         ],
       ),
       body: SingleChildScrollView(
-          child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 19.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 10.w,
-            ),
-            Stack(
-              alignment: AlignmentDirectional.topCenter,
-              children: [
-                Container(
-                  width: mq.size.width,
-                  margin: EdgeInsets.only(bottom: 22.w),
-                  height: 145.w,
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.r),
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [
-                          const Color.fromRGBO(2, 86, 255, 0.6),
-                          Styles.mainColor,
-                        ],
+          child: Styles.contentPadding(
+              child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 10.w,
+          ),
+          Stack(
+            alignment: AlignmentDirectional.topCenter,
+            children: [
+              Container(
+                width: mq.size.width,
+                margin: EdgeInsets.only(bottom: 22.w),
+                height: 145.w,
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.r),
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        const Color.fromRGBO(2, 86, 255, 0.6),
+                        Styles.mainColor,
+                      ],
+                    ),
+                    boxShadow: const [
+                      BoxShadow(
+                        offset: Offset(2, 2), //x,y轴
+                        color: Color.fromRGBO(82, 119, 172, 0.6), //投影颜色
+                        blurRadius: 2, //投影距离
+                      )
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 24.w,
                       ),
-                      boxShadow: const [
-                        BoxShadow(
-                          offset: Offset(2, 2), //x,y轴
-                          color: Color.fromRGBO(82, 119, 172, 0.6), //投影颜色
-                          blurRadius: 2, //投影距离
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 24.w,
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 21.w),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'Total Available Balance',
-                                    style: GoogleFonts.titilliumWeb(
-                                      color: Styles.mainWhite,
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 21.w),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Total Available Balance',
+                                  style: GoogleFonts.titilliumWeb(
+                                    color: Styles.mainWhite,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  SizedBox(width: 5.w),
-                                  Image.asset(
-                                    "assets/images/icons/eye_open.png",
-                                    width: 15.w,
-                                    height: 15.w,
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 5.w),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 21.w),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '\$ ${StringUtils.toDotDoubleStr(_balance?.freeBalance ?? '0x0')}',
-                            style: GoogleFonts.titilliumWeb(
-                              fontSize: 32.sp,
-                              color: Styles.mainWhite,
-                              fontWeight: FontWeight.w600,
+                                ),
+                                SizedBox(width: 5.w),
+                                Image.asset(
+                                  "assets/images/icons/eye_open.png",
+                                  width: 15.w,
+                                  height: 15.w,
+                                )
+                              ],
                             ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 5.w),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 21.w),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '\$ ${StringUtils.toDotDoubleStr(_balance?.freeBalance ?? '0x0')}',
+                          style: GoogleFonts.titilliumWeb(
+                            fontSize: 32.sp,
+                            color: Styles.mainWhite,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                Positioned(
-                    top: 102.w,
-                    child: Container(
-                        width: 280.w,
-                        height: 65.w,
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30.w),
-                            // color: Styles.mainColorDark,
-                            boxShadow: const [
-                              BoxShadow(
-                                offset: Offset(2, 2), //x,y轴
-                                color: Color.fromRGBO(82, 119, 172, 0.6), //投影颜色
-                                blurRadius: 2, //投影距离
-                              )
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ExpandTapWidget(
-                                onTap: () {
-                                  Get.to(ReceivePage(
-                                      wallet:
-                                          walletLogic.selectedWallet.address!));
-                                },
-                                tapPadding: EdgeInsets.all(10.w),
-                                child: Container(
-                                  height: 48.w,
-                                  width: 48.w,
-                                  padding: EdgeInsets.all(11.w),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16.w),
-                                    color: Styles.mainColorDark,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 2.w,
-                                      ),
-                                      Icon(
-                                        Icons.download,
-                                        color: Colors.white,
-                                        size: 22.w,
-                                      ),
-                                    ],
-                                  ),
+              ),
+              Positioned(
+                  top: 102.w,
+                  child: Container(
+                      width: 280.w,
+                      height: 65.w,
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30.w),
+                          // color: Styles.mainColorDark,
+                          boxShadow: const [
+                            BoxShadow(
+                              offset: Offset(2, 2), //x,y轴
+                              color: Color.fromRGBO(82, 119, 172, 0.6), //投影颜色
+                              blurRadius: 2, //投影距离
+                            )
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ExpandTapWidget(
+                              onTap: () {
+                                Get.to(ReceivePage(
+                                    wallet:
+                                        walletLogic.selectedWallet.address!));
+                              },
+                              tapPadding: EdgeInsets.all(10.w),
+                              child: Container(
+                                height: 48.w,
+                                width: 48.w,
+                                padding: EdgeInsets.all(11.w),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.w),
+                                  color: Styles.mainColorDark,
+                                ),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 2.w,
+                                    ),
+                                    Icon(
+                                      Icons.download,
+                                      color: Colors.white,
+                                      size: 22.w,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              ExpandTapWidget(
-                                onTap: () {
-                                  Get.to(SendPage(
-                                      balance: _balance,
-                                      wallet:
-                                          walletLogic.selectedWallet.address!));
-                                },
-                                tapPadding: EdgeInsets.all(10.w),
-                                child: Container(
-                                  height: 48.w,
-                                  width: 48.w,
-                                  padding: EdgeInsets.all(11.w),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16.w),
-                                    color: Styles.mainColorDark,
-                                  ),
-                                  child: Icon(
-                                    Icons.upload,
-                                    color: Colors.white,
-                                    size: 22.w,
-                                  ),
-                                ),
-                              ),
-                              Container(
+                            ),
+                            ExpandTapWidget(
+                              onTap: () {
+                                Get.to(SendPage(
+                                    balance: _balance,
+                                    wallet:
+                                        walletLogic.selectedWallet.address!));
+                              },
+                              tapPadding: EdgeInsets.all(10.w),
+                              child: Container(
                                 height: 48.w,
                                 width: 48.w,
                                 padding: EdgeInsets.all(11.w),
@@ -348,88 +323,102 @@ class _WalletPageState extends State<WalletPage> {
                                   color: Styles.mainColorDark,
                                 ),
                                 child: Icon(
-                                  Icons.arrow_downward,
+                                  Icons.upload,
                                   color: Colors.white,
                                   size: 22.w,
                                 ),
                               ),
-                              Container(
-                                height: 48.w,
-                                width: 48.w,
-                                padding: EdgeInsets.all(11.w),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16.w),
-                                  color: Styles.mainColorDark,
-                                ),
-                                child: Icon(
-                                  Icons.arrow_upward,
-                                  color: Colors.white,
-                                  size: 22.w,
-                                ),
-                              )
-                            ],
-                          ),
-                        )))
-              ],
-            ),
-            SizedBox(
-              height: 30.w,
-            ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Text("Tokens",
-                        style: TextStyle(
-                          color: Styles.mainWhite,
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w600,
-                        )),
-                    const Expanded(child: SizedBox()),
-                    Icon(Icons.search, color: Styles.infoGrayColor, size: 24.w)
-                  ],
-                ),
-                SizedBox(
-                  height: 10.w,
-                ),
-                MenuItem(
-                  name: 'ZKP',
-                  logo: 'assets/images/zklogo.png',
-                  routeName: '/createWallet',
-                  desp: '\$1.92',
-                ),
-                SizedBox(
-                  height: 10.w,
-                ),
-                MenuItem(
-                  name: 'VARA',
-                  routeName: '/createWallet',
-                  desp: '\$2.52',
-                ),
-                SizedBox(
-                  height: 10.w,
-                ),
-                MenuItem(
-                  name: 'DOT',
-                  routeName: '/createWallet',
-                  desp: '\$7.22',
-                ),
-                SizedBox(
-                  height: 10.w,
-                ),
-                MenuItem(
-                  name: 'BTC',
-                  routeName: '/createWallet',
-                  desp: '\$26,225.40',
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 30.w,
-            ),
-          ],
-        ),
-      )),
+                            ),
+                            Container(
+                              height: 48.w,
+                              width: 48.w,
+                              padding: EdgeInsets.all(11.w),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16.w),
+                                color: Styles.mainColorDark,
+                              ),
+                              child: Icon(
+                                Icons.arrow_downward,
+                                color: Colors.white,
+                                size: 22.w,
+                              ),
+                            ),
+                            Container(
+                              height: 48.w,
+                              width: 48.w,
+                              padding: EdgeInsets.all(11.w),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16.w),
+                                color: Styles.mainColorDark,
+                              ),
+                              child: Icon(
+                                Icons.arrow_upward,
+                                color: Colors.white,
+                                size: 22.w,
+                              ),
+                            )
+                          ],
+                        ),
+                      )))
+            ],
+          ),
+          SizedBox(
+            height: 30.w,
+          ),
+          Column(
+            children: [
+              Row(
+                children: [
+                  Text("Tokens",
+                      style: TextStyle(
+                        color: Styles.mainWhite,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600,
+                      )),
+                  const Expanded(child: SizedBox()),
+                  Icon(Icons.search, color: Styles.infoGrayColor, size: 24.w)
+                ],
+              ),
+              SizedBox(
+                height: 10.w,
+              ),
+              MenuItem(
+                name: 'ZKP',
+                logo: 'assets/images/zklogo.png',
+                routeName: '/createWallet',
+                desp: '\$1.92',
+              ),
+              SizedBox(
+                height: 10.w,
+              ),
+              MenuItem(
+                name: 'VARA',
+                routeName: '/createWallet',
+                desp: '\$2.52',
+              ),
+              SizedBox(
+                height: 10.w,
+              ),
+              MenuItem(
+                name: 'DOT',
+                routeName: '/createWallet',
+                desp: '\$7.22',
+              ),
+              SizedBox(
+                height: 10.w,
+              ),
+              MenuItem(
+                name: 'BTC',
+                routeName: '/createWallet',
+                desp: '\$26,225.40',
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 30.w,
+          ),
+        ],
+      ))),
     );
   }
 }
@@ -463,7 +452,6 @@ class MenuItem extends StatelessWidget {
               SizedBox(
                 width: 12.w,
               ),
-
               Container(
                   width: 39.w,
                   height: 39.w,
@@ -491,12 +479,7 @@ class MenuItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(name,
-                          style: GoogleFonts.rubik(
-                            color: Styles.mainWhite,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                          )),
+                      Text(name, style: Styles.contentWhite),
                       SizedBox(
                         height: 2.w,
                       ),
@@ -534,26 +517,15 @@ class MenuItem extends StatelessWidget {
                     width: 10.w,
                   ),
                   Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                    size: 14.w,
-                  )
+                    Icons.chevron_right,
+                    color: Colors.grey,
+                    size: 22.w,
+                  ),
+                  SizedBox(
+                    width: 12.w,
+                  ),
                 ],
               )),
-
-              // Expanded(
-              //   child: Text(name,
-              //       style: GoogleFonts.rubik(
-              //         color: Styles.titleColor,
-              //         fontSize: 14.sp,
-              //         fontWeight: FontWeight.w600,
-              //       )),
-              // ),
-              Image.asset(
-                "assets/images/icons/arrow_right.png",
-                width: 24.w,
-                height: 24.w,
-              ),
             ],
           ),
         ));
