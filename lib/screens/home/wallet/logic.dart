@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_rust_bridge_template/models/wallet/wallets.dart';
-import 'package:flutter_rust_bridge_template/utils/state/data_sp.dart';
+import '/models/wallet/wallets.dart';
+import '/utils/state/data_sp.dart';
 
 import '../../../utils/route/app_navigator.dart';
 import '/utils/log/logger.dart';

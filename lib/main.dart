@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
-import 'package:flutter_rust_bridge_template/utils/route/app_view.dart';
+import '/utils/log/logger.dart';
+import '/utils/route/app_view.dart';
 import 'package:get/get.dart';
 import 'ffi.dart' if (dart.library.html) 'ffi_web.dart';
 import 'utils/config/config.dart';

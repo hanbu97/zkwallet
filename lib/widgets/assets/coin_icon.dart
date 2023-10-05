@@ -1,7 +1,7 @@
 // if icon exists in assets, use it, else Icons.help
 // import 'package:bizhi/utils/file.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
+import '/utils/log/logger.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 

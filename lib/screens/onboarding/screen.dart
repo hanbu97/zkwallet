@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rust_bridge_template/utils/extension/custom_ext.dart';
-import 'package:flutter_rust_bridge_template/utils/route/app_navigator.dart';
+import '/utils/extension/custom_ext.dart';
+import '/utils/route/app_navigator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rust_bridge_template/widgets/confirm/prompt_dialog.dart';
+import '/widgets/confirm/prompt_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 

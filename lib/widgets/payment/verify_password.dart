@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_rust_bridge_template/utils/config/styles.dart';
-import 'package:flutter_rust_bridge_template/utils/route/app_navigator.dart';
+import '/utils/config/styles.dart';
+import '/utils/route/app_navigator.dart';
 import 'package:get/get.dart';
 import 'package:tuple/tuple.dart';
 

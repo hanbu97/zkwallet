@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_rust_bridge_template/utils/config/styles.dart';
+import '/utils/config/styles.dart';
 
 class BackgroundIcon extends StatelessWidget {
   final IconData iconData;

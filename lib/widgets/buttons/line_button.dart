@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_rust_bridge_template/utils/config/styles.dart';
+import '/utils/config/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LineButton extends StatelessWidget {

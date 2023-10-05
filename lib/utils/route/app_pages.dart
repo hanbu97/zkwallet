@@ -1,9 +1,9 @@
-import 'package:flutter_rust_bridge_template/screens/home/main/binding.dart';
-import 'package:flutter_rust_bridge_template/screens/home/main/screen.dart';
-import 'package:flutter_rust_bridge_template/screens/home/wallet/binding.dart';
-import 'package:flutter_rust_bridge_template/screens/home/wallet/screen.dart';
-import 'package:flutter_rust_bridge_template/screens/onboarding/binding.dart';
-import 'package:flutter_rust_bridge_template/screens/onboarding/screen.dart';
+import '/screens/home/main/binding.dart';
+import '/screens/home/main/screen.dart';
+import '/screens/home/wallet/binding.dart';
+import '/screens/home/wallet/screen.dart';
+import '/screens/onboarding/binding.dart';
+import '/screens/onboarding/screen.dart';
 import 'package:get/get.dart';
 
 import '../../screens/splash/binding.dart';

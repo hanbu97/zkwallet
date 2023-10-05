@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rust_bridge_template/utils/extension/custom_ext.dart';
+import '/utils/extension/custom_ext.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

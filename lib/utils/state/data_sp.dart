@@ -2,9 +2,9 @@
 // import '/models/login_certificate.dart';
 import 'dart:convert';
 
-import 'package:flutter_rust_bridge_template/models/wallet/wallets_group.dart';
-import 'package:flutter_rust_bridge_template/models/wallet/wallets_group_read.dart';
-import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
+import '/models/wallet/wallets_group.dart';
+import '/models/wallet/wallets_group_read.dart';
+import '/utils/log/logger.dart';
 import 'package:get/get.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:uuid/uuid.dart';

@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_rust_bridge_template/ffi.dart';
-import 'package:flutter_rust_bridge_template/utils/log/logger.dart';
-import 'package:flutter_rust_bridge_template/utils/state/data_sp.dart';
-import 'package:flutter_rust_bridge_template/widgets/agreements/encrypt_mnemonics.dart';
+import '/ffi.dart';
+import '/utils/log/logger.dart';
+import '/utils/state/data_sp.dart';
+import '/widgets/agreements/encrypt_mnemonics.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 

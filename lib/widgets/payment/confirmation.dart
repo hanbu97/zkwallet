@@ -3,7 +3,7 @@
 // import 'package:falafi/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_rust_bridge_template/utils/config/styles.dart';
+import '/utils/config/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tuple/tuple.dart';
 

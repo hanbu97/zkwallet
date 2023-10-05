@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_rust_bridge_template/utils/config/images.dart';
-import 'package:flutter_rust_bridge_template/utils/config/styles.dart';
-import 'package:flutter_rust_bridge_template/utils/extension/custom_ext.dart';
-import 'package:flutter_rust_bridge_template/utils/state/data_sp.dart';
-import 'package:flutter_rust_bridge_template/widgets/assets/coin_icon.dart';
+import '/utils/config/images.dart';
+import '/utils/config/styles.dart';
+import '/utils/extension/custom_ext.dart';
+import '/utils/state/data_sp.dart';
+import '/widgets/assets/coin_icon.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';

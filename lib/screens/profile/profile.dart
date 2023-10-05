@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rust_bridge_template/screens/profile/pages/wallet_management.dart';
-import 'package:flutter_rust_bridge_template/screens/profile/widgets/decoration.dart';
-import 'package:flutter_rust_bridge_template/utils/config/styles.dart';
+import '/screens/profile/pages/wallet_management.dart';
+import '/screens/profile/widgets/decoration.dart';
+import '/utils/config/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

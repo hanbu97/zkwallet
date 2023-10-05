@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_rust_bridge_template/utils/route/app_navigator.dart';
+import '/utils/route/app_navigator.dart';
 
 import '/utils/log/logger.dart';
 import 'package:get/get.dart';
