@@ -678,7 +678,8 @@ class _NewWalletPageState extends State<NewWalletPage>
                       final walletType = WalletType(name: "vara-testnet");
                       walletGroup = WalletGroup(
                           idx: walletGroupIdx,
-                          name: polkaWallet!.address,
+                          // name: polkaWallet!.address,
+                          name: nameController.text,
                           mnemonics: [mnemonicStr],
                           wallets: [wallet],
                           walletTypes: [walletType]);

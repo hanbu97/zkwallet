@@ -131,7 +131,7 @@ class _WalletPageState extends State<WalletPage> {
                     title: 'zk',
                   ));
                 },
-                child: Text('VARA',
+                child: Text(DataSp.selectedWalletGroupName,
                     style: GoogleFonts.titilliumWeb(
                         fontSize: 14.sp,
                         color: Styles.titleColor,
@@ -144,8 +144,8 @@ class _WalletPageState extends State<WalletPage> {
           ),
           GestureDetector(
             onTap: () async {
-              await dbClear(HiveDBName.walletGroup);
-              await SpUtil().clear();
+              // await dbClear(HiveDBName.walletGroup);
+              // await SpUtil().clear();
               // Get.to(MyHomePage(
               //   title: 'zk',
               // ));

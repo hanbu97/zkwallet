@@ -27,7 +27,6 @@ class WalletAddBottomBarWidget extends StatefulWidget {
 class _WalletAddBottomBarWidgetState extends State<WalletAddBottomBarWidget> {
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -35,27 +34,27 @@ class _WalletAddBottomBarWidgetState extends State<WalletAddBottomBarWidget> {
   Widget build(BuildContext context) {
     return widget.isShown
         ? AnimatedPositioned(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 500),
             bottom: 0,
             left: 0,
             right: 0,
             child: Container(
                 // height: 300,
                 decoration: BoxDecoration(
-                  color: Styles.mainWhite,
+                  color: Styles.backgroundColor,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10.0),
-                    topRight: Radius.circular(10.0),
+                    topLeft: Radius.circular(10.w),
+                    topRight: Radius.circular(10.w),
                   ),
                 ),
                 child: Column(
                   children: [
                     Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: Styles.contentBackground,
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15.0),
-                          topRight: Radius.circular(15.0),
+                          topLeft: Radius.circular(15.w),
+                          topRight: Radius.circular(15.w),
                         ),
                       ),
                       width: double.infinity,
@@ -99,7 +98,7 @@ class _WalletAddBottomBarWidgetState extends State<WalletAddBottomBarWidget> {
                     ),
                     Container(
                       width: double.infinity,
-                      color: Colors.white,
+                      color: Styles.contentBackground,
                       child: FractionallySizedBox(
                         child: Material(
                           color: Colors.transparent,
@@ -142,7 +141,7 @@ class _WalletAddBottomBarWidgetState extends State<WalletAddBottomBarWidget> {
                     ),
                     Container(
                       width: double.infinity,
-                      color: Colors.white,
+                      color: Styles.contentBackground,
                       child: FractionallySizedBox(
                         child: Material(
                           color: Colors.transparent,

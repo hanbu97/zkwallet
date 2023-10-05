@@ -301,9 +301,6 @@ class _WalletListState extends State<WalletList> {
                               itemBuilder: (BuildContext context, int index) =>
                                   Column(
                                 children: [
-                                  // index == 0
-                                  //     ?
-                                  //     : const SizedBox(),
                                   GestureDetector(
                                       onTap: () => {
                                             setState(() {
@@ -323,7 +320,7 @@ class _WalletListState extends State<WalletList> {
                                               color:
                                                   _accountSelectedIndex == index
                                                       ? Styles.mainColor
-                                                      : Colors.transparent,
+                                                      : Styles.backgroundColor,
                                               width: 1.w,
                                             ),
                                           ),
