@@ -31,6 +31,15 @@ abstract class Native {
 
   FlutterRustBridgeTaskConstMeta get kGenerateWalletConstMeta;
 
+  Future<PolkadotAddress> generateWalletFromMnemonics(
+      {required int ss58,
+      String? password,
+      required String phrase,
+      required String lang,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGenerateWalletFromMnemonicsConstMeta;
+
   Future<List<String>> wordSuggestion(
       {required String word, required String lang, dynamic hint});
 

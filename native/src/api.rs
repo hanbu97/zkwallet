@@ -235,6 +235,20 @@ pub fn generate_wallet(
     data
 }
 
+pub fn generate_wallet_from_mnemonics(
+    ss58: u16,
+    password: Option<String>,
+    phrase: String,
+    lang: String,
+) -> PolkadotAddress {
+    let phrase = phrase.trim();
+    let lang = get_language(lang);
+
+    let data =
+        crate::wallet::mnemonics::generate_wallet_from_mnemonics(ss58, password, phrase, lang);
+    data
+}
+
 pub fn word_suggestion(word: String, lang: String) -> Vec<String> {
     let lang = get_language(lang);
     let word = word.trim();
@@ -260,4 +274,13 @@ fn test_mnemonic_words_suggestion() {
     dbg!(data);
 
     // let data = crate::wallet::mnemonics::mnemonic_words_suggestion(word, lang);
+}
+
+#[test]
+fn test_generate_wallet_from_mnemonics() {
+    let phrase =
+        "sudden note pause benefit dash envelope crush secret flush desk east pepper".to_string();
+    let lang = "English".to_string();
+    let data = generate_wallet_from_mnemonics(42, None, phrase, lang);
+    dbg!(data);
 }

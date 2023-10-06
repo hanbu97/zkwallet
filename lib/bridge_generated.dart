@@ -107,6 +107,33 @@ class NativeImpl implements Native {
         argNames: ["ss58", "password", "length", "lang"],
       );
 
+  Future<PolkadotAddress> generateWalletFromMnemonics(
+      {required int ss58,
+      String? password,
+      required String phrase,
+      required String lang,
+      dynamic hint}) {
+    var arg0 = api2wire_u16(ss58);
+    var arg1 = _platform.api2wire_opt_String(password);
+    var arg2 = _platform.api2wire_String(phrase);
+    var arg3 = _platform.api2wire_String(lang);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_generate_wallet_from_mnemonics(port_, arg0, arg1, arg2, arg3),
+      parseSuccessData: _wire2api_polkadot_address,
+      parseErrorData: null,
+      constMeta: kGenerateWalletFromMnemonicsConstMeta,
+      argValues: [ss58, password, phrase, lang],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kGenerateWalletFromMnemonicsConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "generate_wallet_from_mnemonics",
+        argNames: ["ss58", "password", "phrase", "lang"],
+      );
+
   Future<List<String>> wordSuggestion(
       {required String word, required String lang, dynamic hint}) {
     var arg0 = _platform.api2wire_String(word);
@@ -400,6 +427,36 @@ class NativeWire implements FlutterRustBridgeWireBase {
   late final _wire_generate_wallet = _wire_generate_walletPtr.asFunction<
       void Function(int, int, ffi.Pointer<wire_uint_8_list>, int,
           ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_generate_wallet_from_mnemonics(
+    int port_,
+    int ss58,
+    ffi.Pointer<wire_uint_8_list> password,
+    ffi.Pointer<wire_uint_8_list> phrase,
+    ffi.Pointer<wire_uint_8_list> lang,
+  ) {
+    return _wire_generate_wallet_from_mnemonics(
+      port_,
+      ss58,
+      password,
+      phrase,
+      lang,
+    );
+  }
+
+  late final _wire_generate_wallet_from_mnemonicsPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Uint16,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_generate_wallet_from_mnemonics');
+  late final _wire_generate_wallet_from_mnemonics =
+      _wire_generate_wallet_from_mnemonicsPtr.asFunction<
+          void Function(int, int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_word_suggestion(
     int port_,

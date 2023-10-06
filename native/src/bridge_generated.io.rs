@@ -28,6 +28,17 @@ pub extern "C" fn wire_generate_wallet(
 }
 
 #[no_mangle]
+pub extern "C" fn wire_generate_wallet_from_mnemonics(
+    port_: i64,
+    ss58: u16,
+    password: *mut wire_uint_8_list,
+    phrase: *mut wire_uint_8_list,
+    lang: *mut wire_uint_8_list,
+) {
+    wire_generate_wallet_from_mnemonics_impl(port_, ss58, password, phrase, lang)
+}
+
+#[no_mangle]
 pub extern "C" fn wire_word_suggestion(
     port_: i64,
     word: *mut wire_uint_8_list,
