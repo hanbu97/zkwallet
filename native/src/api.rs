@@ -197,22 +197,8 @@ pub fn multiply_zk(a: i32, b: i32) -> (String, String) {
 //     (pwd, ls)
 // }
 
-pub fn generate_wallet(
-    ss58: u16,
-    password: Option<String>,
-    length: u8,
-    lang: String,
-) -> PolkadotAddress {
-    let length = match length {
-        12 => bip39::MnemonicType::Words12,
-        15 => bip39::MnemonicType::Words15,
-        18 => bip39::MnemonicType::Words18,
-        21 => bip39::MnemonicType::Words21,
-        24 => bip39::MnemonicType::Words24,
-        _ => bip39::MnemonicType::Words12,
-    };
-
-    let lang = match lang.as_str() {
+fn get_language(lang: String) -> bip39::Language {
+    match lang.as_str() {
         "English" => bip39::Language::English,
         "ChineseSimplified" => bip39::Language::ChineseSimplified,
         "ChineseTraditional" => bip39::Language::ChineseTraditional,
@@ -222,9 +208,37 @@ pub fn generate_wallet(
         "Korean" => bip39::Language::Korean,
         "Spanish" => bip39::Language::Spanish,
         _ => bip39::Language::English,
-    };
+    }
+}
+
+fn get_length(length: u8) -> bip39::MnemonicType {
+    match length {
+        12 => bip39::MnemonicType::Words12,
+        15 => bip39::MnemonicType::Words15,
+        18 => bip39::MnemonicType::Words18,
+        21 => bip39::MnemonicType::Words21,
+        24 => bip39::MnemonicType::Words24,
+        _ => bip39::MnemonicType::Words12,
+    }
+}
+
+pub fn generate_wallet(
+    ss58: u16,
+    password: Option<String>,
+    length: u8,
+    lang: String,
+) -> PolkadotAddress {
+    let length = get_length(length);
+    let lang = get_language(lang);
 
     let data = crate::wallet::mnemonics::generate_wallet(ss58, password, length, lang);
+    data
+}
+
+pub fn word_suggestion(word: String, lang: String) -> Vec<String> {
+    let lang = get_language(lang);
+    let word = word.trim();
+    let data = crate::wallet::mnemonics::word_suggestion(word, lang);
     data
 }
 
@@ -235,4 +249,15 @@ fn test_generate_wallet() {
 
     let data = generate_wallet(137, None, 24, "ChineseSimplified".to_string());
     println!("data: {:?}", data);
+}
+
+#[test]
+fn test_mnemonic_words_suggestion() {
+    let word = "ab";
+    let lang = "English";
+
+    let data = word_suggestion(word.to_string(), lang.to_string());
+    dbg!(data);
+
+    // let data = crate::wallet::mnemonics::mnemonic_words_suggestion(word, lang);
 }

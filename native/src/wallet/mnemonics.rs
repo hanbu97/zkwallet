@@ -40,3 +40,13 @@ pub fn generate_wallet(
 
     data
 }
+
+pub fn word_suggestion(word: &str, lang: Language) -> Vec<String> {
+    let wordlist = lang.wordlist();
+    let suggestions = wordlist.get_words_by_prefix(word);
+    let suggestions = suggestions
+        .iter()
+        .map(|s| s.to_string())
+        .collect::<Vec<String>>();
+    suggestions
+}

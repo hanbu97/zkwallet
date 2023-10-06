@@ -27,6 +27,15 @@ pub extern "C" fn wire_generate_wallet(
     wire_generate_wallet_impl(port_, ss58, password, length, lang)
 }
 
+#[no_mangle]
+pub extern "C" fn wire_word_suggestion(
+    port_: i64,
+    word: *mut wire_uint_8_list,
+    lang: *mut wire_uint_8_list,
+) {
+    wire_word_suggestion_impl(port_, word, lang)
+}
+
 // Section: allocate functions
 
 #[no_mangle]

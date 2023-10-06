@@ -91,6 +91,24 @@ fn wire_generate_wallet_impl(
         },
     )
 }
+fn wire_word_suggestion_impl(
+    port_: MessagePort,
+    word: impl Wire2Api<String> + UnwindSafe,
+    lang: impl Wire2Api<String> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, Vec<String>, _>(
+        WrapInfo {
+            debug_name: "word_suggestion",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_word = word.wire2api();
+            let api_lang = lang.wire2api();
+            move |task_callback| Result::<_, ()>::Ok(word_suggestion(api_word, api_lang))
+        },
+    )
+}
 // Section: wrapper structs
 
 // Section: static checks

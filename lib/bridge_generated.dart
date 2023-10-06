@@ -107,6 +107,27 @@ class NativeImpl implements Native {
         argNames: ["ss58", "password", "length", "lang"],
       );
 
+  Future<List<String>> wordSuggestion(
+      {required String word, required String lang, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(word);
+    var arg1 = _platform.api2wire_String(lang);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_word_suggestion(port_, arg0, arg1),
+      parseSuccessData: _wire2api_StringList,
+      parseErrorData: null,
+      constMeta: kWordSuggestionConstMeta,
+      argValues: [word, lang],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kWordSuggestionConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "word_suggestion",
+        argNames: ["word", "lang"],
+      );
+
   void dispose() {
     _platform.dispose();
   }
@@ -114,6 +135,10 @@ class NativeImpl implements Native {
 
   String _wire2api_String(dynamic raw) {
     return raw as String;
+  }
+
+  List<String> _wire2api_StringList(dynamic raw) {
+    return (raw as List<dynamic>).cast<String>();
   }
 
   (String, String) _wire2api___record__String_String(dynamic raw) {
@@ -375,6 +400,26 @@ class NativeWire implements FlutterRustBridgeWireBase {
   late final _wire_generate_wallet = _wire_generate_walletPtr.asFunction<
       void Function(int, int, ffi.Pointer<wire_uint_8_list>, int,
           ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_word_suggestion(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> word,
+    ffi.Pointer<wire_uint_8_list> lang,
+  ) {
+    return _wire_word_suggestion(
+      port_,
+      word,
+      lang,
+    );
+  }
+
+  late final _wire_word_suggestionPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_word_suggestion');
+  late final _wire_word_suggestion = _wire_word_suggestionPtr.asFunction<
+      void Function(
+          int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,

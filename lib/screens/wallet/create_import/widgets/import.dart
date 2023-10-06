@@ -51,6 +51,7 @@ class _ImportAccountState extends State<ImportAccount> {
   String lang = 'English';
 
   final currentWord = "".obs;
+  RxList<String> suggestWords = <String>[].obs;
 
   _renderWordVerify() {
     var array = <Widget>[];
@@ -94,8 +95,16 @@ class _ImportAccountState extends State<ImportAccount> {
                     borderSide: BorderSide(color: Styles.mainColor),
                   ),
                 ),
-                onChanged: (value) {
+                onChanged: (value) async {
                   currentWord.value = value.replaceAll(' ', '');
+
+                  if (currentWord.value.isNotEmpty) {
+                    suggestWords.value = await api.wordSuggestion(
+                        word: currentWord.value, lang: lang);
+                  }
+
+                  LogUtil.debug(suggestWords);
+
                   if (value.length - value.replaceAll(' ', '').length == 2) {
                     mnemonicInputs[i] = value.replaceAll(' ', '');
                     mnemonicStates[i] = true;
@@ -128,42 +137,6 @@ class _ImportAccountState extends State<ImportAccount> {
 
     return array;
   }
-
-  // _renderWord4() {
-  //   var array = <Widget>[];
-  //   for (var i = 0; i < verifyTabs.length; i++) {
-  //     array.add(
-  //       GestureDetector(
-  //         onTap: () {
-  //           if (mnemonicInputs.length < length) {
-  //             mnemonicInputs.add(verifyTabs[i]);
-  //             verifyTabs.removeAt(i);
-  //           }
-  //         },
-  //         child: Container(
-  //           width: 60.w,
-  //           height: 32.w,
-  //           alignment: Alignment.center,
-  //           margin: EdgeInsets.only(
-  //             right: (i + 1) % 4 == 0 ? 0 : 18.9.w,
-  //             bottom: 4.w,
-  //           ),
-  //           decoration: BoxDecoration(
-  //             border: Border.all(color: const Color(0xFF303033), width: 1.0),
-  //             borderRadius: BorderRadius.circular(4.r),
-  //             color: const Color(0xFF303033),
-  //           ),
-  //           child: Text(verifyTabs[i],
-  //               style: GoogleFonts.rubik(
-  //                 color: Styles.titleColor,
-  //                 fontSize: 12.sp,
-  //               )),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   return array;
-  // }
 
   @override
   void initState() {
@@ -549,47 +522,38 @@ class _ImportAccountState extends State<ImportAccount> {
                     height: 48.w,
                     child: Obx(() => ElevatedButton(
                           onPressed: () async {
-                            if (mnemonicInputs.length != length) {
-                              EasyLoading.showError(
-                                  'Please fill in all the mnemonic words'.tr);
-                              return;
-                            }
-                            if (mnemonicInputs.join(' ') !=
-                                polkaWallet?.mnemonicPhrase) {
-                              EasyLoading.showError(
-                                  'The mnemonic words you filled in are incorrect'
-                                      .tr);
-                              return;
-                            }
-
                             // safe save wallet
                             String mnemonicStr = "";
-                            mnemonicStr = mnemonicInputs.join(' ');
-                            mnemonicStr = Encryption.encrypt(mnemonicStr,
-                                passwdConfirm.text, EncryptionMethod.fernet);
+                            mnemonicStr =
+                                mnemonicInputs.sublist(0, length).join(' ');
 
-                            late WalletGroup walletGroup;
-                            final wallet = Wallet(
-                                name: "0".toString(),
-                                address: polkaWallet!.address,
-                                secretKey: polkaWallet!.miniSecretKey,
-                                mnemonics: mnemonicStr,
-                                walletMode: 0);
+                            LogUtil.debug(mnemonicStr);
 
-                            final walletGroupIdx =
-                                DataSp.increaseWalletGroupMaxID();
-                            final walletType = WalletType(name: "vara-testnet");
-                            walletGroup = WalletGroup(
-                                idx: walletGroupIdx,
-                                // name: polkaWallet!.address,
-                                name: nameController.text,
-                                mnemonics: [mnemonicStr],
-                                wallets: [wallet],
-                                walletTypes: [walletType]);
+                            // mnemonicStr = Encryption.encrypt(mnemonicStr,
+                            //     passwdConfirm.text, EncryptionMethod.fernet);
 
-                            DataSp.addWalletGroup(walletGroup);
+                            // late WalletGroup walletGroup;
+                            // final wallet = Wallet(
+                            //     name: "0".toString(),
+                            //     address: polkaWallet!.address,
+                            //     secretKey: polkaWallet!.miniSecretKey,
+                            //     mnemonics: mnemonicStr,
+                            //     walletMode: 0);
 
-                            AppNavigator.homepage();
+                            // final walletGroupIdx =
+                            //     DataSp.increaseWalletGroupMaxID();
+                            // final walletType = WalletType(name: "vara-testnet");
+                            // walletGroup = WalletGroup(
+                            //     idx: walletGroupIdx,
+                            //     // name: polkaWallet!.address,
+                            //     name: nameController.text,
+                            //     mnemonics: [mnemonicStr],
+                            //     wallets: [wallet],
+                            //     walletTypes: [walletType]);
+
+                            // DataSp.addWalletGroup(walletGroup);
+
+                            // AppNavigator.homepage();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: agreementChecked.value
@@ -619,19 +583,72 @@ class _ImportAccountState extends State<ImportAccount> {
       );
     }
 
-    return PageView.builder(
-      scrollDirection: Axis.vertical,
-      controller: _createPageController,
-      itemBuilder: (context, index) {
-        switch (index) {
-          case 0:
-            return createStep1();
-          case 1:
-            if (completedCreateSteps[0]) {
-              return createStep2();
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+
+    return Stack(
+      children: [
+        PageView.builder(
+          scrollDirection: Axis.vertical,
+          controller: _createPageController,
+          itemBuilder: (context, index) {
+            switch (index) {
+              case 0:
+                return createStep1();
+              case 1:
+                if (completedCreateSteps[0]) {
+                  return createStep2();
+                }
             }
-        }
-      },
+          },
+        ),
+        Positioned(
+          bottom: keyboardHeight,
+          left: 0,
+          right: 0,
+          child: Obx(() => Container(
+                color: Styles.backgroundColor,
+                height: 60.w,
+                padding: EdgeInsets.symmetric(vertical: 6.w, horizontal: 5.w),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: suggestWords.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          LogUtil.debug(suggestWords[index]);
+                          mnemonicInputs[length - 1] =
+                              suggestWords[index].replaceAll(' ', '');
+                          mnemonicStates[length - 1] = true;
+                          length += 1;
+                          mnemonicInputs.add(' ');
+                          mnemonicStates.add(false);
+                          inputFocus.add(FocusNode());
+
+                          suggestWords.value = [];
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 5.w),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Styles.mainColor),
+                            borderRadius: BorderRadius.circular(6.w),
+                          ),
+                          child: Center(
+                            child: Text(
+                              suggestWords[index],
+                              style: TextStyle(color: Styles.mainColor),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              )),
+        ),
+      ],
     );
   }
 }

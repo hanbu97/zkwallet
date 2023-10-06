@@ -30,6 +30,11 @@ abstract class Native {
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGenerateWalletConstMeta;
+
+  Future<List<String>> wordSuggestion(
+      {required String word, required String lang, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kWordSuggestionConstMeta;
 }
 
 enum Platform {
