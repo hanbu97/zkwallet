@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:waterspay/screens/wallet/create_import/widgets/import.dart';
 import '/ffi.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../utils/config/styles.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-// import 'package:openim_common/openim_common.dart';
-
-import 'logic.dart';
+// import 'logic.dart';
 import 'widgets/create.dart';
 
 class NewWalletPage extends StatefulWidget {
@@ -21,18 +20,6 @@ class NewWalletPage extends StatefulWidget {
 class _NewWalletPageState extends State<NewWalletPage>
     with TickerProviderStateMixin {
   late final TabController _tabController;
-
-  bool showPasswd = true;
-  bool showConfirmPasswd = true;
-
-  RxBool agreementChecked = false.obs;
-  RxBool encryptMnemonicChecked = false.obs;
-
-  late int length;
-  late String lang;
-  final nameController = TextEditingController();
-  final passwd = TextEditingController();
-  final passwdConfirm = TextEditingController();
 
   // create step
   List<bool> completedCreateSteps = [false, false, false];
@@ -48,11 +35,6 @@ class _NewWalletPageState extends State<NewWalletPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-
-    setState(() {
-      length = 12;
-      lang = 'English';
-    });
   }
 
   @override
@@ -60,6 +42,7 @@ class _NewWalletPageState extends State<NewWalletPage>
     final mq = MediaQuery.of(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Styles.backgroundColor,
       body: Column(
         children: [
@@ -94,33 +77,10 @@ class _NewWalletPageState extends State<NewWalletPage>
           Expanded(
               child: TabBarView(
             controller: _tabController,
-            children: <Widget>[
-              const CreateWallet(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 35.w,
-                  ),
-                  Text('Import Wallet',
-                      style: GoogleFonts.titilliumWeb(
-                          fontSize: 32.sp, fontWeight: FontWeight.w600)),
-                  SizedBox(
-                    height: 12.w,
-                  ),
-                  Text('Create Wallet',
-                      style: GoogleFonts.rubik(
-                          fontSize: 14.sp,
-                          color: Color.fromARGB(255, 133, 140, 173))),
-                ],
-              ),
-            ],
+            children: const <Widget>[CreateAccount(), ImportAccount()],
           ))
         ],
       ),
-      // Column(
-      //   children: [],
-      // ),
     );
   }
 }

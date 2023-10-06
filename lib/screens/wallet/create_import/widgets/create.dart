@@ -19,14 +19,14 @@ import '../../../../widgets/agreements/create_wallet.dart';
 import '../../../../widgets/agreements/encrypt_mnemonics.dart';
 import '../../../../widgets/selectDown.dart';
 
-class CreateWallet extends StatefulWidget {
-  const CreateWallet({super.key});
+class CreateAccount extends StatefulWidget {
+  const CreateAccount({super.key});
 
   @override
-  State<CreateWallet> createState() => _CreateWalletState();
+  State<CreateAccount> createState() => _CreateAccountState();
 }
 
-class _CreateWalletState extends State<CreateWallet> {
+class _CreateAccountState extends State<CreateAccount> {
   final PageController _createPageController = PageController();
 
   List<bool> completedCreateSteps = [false, false, false];
