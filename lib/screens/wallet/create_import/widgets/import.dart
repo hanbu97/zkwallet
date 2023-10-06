@@ -499,19 +499,6 @@ class _ImportAccountState extends State<ImportAccount> {
                 ),
               ),
               SizedBox(height: 100.w),
-              // Center(
-              //   child: SizedBox(
-              //     height: length == 12 ? 108.w : 133.w,
-              //     // padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 12.w),
-              //     child: Obx(() => SingleChildScrollView(
-              //           child: Wrap(
-              //             direction: Axis.horizontal,
-              //             children: _renderWord4(),
-              //           ),
-              //         )),
-              //   ),
-              // ),
-              // const Expanded(child: SizedBox()),
               SafeArea(
                 top: false,
                 child: Padding(
@@ -527,33 +514,44 @@ class _ImportAccountState extends State<ImportAccount> {
                             mnemonicStr =
                                 mnemonicInputs.sublist(0, length).join(' ');
 
+                            try {
+                              polkaWallet =
+                                  await api.generateWalletFromMnemonics(
+                                      ss58: 137,
+                                      phrase: mnemonicStr,
+                                      lang: lang);
+
+                              mnemonicStr = Encryption.encrypt(mnemonicStr,
+                                  passwdConfirm.text, EncryptionMethod.fernet);
+
+                              late WalletGroup walletGroup;
+                              final wallet = Wallet(
+                                  name: "0".toString(),
+                                  address: polkaWallet!.address,
+                                  secretKey: polkaWallet!.miniSecretKey,
+                                  mnemonics: mnemonicStr,
+                                  walletMode: 0);
+
+                              final walletGroupIdx =
+                                  DataSp.increaseWalletGroupMaxID();
+                              final walletType =
+                                  WalletType(name: "vara-testnet");
+                              walletGroup = WalletGroup(
+                                  idx: walletGroupIdx,
+                                  // name: polkaWallet!.address,
+                                  name: nameController.text,
+                                  mnemonics: [mnemonicStr],
+                                  wallets: [wallet],
+                                  walletTypes: [walletType]);
+
+                              DataSp.addWalletGroup(walletGroup);
+
+                              AppNavigator.homepage();
+                            } catch (e) {
+                              EasyLoading.showError(e.toString());
+                            }
+
                             LogUtil.debug(mnemonicStr);
-
-                            // mnemonicStr = Encryption.encrypt(mnemonicStr,
-                            //     passwdConfirm.text, EncryptionMethod.fernet);
-
-                            // late WalletGroup walletGroup;
-                            // final wallet = Wallet(
-                            //     name: "0".toString(),
-                            //     address: polkaWallet!.address,
-                            //     secretKey: polkaWallet!.miniSecretKey,
-                            //     mnemonics: mnemonicStr,
-                            //     walletMode: 0);
-
-                            // final walletGroupIdx =
-                            //     DataSp.increaseWalletGroupMaxID();
-                            // final walletType = WalletType(name: "vara-testnet");
-                            // walletGroup = WalletGroup(
-                            //     idx: walletGroupIdx,
-                            //     // name: polkaWallet!.address,
-                            //     name: nameController.text,
-                            //     mnemonics: [mnemonicStr],
-                            //     wallets: [wallet],
-                            //     walletTypes: [walletType]);
-
-                            // DataSp.addWalletGroup(walletGroup);
-
-                            // AppNavigator.homepage();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: agreementChecked.value
