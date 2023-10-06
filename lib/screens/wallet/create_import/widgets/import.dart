@@ -34,9 +34,7 @@ class _ImportAccountState extends State<ImportAccount> {
   final mnemonicStates = <bool>[].obs;
   final inputFocus = <FocusNode>[].obs;
 
-  // final RxList<String> verifyTabs = <String>[].obs;
   RxBool encryptMnemonicChecked = false.obs;
-
   RxBool agreementChecked = false.obs;
 
   bool showPasswd = true;
@@ -48,93 +46,80 @@ class _ImportAccountState extends State<ImportAccount> {
   final _words = <String>[].obs;
   final nameController = TextEditingController();
 
-  // final FocusNode _focusNode = FocusNode();
-
   // mnemonic params
   int length = 1;
   String lang = 'English';
+
+  final currentWord = "".obs;
 
   _renderWordVerify() {
     var array = <Widget>[];
 
     // for (var i = 0; i < mnemonicInputs.length; i++) {
     for (var i = 0; i < length; i++) {
-      array.add(
-        GestureDetector(
-          onTap: () {
-            // if (verifyTabs.length < length) {
-            //   verifyTabs.add(mnemonicInputs[i]);
-            //   mnemonicInputs.removeAt(i);
-            // }
-            // mnemonicStates[i] = false;
-          },
-          child: mnemonicStates[i]
-              ? Container(
-                  width: 85.w,
-                  height: 45.w,
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(
-                    right: (i + 1) % 3 == 0 ? 0 : 18.9.w,
-                    bottom: 12.w,
+      array.add(mnemonicStates[i]
+          ? Container(
+              width: 85.w,
+              height: 45.w,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(
+                right: (i + 1) % 3 == 0 ? 0 : 18.9.w,
+                bottom: 12.w,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.r),
+                // border: Border.all(color: Styles.mainColorDark, width: 1.w),
+                color: const Color(0xFF222225),
+              ),
+              child: Text(mnemonicInputs[i],
+                  style: GoogleFonts.rubik(
+                    color: Styles.titleColor,
+                    fontSize: 15.sp,
+                  )),
+            )
+          : SizedBox(
+              width: 85.w,
+              height: 45.w,
+              child: TextField(
+                autofocus: true,
+                focusNode: inputFocus[i],
+                controller: TextEditingController(text: mnemonicInputs[i]),
+                cursorColor: Styles.mainColor,
+                style: TextStyle(color: Styles.mainColor),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Styles.mainColor),
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.r),
-                    // border: Border.all(color: Styles.mainColorDark, width: 1.w),
-                    color: const Color(0xFF222225),
-                  ),
-                  child: Text(mnemonicInputs[i],
-                      style: GoogleFonts.rubik(
-                        color: Styles.titleColor,
-                        fontSize: 15.sp,
-                      )),
-                )
-              : SizedBox(
-                  width: 85.w,
-                  height: 45.w,
-                  child: TextField(
-                    autofocus: true,
-                    focusNode: inputFocus[i],
-                    controller: TextEditingController(text: mnemonicInputs[i]),
-                    cursorColor: Styles.mainColor,
-                    style: TextStyle(color: Styles.mainColor),
-                    decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Styles.mainColor),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Styles.mainColor),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      LogUtil.debug(
-                          value.length - value.replaceAll(' ', '').length);
-                      if (value.length - value.replaceAll(' ', '').length ==
-                          2) {
-                        mnemonicInputs[i] = value.replaceAll(' ', '');
-                        mnemonicStates[i] = true;
-                        if (i == length - 1) {
-                          length += 1;
-                          mnemonicInputs.add(' ');
-                          mnemonicStates.add(false);
-                          inputFocus.add(FocusNode());
-                        }
-                      }
-                      if (value.isEmpty) {
-                        mnemonicInputs[i] = ' ';
-                        mnemonicStates[i] = false;
-
-                        if (i != 0) {
-                          length -= 1;
-                          mnemonicStates[i - 1] = false;
-                          mnemonicInputs[i - 1] = " " + mnemonicInputs[i - 1];
-                        }
-                      }
-                      LogUtil.debug(length);
-                    },
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Styles.mainColor),
                   ),
                 ),
-        ),
-      );
+                onChanged: (value) {
+                  currentWord.value = value.replaceAll(' ', '');
+                  if (value.length - value.replaceAll(' ', '').length == 2) {
+                    mnemonicInputs[i] = value.replaceAll(' ', '');
+                    mnemonicStates[i] = true;
+                    if (i == length - 1) {
+                      length += 1;
+                      mnemonicInputs.add(' ');
+                      mnemonicStates.add(false);
+                      inputFocus.add(FocusNode());
+                    }
+                  }
+                  if (value.isEmpty) {
+                    mnemonicInputs[i] = ' ';
+                    mnemonicStates[i] = false;
+
+                    if (i != 0) {
+                      length -= 1;
+                      mnemonicStates[i - 1] = false;
+                      mnemonicInputs[i - 1] =
+                          [" ", mnemonicInputs[i - 1]].join();
+                    }
+                  }
+                },
+              ),
+            ));
 
       if (mnemonicStates[i] == false) {
         inputFocus[i].requestFocus();
