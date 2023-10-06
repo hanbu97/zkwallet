@@ -30,8 +30,11 @@ class _ImportAccountState extends State<ImportAccount> {
   final PageController _createPageController = PageController();
 
   List<bool> completedCreateSteps = [false, false];
-  final verifyInputs = <String>[].obs;
-  final RxList<String> verifyTabs = <String>[].obs;
+  final mnemonicInputs = <String>[].obs;
+  final mnemonicStates = <bool>[].obs;
+  final inputFocus = <FocusNode>[].obs;
+
+  // final RxList<String> verifyTabs = <String>[].obs;
   RxBool encryptMnemonicChecked = false.obs;
 
   RxBool agreementChecked = false.obs;
@@ -45,109 +48,144 @@ class _ImportAccountState extends State<ImportAccount> {
   final _words = <String>[].obs;
   final nameController = TextEditingController();
 
+  // final FocusNode _focusNode = FocusNode();
+
   // mnemonic params
-  int length = 12;
+  int length = 1;
   String lang = 'English';
-
-  _renderWord() {
-    var array = <Widget>[];
-    final words = polkaWallet?.mnemonicPhrase.split(' ') ?? [];
-
-    for (var i = 0; i < words.length; i++) {
-      array.add(
-        Container(
-          width: 85.w,
-          height: 45.w,
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(
-            right: (i + 1) % 3 == 0 ? 0 : 18.9.w,
-            bottom: 12.w,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.r),
-            color: const Color(0xFF222225),
-          ),
-          child: Text(words[i],
-              style: GoogleFonts.rubik(
-                color: Styles.titleColor,
-                fontSize: 15.sp,
-              )),
-        ),
-      );
-    }
-    return array;
-  }
 
   _renderWordVerify() {
     var array = <Widget>[];
 
-    for (var i = 0; i < verifyInputs.length; i++) {
+    // for (var i = 0; i < mnemonicInputs.length; i++) {
+    for (var i = 0; i < length; i++) {
       array.add(
         GestureDetector(
           onTap: () {
-            if (verifyTabs.length < length) {
-              verifyTabs.add(verifyInputs[i]);
-              verifyInputs.removeAt(i);
-            }
+            // if (verifyTabs.length < length) {
+            //   verifyTabs.add(mnemonicInputs[i]);
+            //   mnemonicInputs.removeAt(i);
+            // }
+            // mnemonicStates[i] = false;
           },
-          child: Container(
-            width: 85.w,
-            height: 45.w,
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(
-              right: (i + 1) % 3 == 0 ? 0 : 18.9.w,
-              bottom: 12.w,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.r),
-              color: const Color(0xFF222225),
-            ),
-            child: Text(verifyInputs[i],
-                style: GoogleFonts.rubik(
-                  color: Styles.titleColor,
-                  fontSize: 15.sp,
-                )),
-          ),
+          child: mnemonicStates[i]
+              ? Container(
+                  width: 85.w,
+                  height: 45.w,
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(
+                    right: (i + 1) % 3 == 0 ? 0 : 18.9.w,
+                    bottom: 12.w,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.r),
+                    // border: Border.all(color: Styles.mainColorDark, width: 1.w),
+                    color: const Color(0xFF222225),
+                  ),
+                  child: Text(mnemonicInputs[i],
+                      style: GoogleFonts.rubik(
+                        color: Styles.titleColor,
+                        fontSize: 15.sp,
+                      )),
+                )
+              : SizedBox(
+                  width: 85.w,
+                  height: 45.w,
+                  child: TextField(
+                    autofocus: true,
+                    focusNode: inputFocus[i],
+                    controller: TextEditingController(text: mnemonicInputs[i]),
+                    cursorColor: Styles.mainColor,
+                    style: TextStyle(color: Styles.mainColor),
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Styles.mainColor),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Styles.mainColor),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      LogUtil.debug(
+                          value.length - value.replaceAll(' ', '').length);
+                      if (value.length - value.replaceAll(' ', '').length ==
+                          2) {
+                        mnemonicInputs[i] = value.replaceAll(' ', '');
+                        mnemonicStates[i] = true;
+                        if (i == length - 1) {
+                          length += 1;
+                          mnemonicInputs.add(' ');
+                          mnemonicStates.add(false);
+                          inputFocus.add(FocusNode());
+                        }
+                      }
+                      if (value.isEmpty) {
+                        mnemonicInputs[i] = ' ';
+                        mnemonicStates[i] = false;
+
+                        if (i != 0) {
+                          length -= 1;
+                          mnemonicStates[i - 1] = false;
+                          mnemonicInputs[i - 1] = " " + mnemonicInputs[i - 1];
+                        }
+                      }
+                      LogUtil.debug(length);
+                    },
+                  ),
+                ),
         ),
       );
+
+      if (mnemonicStates[i] == false) {
+        inputFocus[i].requestFocus();
+      }
     }
+
     return array;
   }
 
-  _renderWord4() {
-    var array = <Widget>[];
-    for (var i = 0; i < verifyTabs.length; i++) {
-      array.add(
-        GestureDetector(
-          onTap: () {
-            if (verifyInputs.length < length) {
-              verifyInputs.add(verifyTabs[i]);
-              verifyTabs.removeAt(i);
-            }
-          },
-          child: Container(
-            width: 60.w,
-            height: 32.w,
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(
-              right: (i + 1) % 4 == 0 ? 0 : 18.9.w,
-              bottom: 4.w,
-            ),
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFF303033), width: 1.0),
-              borderRadius: BorderRadius.circular(4.r),
-              color: const Color(0xFF303033),
-            ),
-            child: Text(verifyTabs[i],
-                style: GoogleFonts.rubik(
-                  color: Styles.titleColor,
-                  fontSize: 12.sp,
-                )),
-          ),
-        ),
-      );
-    }
-    return array;
+  // _renderWord4() {
+  //   var array = <Widget>[];
+  //   for (var i = 0; i < verifyTabs.length; i++) {
+  //     array.add(
+  //       GestureDetector(
+  //         onTap: () {
+  //           if (mnemonicInputs.length < length) {
+  //             mnemonicInputs.add(verifyTabs[i]);
+  //             verifyTabs.removeAt(i);
+  //           }
+  //         },
+  //         child: Container(
+  //           width: 60.w,
+  //           height: 32.w,
+  //           alignment: Alignment.center,
+  //           margin: EdgeInsets.only(
+  //             right: (i + 1) % 4 == 0 ? 0 : 18.9.w,
+  //             bottom: 4.w,
+  //           ),
+  //           decoration: BoxDecoration(
+  //             border: Border.all(color: const Color(0xFF303033), width: 1.0),
+  //             borderRadius: BorderRadius.circular(4.r),
+  //             color: const Color(0xFF303033),
+  //           ),
+  //           child: Text(verifyTabs[i],
+  //               style: GoogleFonts.rubik(
+  //                 color: Styles.titleColor,
+  //                 fontSize: 12.sp,
+  //               )),
+  //         ),
+  //       ),
+  //     );
+  //   }
+  //   return array;
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    mnemonicInputs.add(' ');
+    mnemonicStates.add(false);
+    inputFocus.add(FocusNode());
   }
 
   @override
@@ -460,8 +498,6 @@ class _ImportAccountState extends State<ImportAccount> {
     Widget createStep2() {
       return SingleChildScrollView(
         child: IntrinsicHeight(
-          // constraints:
-          //     BoxConstraints(minHeight: MediaQuery.of(context).size.height),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -478,7 +514,7 @@ class _ImportAccountState extends State<ImportAccount> {
                             fontSize: 25.sp,
                             fontWeight: FontWeight.w600,
                             color: Styles.mainColor)),
-                    SizedBox(height: 12.w),
+                    SizedBox(height: 20.w),
                     Container(
                       width: double.infinity,
                       height: length == 12 ? 258.w : 285.w,
@@ -495,7 +531,7 @@ class _ImportAccountState extends State<ImportAccount> {
                             ),
                           )),
                     ),
-                    SizedBox(height: 12.w),
+                    SizedBox(height: 20.w),
                     Text(
                         '''Use your mnemonic phrase - it's essential for enabling multiple chain derivation. Feel free to import your wallet using a private key, but only after your account is established. 
                     \nNote: password encryption of your mnemonic phrase will alter results.''',
@@ -504,20 +540,20 @@ class _ImportAccountState extends State<ImportAccount> {
                   ],
                 ),
               ),
-              SizedBox(height: 20.w),
-              Center(
-                child: SizedBox(
-                  height: length == 12 ? 108.w : 133.w,
-                  // padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 12.w),
-                  child: Obx(() => SingleChildScrollView(
-                        child: Wrap(
-                          direction: Axis.horizontal,
-                          children: _renderWord4(),
-                        ),
-                      )),
-                ),
-              ),
-              const Expanded(child: SizedBox()),
+              SizedBox(height: 100.w),
+              // Center(
+              //   child: SizedBox(
+              //     height: length == 12 ? 108.w : 133.w,
+              //     // padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 12.w),
+              //     child: Obx(() => SingleChildScrollView(
+              //           child: Wrap(
+              //             direction: Axis.horizontal,
+              //             children: _renderWord4(),
+              //           ),
+              //         )),
+              //   ),
+              // ),
+              // const Expanded(child: SizedBox()),
               SafeArea(
                 top: false,
                 child: Padding(
@@ -528,12 +564,12 @@ class _ImportAccountState extends State<ImportAccount> {
                     height: 48.w,
                     child: Obx(() => ElevatedButton(
                           onPressed: () async {
-                            if (verifyInputs.length != length) {
+                            if (mnemonicInputs.length != length) {
                               EasyLoading.showError(
                                   'Please fill in all the mnemonic words'.tr);
                               return;
                             }
-                            if (verifyInputs.join(' ') !=
+                            if (mnemonicInputs.join(' ') !=
                                 polkaWallet?.mnemonicPhrase) {
                               EasyLoading.showError(
                                   'The mnemonic words you filled in are incorrect'
@@ -543,7 +579,7 @@ class _ImportAccountState extends State<ImportAccount> {
 
                             // safe save wallet
                             String mnemonicStr = "";
-                            mnemonicStr = verifyInputs.join(' ');
+                            mnemonicStr = mnemonicInputs.join(' ');
                             mnemonicStr = Encryption.encrypt(mnemonicStr,
                                 passwdConfirm.text, EncryptionMethod.fernet);
 
