@@ -127,7 +127,7 @@ class _WalletPageState extends State<WalletPage> {
 
               GestureDetector(
                 onTap: () {
-                  Get.to(MyHomePage(
+                  Get.to(const MyHomePage(
                     title: 'zk',
                   ));
                 },
@@ -144,8 +144,8 @@ class _WalletPageState extends State<WalletPage> {
           ),
           GestureDetector(
             onTap: () async {
-              // await dbClear(HiveDBName.walletGroup);
-              // await SpUtil().clear();
+              await dbClear(HiveDBName.walletGroup);
+              await SpUtil().clear();
               // Get.to(MyHomePage(
               //   title: 'zk',
               // ));

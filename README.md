@@ -1,7 +1,4 @@
-# flutter_rust_bridge_template
-
-This repository serves as a template for Flutter projects calling into native Rust
-libraries via `flutter_rust_bridge`.
+# Waters Pay
 
 ## Getting Started
 
@@ -13,7 +10,7 @@ To begin, ensure that you have a working installation of the following items:
 - For Android targets:
     - Install [cargo-ndk](https://github.com/bbqsrc/cargo-ndk#installing)
     - Install [Android NDK 22](https://github.com/android/ndk/wiki/Unsupported-Downloads#r22b), then put its path in one of the `gradle.properties`, e.g.:
-
+ 
 ```
 echo "ANDROID_NDK=.." >> ~/.gradle/gradle.properties
 ```
@@ -50,7 +47,7 @@ not flutter_rust_bridge.
 
 ## License
 
-Copyright 2022 Viet Dinh.
+Copyright 2023 Waters Pay
 
 This template is licensed under either of
 - [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) ([LICENSE-APACHE](LICENSE-APACHE))
