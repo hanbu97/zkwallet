@@ -93,9 +93,7 @@ class _WalletAddBottomBarWidgetState extends State<WalletAddBottomBarWidget> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 1,
-                    ),
+                    Styles.lineSpacerV(),
                     Container(
                       width: double.infinity,
                       color: Styles.contentBackground,

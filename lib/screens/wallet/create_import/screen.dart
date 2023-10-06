@@ -25,6 +25,7 @@ import 'package:get/get.dart';
 // import 'package:openim_common/openim_common.dart';
 
 import 'logic.dart';
+import 'widgets/create.dart';
 
 class NewWalletPage extends StatefulWidget {
   const NewWalletPage({super.key});
@@ -56,7 +57,7 @@ class _NewWalletPageState extends State<NewWalletPage>
   final createStep = 0.obs;
   int _currentPage = 0;
 
-  PolkadotAddress? polkaWallet = null;
+  PolkadotAddress? polkaWallet;
 
   final _words = <String>[].obs;
 
@@ -793,24 +794,7 @@ class _NewWalletPageState extends State<NewWalletPage>
               child: TabBarView(
             controller: _tabController,
             children: <Widget>[
-              PageView.builder(
-                scrollDirection: Axis.vertical,
-                controller: _createPageController,
-                itemBuilder: (context, index) {
-                  switch (index) {
-                    case 0:
-                      return createStep1();
-                    case 1:
-                      if (completedCreateSteps[0]) {
-                        return createStep2();
-                      }
-                    case 2:
-                      if (completedCreateSteps[1]) {
-                        return createStep3();
-                      }
-                  }
-                },
-              ),
+              const CreateWallet(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
