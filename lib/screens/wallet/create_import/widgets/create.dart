@@ -159,12 +159,12 @@ class _CreateWalletState extends State<CreateWallet> {
           SizedBox(
             height: 20.w,
           ),
-          Text('Create Wallet',
+          Text('Create Account',
               style: GoogleFonts.titilliumWeb(
                   fontSize: 32.sp,
                   fontWeight: FontWeight.w600,
                   color: Styles.mainColor)),
-          Text('Establish your new wallet.',
+          Text('Establish your new wallet group.',
               style: GoogleFonts.rubik(
                   fontSize: 14.sp, color: Styles.infoGrayColor)),
           SizedBox(
@@ -177,7 +177,7 @@ class _CreateWalletState extends State<CreateWallet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Wallet Name',
+                  'Account Name',
                   style: GoogleFonts.rubik(
                       color: Styles.titleColor,
                       fontSize: 14.sp,
@@ -201,7 +201,7 @@ class _CreateWalletState extends State<CreateWallet> {
                     decoration: InputDecoration(
                       fillColor: Colors.transparent,
                       filled: true,
-                      hintText: 'Please input name of wallet',
+                      hintText: 'Please input name of account',
                       hintStyle: TextStyle(
                         color: Styles.infoGrayColor,
                         fontSize: 14.sp,
@@ -283,7 +283,7 @@ class _CreateWalletState extends State<CreateWallet> {
                 ),
                 SizedBox(height: 20.w),
                 Text(
-                  'Wallet Password',
+                  'Account Password',
                   style: GoogleFonts.rubik(
                       color: Styles.titleColor,
                       fontSize: 14.sp,
