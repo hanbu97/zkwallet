@@ -203,11 +203,11 @@ class _ImportAccountState extends State<ImportAccount> {
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                       ),
-                      contentPadding: EdgeInsets.only(),
-                      enabledBorder: OutlineInputBorder(
+                      contentPadding: const EdgeInsets.only(),
+                      enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.transparent),
                       ),
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.transparent),
                       ),
                     ),

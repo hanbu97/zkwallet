@@ -36,3 +36,7 @@ tiny-bip39 = "1.0.0"
 sp-core = { path = "sp-core" }
 bip39 = "2.0.0"
 data-encoding = "2.4.0"
+derivation-path = "0.2.0"
+thiserror = "1.0.39"
+uriparse = "0.6.4"
+qstring = "0.7.2"
