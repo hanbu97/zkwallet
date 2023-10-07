@@ -80,4 +80,8 @@ impl Keypair {
             public: self.0.public,
         })
     }
+
+    // fn pubkey(&self) -> Pubkey {
+    //     Pubkey::from(self.0.public.to_bytes())
+    // }
 }
