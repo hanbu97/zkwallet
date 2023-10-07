@@ -1,14 +1,14 @@
 #[derive(serde::Serialize, serde::Deserialize, Clone, Default)]
 pub struct WalletCreationConfig {
     pub use_mnemonic: Option<bool>,
-    lang: Option<String>,
-    length: Option<u8>,
-    method: Option<String>,
-    coin_type: Option<u32>,
-    account_index: Option<u32>,
-    change: Option<u32>,
-    address_index: Option<u32>,
-    password: Option<String>,
+    pub lang: Option<String>,
+    pub length: Option<u8>,
+    pub method: Option<String>,
+    pub coin_type: Option<u32>,
+    pub account_index: Option<u32>,
+    pub change: Option<u32>,
+    pub address_index: Option<u32>,
+    pub password: Option<String>,
     // 在这里添加其他配置选项（如果有的话）
 }
 
@@ -78,4 +78,11 @@ impl From<WalletCreationConfig> for CreationConfig {
             password: config.password.unwrap_or("".to_string()),
         }
     }
+}
+
+#[derive(Debug, Clone)]
+pub struct WalletCreationResult {
+    pub address: String,
+    pub private_key: Option<String>,
+    pub mnemonic: Option<String>,
 }
