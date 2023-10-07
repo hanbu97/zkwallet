@@ -1,0 +1,39 @@
+[package]
+authors = ["Sebastian Messmer"]
+edition = "2018"
+name = "crypto-wallet-gen"
+version = "2.3.0"
+readme = "README.md"
+documentation = "https://github.com/smessmer/crypto-wallet-gen"
+homepage = "https://github.com/smessmer/crypto-wallet-gen"
+repository = "https://github.com/smessmer/crypto-wallet-gen"
+license = "GPL-3.0-or-later"
+keywords = ["cryptocurrency", "wallet", "bitcoin", "monero", "ethereum"]
+categories = ["command-line-utilities", "cryptography::cryptocurrencies"]
+description = "This is a utility to generate seed phrases and to generate crypto currency wallets from a seed phrase. This way, you only need to remember one seed phrase and can generate wallets from it for multiple currencies."
+
+[lib]
+name = "crypto_wallet_gen"
+path = "src/lib.rs"
+
+[dependencies]
+anyhow = "^1.0.40"
+bitcoin = "^0.26.0"
+clap = "^2.33.3"
+failure = "^0.1.8"
+hex = "^0.4.3"
+rand = { version = "^0.8.3", features = ["getrandom"] }
+rand_chacha = "^0.3.0"
+rand_core_5 = { version = "^0.5.1", package = "rand_core" }
+rand_hc = "^0.3.0"
+rand_jitter = "^0.3.0"
+scrypt = "^0.7.0"
+libsecp256k1 = { workspace = true }
+thiserror = "^1.0.24"
+tiny-bip39 = { workspace = true }
+zeroize = "*"
+
+unicode-normalization = "^0.1.17"
+
+[profile.release]
+lto = "fat"
