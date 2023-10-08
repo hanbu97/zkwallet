@@ -1,7 +1,7 @@
 // use rand07::{rngs::OsRng, CryptoRng, RngCore};
-use rand0_7::{rngs::OsRng, CryptoRng, RngCore};
-
 use super::path::DerivationPath;
+use crate::utils::sign::Signer;
+use rand0_7::{rngs::OsRng, CryptoRng, RngCore};
 // use ed25519_dalek_bip32::Error as Bip32Error;
 
 pub fn keypair_from_seed_and_derivation_path(
@@ -84,4 +84,18 @@ impl Keypair {
     // fn pubkey(&self) -> Pubkey {
     //     Pubkey::from(self.0.public.to_bytes())
     // }
+}
+
+impl Signer for Keypair {
+    fn is_interactive(&self) -> bool {
+        false
+    }
+    fn try_pubkey(
+        &self,
+    ) -> Result<crate::utils::pubkey::Pubkey, crate::utils::sign::error::SignerError> {
+        Ok(self.pubkey())
+    }
+    fn pubkey(&self) -> crate::utils::pubkey::Pubkey {
+        crate::utils::pubkey::Pubkey::from(self.0.public.to_bytes())
+    }
 }

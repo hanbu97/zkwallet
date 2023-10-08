@@ -1,3 +1,21 @@
+use std::fmt;
+
+#[derive(Default)]
+pub struct Pubkey(pub(crate) [u8; 32]);
+
+impl From<[u8; 32]> for Pubkey {
+    #[inline]
+    fn from(from: [u8; 32]) -> Self {
+        Self(from)
+    }
+}
+
+impl fmt::Display for Pubkey {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", bs58::encode(self.0).into_string())
+    }
+}
+
 // //! Solana account addresses.
 
 // #![allow(clippy::arithmetic_side_effects)]
