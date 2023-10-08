@@ -1,3 +1,5 @@
+use super::method::GenMethod;
+
 #[derive(serde::Serialize, serde::Deserialize, Clone, Default)]
 pub struct WalletCreationConfig {
     pub use_mnemonic: Option<bool>,
@@ -25,7 +27,7 @@ pub struct CreationConfig {
     pub use_mnemonic: bool,
     pub lang: bip39::Language,
     pub length: bip39::MnemonicType,
-    pub method: wallet_creation::GenMethod,
+    pub method: GenMethod,
     pub coin_type: u32,
     pub account_index: u32,
     pub change: u32,
@@ -65,11 +67,11 @@ impl From<WalletCreationConfig> for CreationConfig {
             },
             method: match config.method {
                 Some(m) => match m.as_str().to_lowercase().as_str() {
-                    "bip44" => wallet_creation::GenMethod::Bip44,
-                    "eip2333" => wallet_creation::GenMethod::Eip2333,
-                    _ => wallet_creation::GenMethod::Bip44,
+                    "bip44" => GenMethod::Bip44,
+                    "eip2333" => GenMethod::Eip2333,
+                    _ => GenMethod::Bip44,
                 },
-                None => wallet_creation::GenMethod::Bip44,
+                None => GenMethod::Bip44,
             },
             coin_type: config.coin_type.unwrap_or(0),
             account_index: config.account_index.unwrap_or(0),

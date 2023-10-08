@@ -9,23 +9,25 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [workspace]
-members = [".", "wallet_creation", "hdpath", "crypto-wallet-gen"]
+members = [".", "hdpath", "crypto-wallet-gen", "ark-circom"]
 
 
 [workspace.dependencies]
 anyhow = "1"
 serde = { version = "1.0.188" }
+# tiny-bip39 = "0.8.2"
 tiny-bip39 = "1.0.0"
 libsecp256k1 = "0.7.1"
 
 [dependencies]
-wallet_creation = { path = "./wallet_creation" }
+# wallet_creation = { path = "./wallet_creation" }
 anyhow = "1"
 flutter_rust_bridge = "1"
 
 # zk deps
 ark-bn254 = "0.4.0"
-ark-circom = { git = "https://github.com/gakonst/ark-circom.git", features = [
+# ark-circom = { git = "https://github.com/gakonst/ark-circom.git", features = [
+ark-circom = { path = "ark-circom", features = [
     "circom-2",
     # "wasm",
 ] }
@@ -37,14 +39,14 @@ color-eyre = "0.6.2"
 serde = { workspace = true, features = ["derive"] }
 serde_json = "1.0.107"
 wasmer = { version = "2.3.0" }
-tiny-bip39 = "1.0.0"
+tiny-bip39.workspace = true
 
 # wallet
 sp-core = { path = "sp-core" }
-bip39 = "2.0.0"
+# bip39 = "2.0.0"
 data-encoding = "2.4.0"
 derivation-path = "0.2.0"
-thiserror = "1.0.39"
+# thiserror = "1.0.39"
 uriparse = "0.6.4"
 qstring = "0.7.2"
 bitcoin = "0.30.0"
@@ -52,6 +54,12 @@ bs58 = "0.4.0"
 
 rand = { version = "0.8" }
 rand0-7 = { package = "rand", version = "0.7" }
+thiserror = "1.0.49"
+# solana-sdk = "1.17.1"
+# solana-sdk = "1.17.1"
+
+# [dependencies.zeroize]
+# version = "1.3"
 
 [dependencies.ed25519-dalek]
 version = "=1.0.1"
