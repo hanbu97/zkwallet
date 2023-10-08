@@ -22,6 +22,16 @@ abstract class Native {
 
   FlutterRustBridgeTaskConstMeta get kMultiplyZkConstMeta;
 
+  Future<WalletAddress> generateWalletMulti(
+      {String? password,
+      required int length,
+      required String lang,
+      required String params,
+      required String chain,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGenerateWalletMultiConstMeta;
+
   Future<PolkadotAddress> generateWallet(
       {required int ss58,
       String? password,
@@ -67,6 +77,18 @@ class PolkadotAddress {
     required this.mnemonicPhrase,
     required this.miniSecretKey,
     required this.publicKey,
+    required this.address,
+  });
+}
+
+class WalletAddress {
+  final String mnemonicPhrase;
+  final String secretKey;
+  final String address;
+
+  const WalletAddress({
+    required this.mnemonicPhrase,
+    required this.secretKey,
     required this.address,
   });
 }

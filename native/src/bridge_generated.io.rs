@@ -17,6 +17,18 @@ pub extern "C" fn wire_multiply_zk(port_: i64, a: i32, b: i32) {
 }
 
 #[no_mangle]
+pub extern "C" fn wire_generate_wallet_multi(
+    port_: i64,
+    password: *mut wire_uint_8_list,
+    length: u8,
+    lang: *mut wire_uint_8_list,
+    params: *mut wire_uint_8_list,
+    chain: *mut wire_uint_8_list,
+) {
+    wire_generate_wallet_multi_impl(port_, password, length, lang, params, chain)
+}
+
+#[no_mangle]
 pub extern "C" fn wire_generate_wallet(
     port_: i64,
     ss58: u16,

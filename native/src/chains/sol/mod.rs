@@ -7,7 +7,7 @@ use crate::{
 };
 use bitcoin::base58;
 
-use super::sanitize_seed_phrase;
+use super::{sanitize_seed_phrase, WalletOperations};
 
 // // pub mod signature;
 // // pub mod singer;
@@ -18,8 +18,8 @@ use super::sanitize_seed_phrase;
 
 pub struct SolWallet {}
 
-// impl WalletOperations for SolWallet {
-impl SolWallet {
+impl WalletOperations for SolWallet {
+    // impl SolWallet {
     fn import_private_key(
         &self,
         private_key: &str,

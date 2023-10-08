@@ -2,12 +2,27 @@ use crate::models::wallet_create::{WalletCreationConfig, WalletCreationResult};
 
 pub mod sol;
 
+pub enum SupportChains {
+    Sol,
+    Gear,
+}
+
+impl From<String> for SupportChains {
+    fn from(value: String) -> Self {
+        match value.to_lowercase().as_str() {
+            "sol" => SupportChains::Sol,
+            "gear" => SupportChains::Gear,
+            _ => SupportChains::Sol,
+        }
+    }
+}
+
 pub trait WalletOperations {
-    fn create(
-        &self,
-        config: WalletCreationConfig,
-        wallet_type: Option<&str>,
-    ) -> anyhow::Result<WalletCreationResult>;
+    // fn create(
+    //     &self,
+    //     config: WalletCreationConfig,
+    //     wallet_type: Option<&str>,
+    // ) -> anyhow::Result<WalletCreationResult>;
     fn import_private_key(
         &self,
         private_key: &str,

@@ -2,7 +2,11 @@
 // When adding new code to your project, note that only items used
 // here will be transformed to their Dart equivalents.
 
-use crate::wallet::mnemonics::PolkadotAddress;
+use crate::{
+    chains::{sol::SolWallet, SupportChains, WalletOperations},
+    models::{address::WalletAddress, wallet_create::WalletCreationConfig},
+    wallet::mnemonics::PolkadotAddress,
+};
 
 // A plain enum without any fields. This is similar to Dart- or C-style enums.
 // flutter_rust_bridge is capable of generating code for enums with fields
@@ -220,6 +224,64 @@ fn get_length(length: u8) -> bip39::MnemonicType {
         24 => bip39::MnemonicType::Words24,
         _ => bip39::MnemonicType::Words12,
     }
+}
+
+pub fn generate_wallet_multi(
+    password: Option<String>,
+    length: u8,
+    lang: String,
+    params: String,
+    chain: String,
+) -> WalletAddress {
+    let length: bip39::MnemonicType = get_length(length);
+    let lang = get_language(lang);
+    let chain: SupportChains = chain.into();
+    let params = serde_json::from_str::<serde_json::Value>(&params).unwrap();
+
+    match chain {
+        SupportChains::Sol => {
+            let mnemonic = bip39::Mnemonic::new(length, lang);
+
+            let wallet = SolWallet {};
+            let config = WalletCreationConfig {
+                use_mnemonic: None,
+                lang: None,
+                length: None,
+                method: None,
+                coin_type: None,
+                account_index: None,
+                change: None,
+                address_index: None,
+                password,
+            };
+            let result = wallet
+                .import_mnemonic(mnemonic.phrase(), config, None)
+                .unwrap();
+
+            WalletAddress {
+                mnemonic_phrase: mnemonic.phrase().to_string(),
+                secret_key: result.private_key.unwrap(),
+                address: result.address,
+            }
+        }
+        SupportChains::Gear => {
+            let ss58 = params.get("ss58").unwrap().as_u64().unwrap() as u16;
+            let data = crate::wallet::mnemonics::generate_wallet(ss58, password, length, lang);
+
+            WalletAddress {
+                mnemonic_phrase: data.mnemonic_phrase,
+                secret_key: data.mini_secret_key,
+                address: data.address,
+            }
+        }
+    }
+
+    // let mut data = vec![];
+    // for _ in 0..count {
+    //     let data = crate::wallet::mnemonics::generate_wallet(ss58, password.clone(), length, lang);
+    //     data.push(data);
+    // }
+    // data
 }
 
 pub fn generate_wallet(

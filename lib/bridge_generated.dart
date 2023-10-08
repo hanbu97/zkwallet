@@ -80,6 +80,35 @@ class NativeImpl implements Native {
         argNames: ["a", "b"],
       );
 
+  Future<WalletAddress> generateWalletMulti(
+      {String? password,
+      required int length,
+      required String lang,
+      required String params,
+      required String chain,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_opt_String(password);
+    var arg1 = api2wire_u8(length);
+    var arg2 = _platform.api2wire_String(lang);
+    var arg3 = _platform.api2wire_String(params);
+    var arg4 = _platform.api2wire_String(chain);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_generate_wallet_multi(port_, arg0, arg1, arg2, arg3, arg4),
+      parseSuccessData: _wire2api_wallet_address,
+      parseErrorData: null,
+      constMeta: kGenerateWalletMultiConstMeta,
+      argValues: [password, length, lang, params, chain],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kGenerateWalletMultiConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "generate_wallet_multi",
+        argNames: ["password", "length", "lang", "params", "chain"],
+      );
+
   Future<PolkadotAddress> generateWallet(
       {required int ss58,
       String? password,
@@ -209,6 +238,17 @@ class NativeImpl implements Native {
 
   Uint8List _wire2api_uint_8_list(dynamic raw) {
     return raw as Uint8List;
+  }
+
+  WalletAddress _wire2api_wallet_address(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return WalletAddress(
+      mnemonicPhrase: _wire2api_String(arr[0]),
+      secretKey: _wire2api_String(arr[1]),
+      address: _wire2api_String(arr[2]),
+    );
   }
 }
 
@@ -399,6 +439,43 @@ class NativeWire implements FlutterRustBridgeWireBase {
       'wire_multiply_zk');
   late final _wire_multiply_zk =
       _wire_multiply_zkPtr.asFunction<void Function(int, int, int)>();
+
+  void wire_generate_wallet_multi(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> password,
+    int length,
+    ffi.Pointer<wire_uint_8_list> lang,
+    ffi.Pointer<wire_uint_8_list> params,
+    ffi.Pointer<wire_uint_8_list> chain,
+  ) {
+    return _wire_generate_wallet_multi(
+      port_,
+      password,
+      length,
+      lang,
+      params,
+      chain,
+    );
+  }
+
+  late final _wire_generate_wallet_multiPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Uint8,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_generate_wallet_multi');
+  late final _wire_generate_wallet_multi =
+      _wire_generate_wallet_multiPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_generate_wallet(
     int port_,

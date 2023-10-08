@@ -20,6 +20,7 @@ use std::sync::Arc;
 
 // Section: imports
 
+use crate::models::address::WalletAddress;
 use crate::wallet::mnemonics::PolkadotAddress;
 
 // Section: wire functions
@@ -59,6 +60,38 @@ fn wire_multiply_zk_impl(
             let api_a = a.wire2api();
             let api_b = b.wire2api();
             move |task_callback| Result::<_, ()>::Ok(multiply_zk(api_a, api_b))
+        },
+    )
+}
+fn wire_generate_wallet_multi_impl(
+    port_: MessagePort,
+    password: impl Wire2Api<Option<String>> + UnwindSafe,
+    length: impl Wire2Api<u8> + UnwindSafe,
+    lang: impl Wire2Api<String> + UnwindSafe,
+    params: impl Wire2Api<String> + UnwindSafe,
+    chain: impl Wire2Api<String> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, WalletAddress, _>(
+        WrapInfo {
+            debug_name: "generate_wallet_multi",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_password = password.wire2api();
+            let api_length = length.wire2api();
+            let api_lang = lang.wire2api();
+            let api_params = params.wire2api();
+            let api_chain = chain.wire2api();
+            move |task_callback| {
+                Result::<_, ()>::Ok(generate_wallet_multi(
+                    api_password,
+                    api_length,
+                    api_lang,
+                    api_params,
+                    api_chain,
+                ))
+            }
         },
     )
 }
@@ -215,6 +248,23 @@ impl support::IntoDart for PolkadotAddress {
 }
 impl support::IntoDartExceptPrimitive for PolkadotAddress {}
 impl rust2dart::IntoIntoDart<PolkadotAddress> for PolkadotAddress {
+    fn into_into_dart(self) -> Self {
+        self
+    }
+}
+
+impl support::IntoDart for WalletAddress {
+    fn into_dart(self) -> support::DartAbi {
+        vec![
+            self.mnemonic_phrase.into_into_dart().into_dart(),
+            self.secret_key.into_into_dart().into_dart(),
+            self.address.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl support::IntoDartExceptPrimitive for WalletAddress {}
+impl rust2dart::IntoIntoDart<WalletAddress> for WalletAddress {
     fn into_into_dart(self) -> Self {
         self
     }
