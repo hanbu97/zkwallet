@@ -136,6 +136,37 @@ class NativeImpl implements Native {
         argNames: ["ss58", "password", "length", "lang"],
       );
 
+  Future<WalletAddress> generateWalletFromMnemonicsMulti(
+      {required String chain,
+      String? password,
+      required String phrase,
+      required String lang,
+      required String params,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(chain);
+    var arg1 = _platform.api2wire_opt_String(password);
+    var arg2 = _platform.api2wire_String(phrase);
+    var arg3 = _platform.api2wire_String(lang);
+    var arg4 = _platform.api2wire_String(params);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_generate_wallet_from_mnemonics_multi(
+              port_, arg0, arg1, arg2, arg3, arg4),
+      parseSuccessData: _wire2api_wallet_address,
+      parseErrorData: null,
+      constMeta: kGenerateWalletFromMnemonicsMultiConstMeta,
+      argValues: [chain, password, phrase, lang, params],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta
+      get kGenerateWalletFromMnemonicsMultiConstMeta =>
+          const FlutterRustBridgeTaskConstMeta(
+            debugName: "generate_wallet_from_mnemonics_multi",
+            argNames: ["chain", "password", "phrase", "lang", "params"],
+          );
+
   Future<PolkadotAddress> generateWalletFromMnemonics(
       {required int ss58,
       String? password,
@@ -504,6 +535,44 @@ class NativeWire implements FlutterRustBridgeWireBase {
   late final _wire_generate_wallet = _wire_generate_walletPtr.asFunction<
       void Function(int, int, ffi.Pointer<wire_uint_8_list>, int,
           ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_generate_wallet_from_mnemonics_multi(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> chain,
+    ffi.Pointer<wire_uint_8_list> password,
+    ffi.Pointer<wire_uint_8_list> phrase,
+    ffi.Pointer<wire_uint_8_list> lang,
+    ffi.Pointer<wire_uint_8_list> params,
+  ) {
+    return _wire_generate_wallet_from_mnemonics_multi(
+      port_,
+      chain,
+      password,
+      phrase,
+      lang,
+      params,
+    );
+  }
+
+  late final _wire_generate_wallet_from_mnemonics_multiPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_generate_wallet_from_mnemonics_multi');
+  late final _wire_generate_wallet_from_mnemonics_multi =
+      _wire_generate_wallet_from_mnemonics_multiPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_generate_wallet_from_mnemonics(
     int port_,

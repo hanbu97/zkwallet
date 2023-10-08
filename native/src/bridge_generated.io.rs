@@ -40,6 +40,18 @@ pub extern "C" fn wire_generate_wallet(
 }
 
 #[no_mangle]
+pub extern "C" fn wire_generate_wallet_from_mnemonics_multi(
+    port_: i64,
+    chain: *mut wire_uint_8_list,
+    password: *mut wire_uint_8_list,
+    phrase: *mut wire_uint_8_list,
+    lang: *mut wire_uint_8_list,
+    params: *mut wire_uint_8_list,
+) {
+    wire_generate_wallet_from_mnemonics_multi_impl(port_, chain, password, phrase, lang, params)
+}
+
+#[no_mangle]
 pub extern "C" fn wire_generate_wallet_from_mnemonics(
     port_: i64,
     ss58: u16,

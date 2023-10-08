@@ -297,6 +297,55 @@ pub fn generate_wallet(
     data
 }
 
+pub fn generate_wallet_from_mnemonics_multi(
+    chain: String,
+    password: Option<String>,
+    phrase: String,
+    lang: String,
+    params: String,
+) -> WalletAddress {
+    let phrase = phrase.trim();
+    let lang = get_language(lang);
+    let params = serde_json::from_str::<serde_json::Value>(&params).unwrap();
+    let chain: SupportChains = chain.into();
+
+    match chain {
+        SupportChains::Sol => {
+            let wallet = SolWallet {};
+            let config = WalletCreationConfig {
+                use_mnemonic: None,
+                lang: None,
+                length: None,
+                method: None,
+                coin_type: None,
+                account_index: None,
+                change: None,
+                address_index: None,
+                password,
+            };
+            let result = wallet.import_mnemonic(phrase, config, None).unwrap();
+
+            WalletAddress {
+                mnemonic_phrase: phrase.to_string(),
+                secret_key: result.private_key.unwrap(),
+                address: result.address,
+            }
+        }
+        SupportChains::Gear => {
+            let ss58 = params.get("ss58").unwrap().as_u64().unwrap() as u16;
+            let data = crate::wallet::mnemonics::generate_wallet_from_mnemonics(
+                ss58, password, phrase, lang,
+            );
+
+            WalletAddress {
+                mnemonic_phrase: data.mnemonic_phrase,
+                secret_key: data.mini_secret_key,
+                address: data.address,
+            }
+        }
+    }
+}
+
 pub fn generate_wallet_from_mnemonics(
     ss58: u16,
     password: Option<String>,

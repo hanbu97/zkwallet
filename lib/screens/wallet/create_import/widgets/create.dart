@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -41,7 +43,8 @@ class _CreateAccountState extends State<CreateAccount> {
   final passwd = TextEditingController();
   final passwdConfirm = TextEditingController();
 
-  PolkadotAddress? polkaWallet;
+  // PolkadotAddress? newAccount;
+  WalletAddress? newAccount;
   final _words = <String>[].obs;
   final nameController = TextEditingController();
 
@@ -51,7 +54,7 @@ class _CreateAccountState extends State<CreateAccount> {
 
   _renderWord() {
     var array = <Widget>[];
-    final words = polkaWallet?.mnemonicPhrase.split(' ') ?? [];
+    final words = newAccount?.mnemonicPhrase.split(' ') ?? [];
 
     for (var i = 0; i < words.length; i++) {
       array.add(
@@ -207,11 +210,11 @@ class _CreateAccountState extends State<CreateAccount> {
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                       ),
-                      contentPadding: EdgeInsets.only(),
-                      enabledBorder: OutlineInputBorder(
+                      contentPadding: const EdgeInsets.only(),
+                      enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.transparent),
                       ),
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.transparent),
                       ),
                     ),
@@ -426,24 +429,39 @@ class _CreateAccountState extends State<CreateAccount> {
                                   return;
                                 }
 
-                                final data = await api.generateWallet(
-                                    ss58: 137,
-                                    password: encryptMnemonicChecked.value
-                                        ? passwd.text
-                                        : null,
-                                    length: length,
-                                    lang: lang);
+                                // final data = await api.generateWallet(
+                                //     ss58: 137,
+                                //     password: encryptMnemonicChecked.value
+                                //         ? passwd.text
+                                //         : null,
+                                //     length: length,
+                                //     lang: lang);
+
+                                // _words.value = data.mnemonicPhrase.split(' ');
+                                // setState(() {
+                                //   newAccount = data;
+                                // });
+
+                                final data = await api.generateWalletMulti(
+                                  chain: 'sol',
+                                  length: length,
+                                  lang: lang,
+                                  params: jsonEncode({"ss58": 137}),
+                                  password: encryptMnemonicChecked.value
+                                      ? passwd.text
+                                      : null,
+                                );
 
                                 _words.value = data.mnemonicPhrase.split(' ');
-
                                 setState(() {
-                                  polkaWallet = data;
+                                  newAccount = data;
                                 });
 
-                                LogUtil.debug(polkaWallet?.address);
-                                LogUtil.debug(polkaWallet?.miniSecretKey);
-                                LogUtil.debug(polkaWallet?.publicKey);
-                                // LogUtil.debug(polkaWallet?.mnemonicPhrase);
+                                LogUtil.debug(newAccount?.address);
+                                // LogUtil.debug(newAccount?.miniSecretKey);
+                                LogUtil.debug(newAccount?.secretKey);
+                                LogUtil.debug(newAccount?.address);
+                                // LogUtil.debug(newAccount?.mnemonicPhrase);
 
                                 completedCreateSteps[0] = true;
                                 _createPageController.nextPage(
@@ -535,7 +553,7 @@ class _CreateAccountState extends State<CreateAccount> {
               TextButton(
                   onPressed: () {
                     Clipboard.setData(
-                        ClipboardData(text: polkaWallet?.mnemonicPhrase ?? ''));
+                        ClipboardData(text: newAccount?.mnemonicPhrase ?? ''));
                     Get.snackbar('Create Wallet', 'Copied to clipboard',
                         colorText: Colors.white);
                   },
@@ -666,7 +684,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           return;
                         }
                         if (verifyInputs.join(' ') !=
-                            polkaWallet?.mnemonicPhrase) {
+                            newAccount?.mnemonicPhrase) {
                           EasyLoading.showError(
                               'The mnemonic words you filled in are incorrect'
                                   .tr);
@@ -682,8 +700,9 @@ class _CreateAccountState extends State<CreateAccount> {
                         late WalletGroup walletGroup;
                         final wallet = Wallet(
                             name: "0".toString(),
-                            address: polkaWallet!.address,
-                            secretKey: polkaWallet!.miniSecretKey,
+                            address: newAccount!.address,
+                            // secretKey: newAccount!.miniSecretKey,
+                            secretKey: newAccount!.secretKey,
                             mnemonics: mnemonicStr,
                             walletMode: 0);
 
@@ -692,7 +711,7 @@ class _CreateAccountState extends State<CreateAccount> {
                         final walletType = WalletType(name: "vara-testnet");
                         walletGroup = WalletGroup(
                             idx: walletGroupIdx,
-                            // name: polkaWallet!.address,
+                            // name: newAccount!.address,
                             name: nameController.text,
                             mnemonics: [mnemonicStr],
                             wallets: [wallet],

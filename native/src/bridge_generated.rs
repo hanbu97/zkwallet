@@ -124,6 +124,38 @@ fn wire_generate_wallet_impl(
         },
     )
 }
+fn wire_generate_wallet_from_mnemonics_multi_impl(
+    port_: MessagePort,
+    chain: impl Wire2Api<String> + UnwindSafe,
+    password: impl Wire2Api<Option<String>> + UnwindSafe,
+    phrase: impl Wire2Api<String> + UnwindSafe,
+    lang: impl Wire2Api<String> + UnwindSafe,
+    params: impl Wire2Api<String> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, WalletAddress, _>(
+        WrapInfo {
+            debug_name: "generate_wallet_from_mnemonics_multi",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_chain = chain.wire2api();
+            let api_password = password.wire2api();
+            let api_phrase = phrase.wire2api();
+            let api_lang = lang.wire2api();
+            let api_params = params.wire2api();
+            move |task_callback| {
+                Result::<_, ()>::Ok(generate_wallet_from_mnemonics_multi(
+                    api_chain,
+                    api_password,
+                    api_phrase,
+                    api_lang,
+                    api_params,
+                ))
+            }
+        },
+    )
+}
 fn wire_generate_wallet_from_mnemonics_impl(
     port_: MessagePort,
     ss58: impl Wire2Api<u16> + UnwindSafe,
