@@ -55,7 +55,7 @@ dependencies:
   shared_preferences: ^2.2.1
   sprintf: ^7.0.0
   flutter_easyloading: ^3.0.5
-  device_info_plus: ^9.0.3
+  device_info_plus: ^10.0.0
   flutter_app_badger: ^1.5.0
   rxdart: ^0.27.7
   visibility_detector: ^0.4.0+2
