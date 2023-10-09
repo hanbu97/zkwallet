@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:expand_tap_area/expand_tap_area.dart';
 import 'package:flutter/material.dart';
+import 'package:waterspay/screens/home/wallet/test_sol.dart';
 import '/main.dart';
 import '/screens/home/receive/receive.dart';
 import '/screens/home/send/send.dart';
@@ -343,18 +344,23 @@ class _WalletPageState extends State<WalletPage> {
                                 size: 22.w,
                               ),
                             ),
-                            Container(
-                              height: 48.w,
-                              width: 48.w,
-                              padding: EdgeInsets.all(11.w),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16.w),
-                                color: Styles.mainColorDark,
-                              ),
-                              child: Icon(
-                                Icons.arrow_upward,
-                                color: Colors.white,
-                                size: 22.w,
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(const TestSolanaPage());
+                              },
+                              child: Container(
+                                height: 48.w,
+                                width: 48.w,
+                                padding: EdgeInsets.all(11.w),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.w),
+                                  color: Styles.mainColorDark,
+                                ),
+                                child: Icon(
+                                  Icons.arrow_upward,
+                                  color: Colors.white,
+                                  size: 22.w,
+                                ),
                               ),
                             )
                           ],

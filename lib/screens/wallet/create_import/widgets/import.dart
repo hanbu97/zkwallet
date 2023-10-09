@@ -4,7 +4,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:solana/solana.dart' as Solana;
+// import 'package:solana_mobile_client';
 
 import '../../../../bridge_definitions.dart';
 import '../../../../ffi.dart';
