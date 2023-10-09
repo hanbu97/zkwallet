@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:solana/solana.dart' as Solana;
 
 import '../../../../bridge_definitions.dart';
 import '../../../../ffi.dart';
@@ -42,7 +43,7 @@ class _ImportAccountState extends State<ImportAccount> {
   final passwd = TextEditingController();
   final passwdConfirm = TextEditingController();
 
-  PolkadotAddress? polkaWallet;
+  PolkadotAddress? newAccount;
   final _words = <String>[].obs;
   final nameController = TextEditingController();
 
@@ -405,13 +406,13 @@ class _ImportAccountState extends State<ImportAccount> {
                                 _words.value = data.mnemonicPhrase.split(' ');
 
                                 setState(() {
-                                  polkaWallet = data;
+                                  newAccount = data;
                                 });
 
-                                LogUtil.debug(polkaWallet?.address);
-                                LogUtil.debug(polkaWallet?.miniSecretKey);
-                                LogUtil.debug(polkaWallet?.publicKey);
-                                // LogUtil.debug(polkaWallet?.mnemonicPhrase);
+                                LogUtil.debug(newAccount?.address);
+                                LogUtil.debug(newAccount?.miniSecretKey);
+                                LogUtil.debug(newAccount?.publicKey);
+                                // LogUtil.debug(newAccount?.mnemonicPhrase);
 
                                 completedCreateSteps[0] = true;
                                 _createPageController.nextPage(
@@ -515,11 +516,11 @@ class _ImportAccountState extends State<ImportAccount> {
                                 mnemonicInputs.sublist(0, length).join(' ');
 
                             try {
-                              polkaWallet =
+                              newAccount =
                                   await api.generateWalletFromMnemonics(
                                       ss58: 137,
                                       phrase: mnemonicStr,
-                                      lang: lang);
+                                      lang: lang); //
 
                               mnemonicStr = Encryption.encrypt(mnemonicStr,
                                   passwdConfirm.text, EncryptionMethod.fernet);
@@ -527,8 +528,8 @@ class _ImportAccountState extends State<ImportAccount> {
                               late WalletGroup walletGroup;
                               final wallet = Wallet(
                                   name: "0".toString(),
-                                  address: polkaWallet!.address,
-                                  secretKey: polkaWallet!.miniSecretKey,
+                                  address: newAccount!.address,
+                                  secretKey: newAccount!.miniSecretKey,
                                   mnemonics: mnemonicStr,
                                   walletMode: 0);
 
@@ -538,7 +539,7 @@ class _ImportAccountState extends State<ImportAccount> {
                                   WalletType(name: "vara-testnet");
                               walletGroup = WalletGroup(
                                   idx: walletGroupIdx,
-                                  // name: polkaWallet!.address,
+                                  // name: newAccount!.address,
                                   name: nameController.text,
                                   mnemonics: [mnemonicStr],
                                   wallets: [wallet],
