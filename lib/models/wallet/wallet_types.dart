@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:waterspay/chains/config.dart';
+import 'package:waterspay/utils/log/logger.dart';
 
 import 'wallets.dart';
 import 'package:flutter/services.dart';
@@ -70,7 +71,9 @@ class WalletType extends HiveObject {
 
 Future<List<WalletType>> loadWalletTypes() async {
   final List<WalletType> walletTypes = [];
-  for (final chain in defaultChains) {
+
+  for (final chain in chainsConfig.keys) {
+    // for (final chain in defaultChains) {
     final chainJson = Map<String, dynamic>.from(chainsConfig[chain]);
     final walletType = WalletType.fromJson(chainJson);
     walletTypes.add(walletType);

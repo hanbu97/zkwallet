@@ -11,6 +11,9 @@ abstract class AppRoutes {
   // home
   static const home = '/home';
   static const wallet = '/wallet';
+
+  // test
+  static const test = '/test';
 }
 
 extension RoutesExtension on String {

@@ -39,7 +39,8 @@ class ZkTransferApp extends StatelessWidget {
               //   return locale;
               // },
               initialBinding: InitBinding(),
-              initialRoute: AppRoutes.splash,
+              // initialRoute: AppRoutes.splash,
+              initialRoute: AppRoutes.test,
               getPages: AppPages.routes,
               // title: 'zkTransfer',
               // theme: ThemeData(

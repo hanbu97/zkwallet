@@ -2,6 +2,8 @@
 // import '/models/login_certificate.dart';
 import 'dart:convert';
 
+import 'package:get_storage/get_storage.dart';
+
 import '/models/wallet/wallets_group.dart';
 import '/models/wallet/wallets_group_read.dart';
 import '/utils/log/logger.dart';
@@ -15,6 +17,7 @@ import '../../models/wallet/wallets.dart';
 import '../config/config.dart';
 import '../storage/general.dart';
 import 'sp_util.dart';
+import 'wallet_type.dart/wallet_type.dart';
 
 class DataSp {
   static const _walletKey = 'zkTransfer';
@@ -33,6 +36,7 @@ class DataSp {
   // late WalletSDK varaSdk;
   static late WalletSDK varaSdk;
   static late Keyring keyRing;
+  static late WalletTypeSp walletTypeSp;
 
   DataSp._() {
     // varaSdk = WalletSDK();
@@ -40,6 +44,11 @@ class DataSp {
 
   static init() async {
     await SpUtil().init();
+    await GetStorage.init();
+
+    walletTypeSp = WalletTypeSp();
+    walletTypeSp.init();
+
     varaSdk = WalletSDK();
     keyRing = Keyring();
   }

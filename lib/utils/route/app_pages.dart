@@ -1,3 +1,5 @@
+import 'package:waterspay/screens/test/test.dart';
+
 import '/screens/home/main/binding.dart';
 import '/screens/home/main/screen.dart';
 import '/screens/home/wallet/binding.dart';
@@ -53,6 +55,10 @@ class AppPages {
       name: AppRoutes.wallet,
       page: () => WalletPage(),
       binding: WalletBinding(),
+    ),
+    _pageBuilder(
+      name: AppRoutes.test,
+      page: () => TestScreen(),
     ),
   ];
 }

@@ -9,7 +9,6 @@ class SpUtil {
   SpUtil._();
 
   static final SpUtil _singleton = SpUtil._();
-
   factory SpUtil() => _singleton;
 
   Future init() async {
