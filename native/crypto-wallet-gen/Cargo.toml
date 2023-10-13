@@ -27,7 +27,7 @@ rand_chacha = "^0.3.0"
 rand_core_5 = { version = "^0.5.1", package = "rand_core" }
 rand_hc = "^0.3.0"
 rand_jitter = "^0.3.0"
-scrypt = "^0.7.0"
+scrypt = "^0.11.0"
 libsecp256k1 = { workspace = true }
 thiserror = "^1.0.24"
 tiny-bip39 = { workspace = true }
