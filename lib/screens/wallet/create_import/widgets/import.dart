@@ -537,15 +537,15 @@ class _ImportAccountState extends State<ImportAccount> {
 
                               final walletGroupIdx =
                                   DataSp.increaseWalletGroupMaxID();
-                              final walletType =
-                                  WalletType(name: "vara-testnet");
+                              // final walletType =
+                              //     WalletType(name: "vara-testnet");
                               walletGroup = WalletGroup(
                                   idx: walletGroupIdx,
                                   // name: newAccount!.address,
                                   name: nameController.text,
                                   mnemonics: [mnemonicStr],
                                   wallets: [wallet],
-                                  walletTypes: [walletType]);
+                                  walletTypes: []);
 
                               DataSp.addWalletGroup(walletGroup);
 

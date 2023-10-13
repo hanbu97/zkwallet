@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:waterspay/chains/config.dart';
+
 import 'wallets.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
@@ -11,47 +13,54 @@ part 'wallet_types.g.dart';
 @HiveType(typeId: 0)
 class WalletType extends HiveObject {
   @HiveField(0)
-  String name;
+  String id;
 
   @HiveField(1)
   String family;
 
-  // rpc
   @HiveField(2)
-  List<List<String>> network;
+  String name;
 
   @HiveField(3)
-  List<String> networkId;
+  String symbol;
 
   @HiveField(4)
-  List<String> networkIdName;
+  int chainId;
 
   @HiveField(5)
-  List<String> authority;
+  int ss58;
 
   @HiveField(6)
-  List<TokenInfo> tokens;
+  int decimal;
 
   @HiveField(7)
-  List<Map<String, String>> explorer;
+  String hash;
 
   @HiveField(8)
-  List<String> derive;
+  List<Map<String, dynamic>> rpc;
 
   @HiveField(9)
-  Map<String, dynamic> extraFields;
+  int rpcSelect;
+
+  @HiveField(10)
+  List<Map<String, dynamic>> wss;
+
+  @HiveField(11)
+  int wssSelect;
 
   WalletType({
+    required this.id,
+    required this.family,
     required this.name,
-    this.family = "",
-    this.network = const [],
-    this.networkId = const [],
-    this.authority = const [],
-    this.networkIdName = const [],
-    this.tokens = const [],
-    this.explorer = const [],
-    this.derive = const [],
-    this.extraFields = const {},
+    required this.symbol,
+    this.chainId = 0,
+    this.ss58 = 0,
+    required this.decimal,
+    required this.hash,
+    required this.rpc,
+    this.rpcSelect = 0,
+    required this.wss,
+    this.wssSelect = 0,
   });
 
   factory WalletType.fromJson(Map<String, dynamic> json) =>
@@ -59,37 +68,11 @@ class WalletType extends HiveObject {
   Map<String, dynamic> toJson() => _$WalletTypeToJson(this);
 }
 
-WalletType walletTypeFromJson(String jsonStr) {
-  final parsedJson = json.decode(jsonStr);
-  return WalletType(
-    name: parsedJson['name'],
-    family: parsedJson['family'],
-    network: List<List<String>>.from(
-        parsedJson['network'].map((x) => List<String>.from(x.map((y) => y)))),
-    networkId: List<String>.from(parsedJson['networkId'].map((x) => x)),
-    networkIdName: List<String>.from(parsedJson['networkIdName'].map((x) => x)),
-    authority: List<String>.from(parsedJson['authority'].map((x) => x)),
-    tokens: List<TokenInfo>.from(
-        parsedJson['tokens'].map((x) => TokenInfo.fromJson(x))),
-    explorer: List<Map<String, String>>.from(
-        parsedJson['explorer'].map((x) => Map<String, String>.from(x))),
-    derive: List<String>.from(parsedJson['derive'].map((x) => x)),
-    extraFields: Map<String, dynamic>.from(parsedJson['extraFields']),
-  );
-}
-
 Future<List<WalletType>> loadWalletTypes() async {
-  final manifest = await rootBundle.loadString('AssetManifest.json');
-  final fileNames = Map<String, dynamic>.from(json.decode(manifest))
-      .keys
-      .where((String key) => key.startsWith('assets/wallet_types/'))
-      .toList();
-
   final List<WalletType> walletTypes = [];
-
-  for (final fileName in fileNames) {
-    final jsonStr = await rootBundle.loadString(fileName);
-    final walletType = walletTypeFromJson(jsonStr);
+  for (final chain in defaultChains) {
+    final chainJson = Map<String, dynamic>.from(chainsConfig[chain]);
+    final walletType = WalletType.fromJson(chainJson);
     walletTypes.add(walletType);
   }
 

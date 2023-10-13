@@ -17,47 +17,53 @@ class WalletTypeAdapter extends TypeAdapter<WalletType> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return WalletType(
-      name: fields[0] as String,
+      id: fields[0] as String,
       family: fields[1] as String,
-      network: (fields[2] as List)
-          .map((dynamic e) => (e as List).cast<String>())
+      name: fields[2] as String,
+      symbol: fields[3] as String,
+      chainId: fields[4] as int,
+      ss58: fields[5] as int,
+      decimal: fields[6] as int,
+      hash: fields[7] as String,
+      rpc: (fields[8] as List)
+          .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),
-      networkId: (fields[3] as List).cast<String>(),
-      authority: (fields[5] as List).cast<String>(),
-      networkIdName: (fields[4] as List).cast<String>(),
-      tokens: (fields[6] as List).cast<TokenInfo>(),
-      explorer: (fields[7] as List)
-          .map((dynamic e) => (e as Map).cast<String, String>())
+      rpcSelect: fields[9] as int,
+      wss: (fields[10] as List)
+          .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),
-      derive: (fields[8] as List).cast<String>(),
-      extraFields: (fields[9] as Map).cast<String, dynamic>(),
+      wssSelect: fields[11] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, WalletType obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(12)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.id)
       ..writeByte(1)
       ..write(obj.family)
       ..writeByte(2)
-      ..write(obj.network)
+      ..write(obj.name)
       ..writeByte(3)
-      ..write(obj.networkId)
+      ..write(obj.symbol)
       ..writeByte(4)
-      ..write(obj.networkIdName)
+      ..write(obj.chainId)
       ..writeByte(5)
-      ..write(obj.authority)
+      ..write(obj.ss58)
       ..writeByte(6)
-      ..write(obj.tokens)
+      ..write(obj.decimal)
       ..writeByte(7)
-      ..write(obj.explorer)
+      ..write(obj.hash)
       ..writeByte(8)
-      ..write(obj.derive)
+      ..write(obj.rpc)
       ..writeByte(9)
-      ..write(obj.extraFields);
+      ..write(obj.rpcSelect)
+      ..writeByte(10)
+      ..write(obj.wss)
+      ..writeByte(11)
+      ..write(obj.wssSelect);
   }
 
   @override
@@ -76,50 +82,36 @@ class WalletTypeAdapter extends TypeAdapter<WalletType> {
 // **************************************************************************
 
 WalletType _$WalletTypeFromJson(Map<String, dynamic> json) => WalletType(
+      id: json['id'] as String,
+      family: json['family'] as String,
       name: json['name'] as String,
-      family: json['family'] as String? ?? "",
-      network: (json['network'] as List<dynamic>?)
-              ?.map(
-                  (e) => (e as List<dynamic>).map((e) => e as String).toList())
-              .toList() ??
-          const [],
-      networkId: (json['networkId'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      authority: (json['authority'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      networkIdName: (json['networkIdName'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      tokens: (json['tokens'] as List<dynamic>?)
-              ?.map((e) => TokenInfo.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-      explorer: (json['explorer'] as List<dynamic>?)
-              ?.map((e) => Map<String, String>.from(e as Map))
-              .toList() ??
-          const [],
-      derive: (json['derive'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      extraFields: json['extraFields'] as Map<String, dynamic>? ?? const {},
+      symbol: json['symbol'] as String,
+      chainId: json['chainId'] as int? ?? 0,
+      ss58: json['ss58'] as int? ?? 0,
+      decimal: json['decimal'] as int,
+      hash: json['hash'] as String,
+      rpc: (json['rpc'] as List<dynamic>)
+          .map((e) => e as Map<String, dynamic>)
+          .toList(),
+      rpcSelect: json['rpcSelect'] as int? ?? 0,
+      wss: (json['wss'] as List<dynamic>)
+          .map((e) => e as Map<String, dynamic>)
+          .toList(),
+      wssSelect: json['wssSelect'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$WalletTypeToJson(WalletType instance) =>
     <String, dynamic>{
-      'name': instance.name,
+      'id': instance.id,
       'family': instance.family,
-      'network': instance.network,
-      'networkId': instance.networkId,
-      'networkIdName': instance.networkIdName,
-      'authority': instance.authority,
-      'tokens': instance.tokens,
-      'explorer': instance.explorer,
-      'derive': instance.derive,
-      'extraFields': instance.extraFields,
+      'name': instance.name,
+      'symbol': instance.symbol,
+      'chainId': instance.chainId,
+      'ss58': instance.ss58,
+      'decimal': instance.decimal,
+      'hash': instance.hash,
+      'rpc': instance.rpc,
+      'rpcSelect': instance.rpcSelect,
+      'wss': instance.wss,
+      'wssSelect': instance.wssSelect,
     };
