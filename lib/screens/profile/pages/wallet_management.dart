@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../utils/config/styles.dart';
@@ -33,6 +32,8 @@ class _ManageWalletState extends State<ManageWallet> {
 
   @override
   Widget build(BuildContext context) {
+    final bool? args = Get.arguments;
+
     return Stack(
       children: [
         Scaffold(
@@ -46,12 +47,15 @@ class _ManageWalletState extends State<ManageWallet> {
                     fontWeight: FontWeight.w600,
                     fontSize: 18.w),
               ),
-              leading: BackButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                color: Styles.mainColor,
-              ),
+              leading: args == true || args == null
+                  ? BackButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      color: Styles.mainColor,
+                    )
+                  : null,
+              iconTheme: IconThemeData(color: Styles.mainColor),
               actions: [
                 ElevatedButton(
                   style: ButtonStyle(

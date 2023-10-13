@@ -4,6 +4,7 @@ import 'package:expand_tap_area/expand_tap_area.dart';
 import 'package:flutter/material.dart';
 import 'package:waterspay/screens/home/wallet/pages/select_network/screen.dart';
 import 'package:waterspay/screens/home/wallet/test_sol.dart';
+import '../../profile/pages/wallet_management.dart';
 import '/main.dart';
 import '/screens/home/receive/receive.dart';
 import '/screens/home/send/send.dart';
@@ -75,12 +76,21 @@ class _WalletPageState extends State<WalletPage> {
         title: Row(
           children: [
             ExpandTapWidget(
-              onTap: () async {
-                final wallet = walletLogic.selectedWallet.address;
-                final res =
-                    await DataSp.varaSdk.api.account.queryBalance(wallet);
-
-                LogUtil.debug(res?.availableBalance);
+              onTap: () {
+                Get.to(
+                    Dismissible(
+                      direction: DismissDirection.down,
+                      key: const Key('dismissible_manage_wallet'),
+                      confirmDismiss: (direction) async {
+                        Get.back();
+                        return true;
+                      },
+                      child: const ManageWallet(),
+                    ),
+                    opaque: false,
+                    arguments: false,
+                    fullscreenDialog: true,
+                    transition: Transition.downToUp);
               },
               tapPadding: EdgeInsets.all(10.w),
               child: Container(
@@ -146,32 +156,6 @@ class _WalletPageState extends State<WalletPage> {
           ),
           GestureDetector(
             onTap: () {
-              // await dbClear(HiveDBName.walletGroup);
-              // await SpUtil().clear();
-              // Get.to(MyHomePage(
-              //   title: 'zk',
-              // ));
-              // showModalBottomSheet(
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return Container(
-              //       child: Wrap(
-              //         children: <Widget>[
-              //           ListTile(
-              //             leading: Icon(Icons.music_note),
-              //             title: Text('Music'),
-              //             onTap: () => {},
-              //           ),
-              //           ListTile(
-              //             leading: Icon(Icons.videocam),
-              //             title: Text('Video'),
-              //             onTap: () => {},
-              //           ),
-              //         ],
-              //       ),
-              //     );
-              //   },
-              // );
               Get.to(
                   Dismissible(
                     direction: DismissDirection.down,
@@ -180,7 +164,7 @@ class _WalletPageState extends State<WalletPage> {
                       Get.back();
                       return true;
                     },
-                    child: SelectNetworkPage(),
+                    child: const SelectNetworkPage(),
                   ),
                   opaque: false,
                   transition: Transition.downToUp,
