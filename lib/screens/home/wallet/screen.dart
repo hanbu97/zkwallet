@@ -172,8 +172,19 @@ class _WalletPageState extends State<WalletPage> {
               //     );
               //   },
               // );
-              Get.to(SelectNetworkPage(),
-                  transition: Transition.downToUp, fullscreenDialog: true);
+              Get.to(
+                  Dismissible(
+                    direction: DismissDirection.down,
+                    key: const Key('dismissible_network_select'),
+                    confirmDismiss: (direction) async {
+                      Get.back();
+                      return true;
+                    },
+                    child: SelectNetworkPage(),
+                  ),
+                  opaque: false,
+                  transition: Transition.downToUp,
+                  fullscreenDialog: true);
             },
             child: Container(
               width: 39.w,

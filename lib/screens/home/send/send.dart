@@ -5,6 +5,7 @@ import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import '../../../widgets/input/boarder_input.dart';
 import '/utils/config/styles.dart';
 import '/utils/encryption/general.dart';
 import '/utils/log/logger.dart';
@@ -166,37 +167,10 @@ class _SendPageState extends State<SendPage> {
                 SizedBox(
                   height: 15.w,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Styles.mainColor),
-                      borderRadius: BorderRadius.circular(12.w)),
-                  padding: EdgeInsets.only(left: 15.w),
-                  child: TextField(
-                    controller: _receiverController,
-                    style: TextStyle(
-                      color: Styles.titleColor,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    decoration: InputDecoration(
-                      fillColor: Colors.transparent,
-                      filled: true,
-                      hintText: 'Send to Address',
-                      hintStyle: TextStyle(
-                        color: Styles.infoGrayColor,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      contentPadding: EdgeInsets.only(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                    ),
-                  ),
-                )
+                BoarderInput(
+                  controller: _receiverController,
+                  hintText: 'Send to Address',
+                ),
               ],
             ),
           ),
@@ -236,53 +210,23 @@ class _SendPageState extends State<SendPage> {
                 SizedBox(
                   height: 15.w,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Styles.mainColor),
-                      borderRadius: BorderRadius.circular(12.w)),
-                  padding: EdgeInsets.only(left: 15.w),
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: TextField(
-                        controller: _amountController,
-                        style: TextStyle(
-                          color: Styles.titleColor,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        decoration: InputDecoration(
-                          fillColor: Colors.transparent,
-                          filled: true,
-                          hintText: 'Please enter the transfer amount',
-                          hintStyle: TextStyle(
-                            color: Styles.infoGrayColor,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          contentPadding: const EdgeInsets.only(),
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                        ),
-                      )),
-                      TextButton(
-                          onPressed: () {
-                            _amountController.text = (StringUtils.toDotDouble(
-                                        widget.balance?.freeBalance ?? '0x0') -
-                                    _estimateGas * 2)
-                                .floor()
-                                .toString();
-                          },
-                          child: Text(
-                            'MAX',
-                            style: TextStyle(color: Styles.mainColor),
-                          ))
-                    ],
-                  ),
+                BoarderInput(
+                  controller: _amountController,
+                  hintText: 'Please enter the transfer amount',
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          _amountController.text = (StringUtils.toDotDouble(
+                                      widget.balance?.freeBalance ?? '0x0') -
+                                  _estimateGas * 2)
+                              .floor()
+                              .toString();
+                        },
+                        child: Text(
+                          'MAX',
+                          style: TextStyle(color: Styles.mainColor),
+                        ))
+                  ],
                 )
               ],
             ),

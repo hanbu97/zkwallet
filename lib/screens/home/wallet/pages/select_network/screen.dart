@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waterspay/utils/config/styles.dart';
 import 'package:waterspay/widgets/buttons/bg_button.dart';
+import 'package:waterspay/widgets/input/boarder_input.dart';
 
 class SelectNetworkPage extends StatefulWidget {
   const SelectNetworkPage({super.key});
@@ -15,6 +16,8 @@ class SelectNetworkPage extends StatefulWidget {
 class _SelectNetworkPageState extends State<SelectNetworkPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+
+  final TextEditingController searchInput = TextEditingController();
 
   @override
   void initState() {
@@ -51,7 +54,24 @@ class _SelectNetworkPageState extends State<SelectNetworkPage>
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: [],
+          children: [
+            SizedBox(height: 12.w),
+            Container(
+              height: 38.w,
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: BoarderInput(
+                leading: [
+                  Icon(
+                    Icons.search,
+                    color: Styles.mainColor,
+                    size: 20.w,
+                  )
+                ],
+                controller: searchInput,
+                hintText: 'Serch Network',
+              ),
+            )
+          ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
