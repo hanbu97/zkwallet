@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:expand_tap_area/expand_tap_area.dart';
 import 'package:flutter/material.dart';
+import 'package:waterspay/screens/home/wallet/pages/select_network/screen.dart';
 import 'package:waterspay/screens/home/wallet/test_sol.dart';
 import '/main.dart';
 import '/screens/home/receive/receive.dart';
@@ -144,12 +145,35 @@ class _WalletPageState extends State<WalletPage> {
             width: 10.w,
           ),
           GestureDetector(
-            onTap: () async {
-              await dbClear(HiveDBName.walletGroup);
-              await SpUtil().clear();
+            onTap: () {
+              // await dbClear(HiveDBName.walletGroup);
+              // await SpUtil().clear();
               // Get.to(MyHomePage(
               //   title: 'zk',
               // ));
+              // showModalBottomSheet(
+              //   context: context,
+              //   builder: (BuildContext context) {
+              //     return Container(
+              //       child: Wrap(
+              //         children: <Widget>[
+              //           ListTile(
+              //             leading: Icon(Icons.music_note),
+              //             title: Text('Music'),
+              //             onTap: () => {},
+              //           ),
+              //           ListTile(
+              //             leading: Icon(Icons.videocam),
+              //             title: Text('Video'),
+              //             onTap: () => {},
+              //           ),
+              //         ],
+              //       ),
+              //     );
+              //   },
+              // );
+              Get.to(SelectNetworkPage(),
+                  transition: Transition.downToUp, fullscreenDialog: true);
             },
             child: Container(
               width: 39.w,

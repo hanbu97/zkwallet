@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waterspay/widgets/buttons/bg_button.dart';
 import '/screens/profile/pages/wallet_management.dart';
 import '/screens/profile/widgets/decoration.dart';
 import '/utils/config/styles.dart';
@@ -144,28 +145,8 @@ class _ProfilePageState extends State<ProfilePage> {
               left: 0,
               right: 0,
               child: Styles.contentPadding(
-                  child: InkWell(
-                child: Ink(
-                  height: 50.w,
-                  decoration: BoxDecoration(
-                    color: const Color(0xff023327),
-                    borderRadius: BorderRadius.circular(6.w),
-                    border: Border.all(
-                      color: Styles.mainColorDark,
-                      width: 1.w,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Logout'.tr,
-                      style: TextStyle(
-                          color: Styles.mainColor,
-                          fontSize: 16.w,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
-                onTap: () async {},
+                  child: BgButton(
+                text: 'Logout'.tr,
               ))),
         ],
       ),
